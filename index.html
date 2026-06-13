@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juan Carlos Reyes | Recursos Educativos Interactivos</title>
+<style>
+:root{--azul:#1a3a5c;--azul-medio:#2563a8;--azul-claro:#3b82c4;--dorado:#d4a017;--dorado-claro:#f0c040;--gris-claro:#f4f6fa;--gris-texto:#4a5568;--verde:#1a7a4a;--morado:#6b3fa0;--naranja:#c05a10;--rojo-coral:#b83255}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--gris-claro);color:var(--gris-texto)}
+.hero{background:linear-gradient(135deg,var(--azul),var(--azul-medio) 60%,var(--azul-claro));color:white;padding:60px 20px 50px;text-align:center}
+.avatar{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,var(--dorado),var(--dorado-claro));display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto 20px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;margin-bottom:8px}
+.hero .sub{font-size:clamp(1rem,2.5vw,1.2rem);opacity:.88;margin-bottom:6px}
+.hero .desc{font-size:.97rem;opacity:.75;max-width:560px;margin:0 auto 24px;line-height:1.6}
+.ch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ch a{color:white;text-decoration:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:8px 18px;border-radius:50px;font-size:.9rem}
+.ch a:hover{background:rgba(255,255,255,.28)}
+main{max-width:1100px;margin:0 auto;padding:40px 16px 60px}
+.sm{background:white;border-radius:16px;padding:32px 36px;margin-bottom:36px;box-shadow:0 2px 12px rgba(0,0,0,.07);border-left:5px solid var(--dorado)}
+.sm h2{font-size:1.3rem;color:var(--azul);margin-bottom:12px}
+.sm p{line-height:1.75;font-size:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{background:var(--gris-claro);border:1px solid #dde3ec;border-radius:50px;padding:4px 14px;font-size:.82rem;color:var(--azul)}
+.at{font-size:1.4rem;font-weight:700;color:var(--azul);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.at::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--azul-claro),transparent)}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.ac{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;transition:transform .2s,box-shadow .2s}
+.ac:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.ah{padding:22px 24px 16px;display:flex;align-items:center;gap:14px}
+.ai{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.ah h3{font-size:1.15rem;color:var(--azul);margin-bottom:2px}
+.ah p{font-size:.83rem;color:#718096;line-height:1.4}
+.ml{padding:0 24px 20px;border-top:1px solid #edf2f7;margin-top:4px}
+.ml h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:#a0aec0;margin:14px 0 10px}
+.mlink{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;text-decoration:none;color:var(--gris-texto);font-size:.92rem;margin-bottom:4px;transition:background .15s}
+.mlink:hover{background:var(--gris-claro);color:var(--azul-medio)}
+.mn{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:white;flex-shrink:0}
+.bd{margin-left:auto;font-size:.7rem;padding:2px 8px;border-radius:50px;background:#ebf8ee;color:#276749;font-weight:600}
+.bp{margin-left:auto;font-size:.7rem;padding:2px 8px;border-radius:50px;background:#fef3c7;color:#92400e;font-weight:600}
+.af{padding:12px 24px 18px;border-top:1px solid #edf2f7}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:10px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .2s;border:2px solid transparent;color:white}
+.btn:hover{filter:brightness(1.1)}
+.bto{background:transparent!important;cursor:default}
+footer{background:var(--azul);color:rgba(255,255,255,.75);text-align:center;padding:28px 16px;font-size:.88rem;line-height:1.8}
+footer a{color:var(--dorado-claro);text-decoration:none}
+footer strong{color:white}
+@media(max-width:600px){.hero{padding:40px 16px 36px}.sm{padding:22px 20px}.ag{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="hero">
+<div class="avatar">&#x1F468;&#x200D;&#x1F4BC;</div>
+<h1>Juan Carlos Reyes</h1>
+<p class="sub">Contador P&uacute;blico &middot; Docente &middot; Consultor Independiente</p>
+<p class="desc">Recursos educativos interactivos en Contabilidad, Impuestos, Finanzas, Auditor&iacute;a y Habilidades Blandas &mdash; dise&ntilde;ados para aprender haciendo.</p>
+<div class="ch">
+<a href="mailto:juancreyes.hn@gmail.com">&#9993; juancreyes.hn@gmail.com</a>
+<a href="https://juancreyeshn-design.github.io/contabilidad-interactiva/menu.html">&#128218; Ver M&oacute;dulos de Contabilidad</a>
+</div>
+</section>
+<main>
+<div class="sm">
+<h2>&#128100; Sobre m&iacute;</h2>
+<p>Soy contador p&uacute;blico y docente con experiencia en la ense&ntilde;anza de contabilidad, finanzas e impuestos. Desarrollo herramientas interactivas para motivar el aprendizaje y hacer los temas financieros pr&aacute;cticos, visuales y accesibles. Todos los m&oacute;dulos aplican est&aacute;ndares NIIF PYMES con contexto hondure&ntilde;o.</p>
+<div class="tags">
+<span class="tag">&#128202; NIIF PYMES</span>
+<span class="tag">Contexto hondure&ntilde;o</span>
+<span class="tag">&#128161; Aprendizaje activo</span>
+<span class="tag">&#128241; Funciona sin internet</span>
+<span class="tag">Para universidades y empresas</span>
+</div>
+</div>
+<div class="at">&#128194; &Aacute;reas tem&aacute;ticas</div>
+<div class="ag">
+<div class="ac">
+<div class="ah"><div class="ai" style="background:#ebf4ff">&#128210;</div><div><h3>Contabilidad</h3><p>Principios, ciclo contable y estados financieros &mdash; NIIF PYMES</p></div></div>
+<div class="ml"><h4>M&oacute;dulos disponibles</h4>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo1_ecuacion_contable.html"><span class="mn" style="background:#2563a8">1</span> Ecuaci&oacute;n Contable <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo2_componentes.html"><span class="mn" style="background:#2563a8">2</span> Componentes y Subcuentas <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo3_ingresos_gastos.html"><span class="mn" style="background:#2563a8">3</span> Ingresos y Gastos <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo4_naturaleza_cuentas.html"><span class="mn" style="background:#2563a8">4</span> Naturaleza de Cuentas <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo5_libro_diario.html"><span class="mn" style="background:#2563a8">5</span> Libro Diario <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo6_libro_mayor.html"><span class="mn" style="background:#2563a8">6</span> Libro Mayor <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo7_estados_financieros.html"><span class="mn" style="background:#2563a8">7</span> Estados Financieros <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo8_ciclo_contable.html"><span class="mn" style="background:#2563a8">8</span> Ciclo Contable <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo9_asientos_ajuste.html"><span class="mn" style="background:#2563a8">9</span> Asientos de Ajuste <span class="bd">Listo</span></a>
+<a class="mlink" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/modulo10_hoja_trabajo.html"><span class="mn" style="background:#2563a8">10</span> Hoja de Trabajo <span class="bd">Listo</span></a>
+</div>
+<div class="af"><a class="btn" style="background:#2563a8" href="https://juancreyeshn-design.github.io/contabilidad-interactiva/menu.html">&#128218; Ir al men&uacute; completo &rarr;</a></div>
+</div>
+<div class="ac">
+<div class="ah"><div class="ai" style="background:#fef9e7">&#129534;</div><div><h3>Impuestos</h3><p>ISR, ISV, retenciones y declaraciones &mdash; SAR Honduras</p></div></div>
+<div class="ml"><h4>Pr&oacute;ximamente</h4>
+<div class="mlink"><span class="mn" style="background:#c05a10">1</span> ISV &mdash; Impuesto Sobre Ventas <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#c05a10">2</span> ISR &mdash; Impuesto Sobre la Renta <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#c05a10">3</span> Retenciones en la fuente <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#c05a10">4</span> Declaraciones y formularios <span class="bp">Pr&oacute;ximo</span></div>
+</div>
+<div class="af"><span class="btn bto" style="border:2px solid #c05a10;color:#c05a10">En desarrollo</span></div>
+</div>
+<div class="ac">
+<div class="ah"><div class="ai" style="background:#edfaf1">&#128200;</div><div><h3>Finanzas</h3><p>An&aacute;lisis financiero, presupuestos y toma de decisiones</p></div></div>
+<div class="ml"><h4>Pr&oacute;ximamente</h4>
+<div class="mlink"><span class="mn" style="background:#1a7a4a">1</span> An&aacute;lisis de estados financieros <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#1a7a4a">2</span> Razones financieras <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#1a7a4a">3</span> Presupuesto de efectivo <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#1a7a4a">4</span> Valor del dinero en el tiempo <span class="bp">Pr&oacute;ximo</span></div>
+</div>
+<div class="af"><span class="btn bto" style="border:2px solid #1a7a4a;color:#1a7a4a">En desarrollo</span></div>
+</div>
+<div class="ac">
+<div class="ah"><div class="ai" style="background:#f5f0ff">&#128269;</div><div><h3>Auditor&iacute;a</h3><p>Normas ISA, control interno y papeles de trabajo</p></div></div>
+<div class="ml"><h4>Pr&oacute;ximamente</h4>
+<div class="mlink"><span class="mn" style="background:#6b3fa0">1</span> Control interno &mdash; COSO <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#6b3fa0">2</span> Papeles de trabajo <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#6b3fa0">3</span> Evidencia de auditor&iacute;a <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#6b3fa0">4</span> Informe del auditor <span class="bp">Pr&oacute;ximo</span></div>
+</div>
+<div class="af"><span class="btn bto" style="border:2px solid #6b3fa0;color:#6b3fa0">En desarrollo</span></div>
+</div>
+<div class="ac">
+<div class="ah"><div class="ai" style="background:#fff1f5">&#129309;</div><div><h3>Habilidades Blandas</h3><p>Comunicaci&oacute;n, liderazgo, &eacute;tica profesional y trabajo en equipo</p></div></div>
+<div class="ml"><h4>Pr&oacute;ximamente</h4>
+<div class="mlink"><span class="mn" style="background:#b83255">1</span> Comunicaci&oacute;n efectiva <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#b83255">2</span> &Eacute;tica profesional del contador <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#b83255">3</span> Liderazgo y trabajo en equipo <span class="bp">Pr&oacute;ximo</span></div>
+<div class="mlink"><span class="mn" style="background:#b83255">4</span> Manejo del tiempo y productividad <span class="bp">Pr&oacute;ximo</span></div>
+</div>
+<div class="af"><span class="btn bto" style="border:2px solid #b83255;color:#b83255">En desarrollo</span></div>
+</div>
+</div>
+</main>
+<footer>
+<strong>Juan Carlos Reyes</strong> &middot; Contador P&uacute;blico &middot; Docente &middot; Consultor Independiente<br>
+&#9993; <a href="mailto:juancreyes.hn@gmail.com">juancreyes.hn@gmail.com</a><br>
+<small style="opacity:.6;margin-top:8px;display:block">Recursos educativos interactivos &middot; NIIF PYMES &middot; Honduras &middot; 2026</small>
+</footer>
+</body>
+</html>
