@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 4 – El SAR y el SIISAR | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--amber:#f59e0b;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--amber)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--amber);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--amber);border-bottom-color:var(--amber)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#fffbeb;border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#92400e}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f0f2f5}
+.step:last-child{border-bottom:none}
+.snum{min-width:34px;height:34px;border-radius:50%;background:var(--amber);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+.sbody h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.sbody p{font-size:13px;color:#374151;line-height:1.5}
+.proc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:580px){.proc-grid{grid-template-columns:1fr}}
+.proc-card{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px}
+.proc-card h4{font-size:14px;font-weight:700;color:#92400e;margin-bottom:8px}
+.proc-card p{font-size:13px;color:#374151;line-height:1.5}
+.proc-card .num{font-size:28px;font-weight:900;color:var(--amber);margin-bottom:4px}
+.sim-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:16px}
+.sim-card h3{font-size:16px;font-weight:900;margin-bottom:16px}
+.checklist{display:flex;flex-direction:column;gap:10px}
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f9fafb;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;transition:all .2s}
+.check-item.done{background:#f0fdf4;border-color:#86efac}
+.check-item .check-box{width:22px;height:22px;border:2px solid #d1d5db;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;min-width:22px;transition:all .2s}
+.check-item.done .check-box{background:#10b981;border-color:#10b981;color:#fff}
+.check-item .check-text{font-size:13.5px;font-weight:600;color:#374151}
+.check-item.done .check-text{color:#166534}
+.progress-bar{background:#e0e4ea;border-radius:20px;height:10px;margin:16px 0 8px;overflow:hidden}
+.progress-fill{height:10px;background:var(--amber);border-radius:20px;transition:width .4s}
+.progress-label{font-size:13px;font-weight:700;color:#374151}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#fffbeb;border-color:#fde68a}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+.btn{padding:11px 24px;background:var(--amber);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 4</div>
+<h1>El <span>SAR</span> y el <span>SIISAR</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">El SAR — Servicio de Administración de Rentas</p>
+<div class="card">
+<h3>🏛️ ¿Qué es el SAR?</h3>
+<p>El <strong>Servicio de Administración de Rentas (SAR)</strong> es la institución del Estado hondureño encargada de recaudar los impuestos nacionales, administrar el Registro Tributario Nacional (RTN) y fiscalizar el cumplimiento de las obligaciones tributarias. Fue creado por el <strong>Decreto 17-2018</strong> como ente desconcentrado de la Secretaría de Finanzas.</p>
+<div class="hl"><strong>Misión del SAR:</strong> Facilitar y asegurar el cumplimiento de las obligaciones tributarias mediante servicios eficientes, fiscalización efectiva y aplicación equitativa de las leyes.</div>
+</div>
+<div class="card">
+<h3>💻 ¿Qué es el SIISAR?</h3>
+<p style="margin-bottom:10px">El <strong>Sistema Integrado de Información del SAR (SIISAR)</strong> es la plataforma digital oficial del SAR para que los contribuyentes realicen sus trámites tributarios en línea desde cualquier lugar.</p>
+<div class="proc-grid">
+<div class="proc-card"><div class="num">📋</div><h4>Inscripción RTN</h4><p>Registro de Contribuyentes (personas naturales y jurídicas) para obtener el RTN (Registro Tributario Nacional).</p></div>
+<div class="proc-card"><div class="num">📄</div><h4>Declaraciones</h4><p>Presentación de ISV mensual, ISR anual, anticipos, retenciones y otros formularios tributarios.</p></div>
+<div class="proc-card"><div class="num">💳</div><h4>Pago en Línea</h4><p>Pago de impuestos mediante transferencia bancaria, débito automático o en cualquier banco del sistema.</p></div>
+<div class="proc-card"><div class="num">🔖</div><h4>CAI y Facturación</h4><p>Solicitud del Código de Autorización de Impresión (CAI) para emisión de facturas y otros documentos fiscales.</p></div>
+</div>
+</div>
+<div class="card">
+<h3>📝 Inscripción como Contribuyente (RTN)</h3>
+<div class="steps">
+<div class="step"><div class="snum">1</div><div class="sbody"><h4>Reunir documentos</h4><p>Persona Natural: DUI/Pasaporte. Persona Jurídica: Escritura de constitución, poder del representante legal, DUI del representante.</p></div></div>
+<div class="step"><div class="snum">2</div><div class="sbody"><h4>Ingresar al SIISAR</h4><p>Acceder a siisar.sar.gob.hn y completar el formulario de inscripción con la información de la empresa o persona.</p></div></div>
+<div class="step"><div class="snum">3</div><div class="sbody"><h4>Cita presencial (si aplica)</h4><p>Para personas jurídicas y algunos casos especiales se requiere visita a una oficina del SAR para validar documentos.</p></div></div>
+<div class="step"><div class="snum">4</div><div class="sbody"><h4>Obtener el RTN</h4><p>El número de RTN tiene 14 dígitos. Es obligatorio para facturas, contratos, cuentas bancarias empresariales y trámites estatales.</p></div></div>
+<div class="step"><div class="snum">5</div><div class="sbody"><h4>Solicitar CAI</h4><p>Con el RTN activo, solicitar la autorización para imprimir facturas (CAI) a través del SIISAR. El CAI tiene vigencia de 1 año.</p></div></div>
+</div>
+</div>
+<div class="card">
+<h3>🔑 Obligaciones del Contribuyente en el SIISAR</h3>
+<div class="hl">• <strong>Actualizar datos:</strong> Cambios de domicilio, actividad económica o representante legal deben actualizarse en el SIISAR.<br>• <strong>Conservar documentos:</strong> Libros contables y comprobantes por mínimo 5 años (o 10 en casos especiales).<br>• <strong>Declarar aunque no haya actividad:</strong> Si no hubo ventas, se presenta declaración en cero ("declaración cero").<br>• <strong>Emitir factura:</strong> Toda venta o prestación de servicio debe documentarse con factura con CAI vigente.</div>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Checklist de Trámites en el SIISAR</p>
+<div class="sim-card">
+<h3>✅ Simula el proceso de inscripción de una empresa nueva</h3>
+<p style="font-size:14px;color:#374151;margin-bottom:16px">Marca cada paso conforme lo completes para llevar el control de tu proceso de inscripción ante el SAR.</p>
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+<div class="progress-label" id="prog-label">0 de 8 pasos completados</div>
+<div class="checklist" style="margin-top:16px" id="checklist">
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Obtener escritura de constitución de la sociedad ante notario</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Registrar la sociedad en el Registro Mercantil</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Crear cuenta en el portal SIISAR (siisar.sar.gob.hn)</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Completar formulario de inscripción como contribuyente</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Presentar documentos en oficina SAR y obtener RTN</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Solicitar CAI para impresión de facturas</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Imprimir facturas en imprenta autorizada por el SAR</div></div>
+<div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Presentar primera declaración ISV (aunque sea en cero)</div></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu conocimiento del SAR y el SIISAR</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 4 — El SAR y el SIISAR · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:var(--amber);text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
+function toggleCheck(el){
+  el.classList.toggle('done');
+  if(el.classList.contains('done'))el.querySelector('.check-box').textContent='✓';
+  else el.querySelector('.check-box').textContent='';
+  const total=document.querySelectorAll('.check-item').length;
+  const done=document.querySelectorAll('.check-item.done').length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=done+' de '+total+' pasos completados';
+}
+const preguntas=[
+  {q:'¿Cuántos dígitos tiene el RTN en Honduras?',ops:['8','10','14','16'],ok:2,exp:'El RTN (Registro Tributario Nacional) tiene 14 dígitos y es el identificador único de cada contribuyente.'},
+  {q:'¿Qué significa CAI?',ops:['Código de Autorización de Impresión','Control de Archivo de Impuestos','Certificado de Actividad Industrial','Código de Acceso Informático'],ok:0,exp:'CAI = Código de Autorización de Impresión. Es el código que el SAR otorga para autorizar la impresión de facturas.'},
+  {q:'¿Cuánto tiempo de vigencia tiene un CAI?',ops:['6 meses','1 año','2 años','Indefinido'],ok:1,exp:'El CAI tiene una vigencia de 1 año a partir de la fecha de autorización. Al vencer, se debe solicitar uno nuevo.'},
+  {q:'¿Por cuántos años deben conservarse los documentos contables según el Código Tributario?',ops:['3 años','5 años','7 años','10 años'],ok:1,exp:'El Artículo 74 del Código Tributario establece que los libros y documentos contables deben conservarse por mínimo 5 años.'},
+  {q:'Si una empresa no tuvo ventas en el mes, ¿debe presentar declaración ISV?',ops:['No, solo cuando hay ventas','Sí, debe presentar declaración en cero','Solo si tiene empleados','Solo si tiene deudas pendientes'],ok:1,exp:'Todo contribuyente inscrito debe presentar su declaración mensual aunque sea en cero ("declaración cero").'},
+  {q:'¿Bajo qué decreto fue creado el SAR?',ops:['Decreto 24-98','Decreto 25-63','Decreto 17-2018','Decreto 113-2011'],ok:2,exp:'El SAR fue creado por el Decreto 17-2018 como ente desconcentrado de la Secretaría de Finanzas de Honduras.'},
+  {q:'¿Dónde se realiza la inscripción en línea de un contribuyente ante el SAR?',ops:['sat.gob.hn','siisar.sar.gob.hn','hacienda.gob.hn','rtn.gob.hn'],ok:1,exp:'El portal oficial del SAR para trámites en línea es siisar.sar.gob.hn (Sistema Integrado de Información del SAR).'},
+  {q:'¿Cuál es la institución que administra el RTN en Honduras?',ops:['SEFIN','BCH','SAR','Registro Mercantil'],ok:2,exp:'El SAR (Servicio de Administración de Rentas) es el ente encargado de administrar el RTN.'},
+  {q:'¿Qué tipo de contribuyente requiere presentar documentos presencialmente para inscribirse?',ops:['Solo personas naturales','Solo personas jurídicas','Ambos siempre','Depende del tipo de contribuyente'],ok:3,exp:'Las personas jurídicas y casos especiales requieren visita presencial al SAR. Las personas naturales pueden hacer el trámite en línea.'},
+  {q:'¿Qué pasa si se emite una factura con un CAI vencido?',ops:['La factura es válida pero con multa','La factura no tiene validez legal tributaria','El SAR acepta el documento pero advierte','No pasa nada si el monto es menor a L.10,000'],ok:1,exp:'Una factura emitida con CAI vencido no tiene validez legal tributaria. No puede usarse como crédito fiscal ni como deducción.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'var(--amber)':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Excelente! Puedes avanzar al siguiente módulo.':'📚 Repasa el material. Necesitas al menos 70%.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
