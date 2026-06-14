@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 8 – Precios de Transferencia | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--teal:#14b8a6;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--teal)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--teal);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.new-tag{display:inline-block;background:#10b981;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;margin-left:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#f0fdfa;border-left:4px solid var(--teal);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#0f766e}
+.metodos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media(max-width:580px){.metodos-grid{grid-template-columns:1fr}}
+.metodo-card{border:1.5px solid #99f6e4;border-radius:10px;padding:16px;background:#f0fdfa}
+.metodo-card h4{font-size:14px;font-weight:700;color:#0f766e;margin-bottom:6px}
+.metodo-card p{font-size:13px;color:#374151;line-height:1.5}
+.metodo-card .sigla{font-size:11px;font-weight:900;background:var(--teal);color:#fff;padding:2px 6px;border-radius:6px;margin-right:6px}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f0f2f5}
+.step:last-child{border-bottom:none}
+.snum{min-width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+.sbody h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.sbody p{font-size:13px;color:#374151;line-height:1.5}
+.sim-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:16px}
+.sim-card h3{font-size:16px;font-weight:900;margin-bottom:16px}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:var(--teal)}
+.btn{padding:11px 24px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:#0d9488}
+.result-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #ccfbf1;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:var(--teal)}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#f0fdfa;border-color:#99f6e4}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 8</div><span class="new-tag">NUEVO</span>
+<h1>Precios de <span>Transferencia</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">Precios de Transferencia — Honduras y Estándares OCDE</p>
+<div class="card">
+<h3>🔗 ¿Qué son los Precios de Transferencia?</h3>
+<p>Son los precios pactados en transacciones entre <strong>partes relacionadas</strong> (empresas del mismo grupo económico). La normativa exige que estos precios sean equivalentes a los que se pactarían entre partes independientes en condiciones similares (<strong>Principio de Plena Competencia</strong> o <em>Arm's Length</em>).</p>
+<div class="hl"><strong>Base legal en Honduras:</strong> Decreto 232-2011 (Ley de Regulación de Precios de Transferencia) y el Acuerdo DEIG-004 que establece los métodos y la Declaración Informativa Anual de Partes Relacionadas (DJIAPT).</div>
+</div>
+<div class="card">
+<h3>👥 ¿Cuándo hay "Partes Relacionadas"?</h3>
+<p>Existe vinculación cuando una empresa o persona natural tiene participación directa o indirecta ≥ 25% en otra empresa, o cuando hay control, administración o dependencia económica entre ellas. Casos típicos:</p>
+<div class="hl">• Empresa Matriz ↔ Filial / Subsidiaria hondureña<br>• Dos empresas con el mismo dueño final (socio final &gt;25%)<br>• Empresa ↔ su Representante exclusivo en otro país<br>• Empresa ↔ sus accionistas cuando controlan la gestión</div>
+</div>
+<div class="card">
+<h3>📐 Métodos OCDE para Determinar el Precio de Plena Competencia</h3>
+<div class="metodos-grid">
+<div class="metodo-card"><h4><span class="sigla">CUP</span>Precio Comparable No Controlado</h4><p>Compara el precio de la transacción con el precio de una transacción similar entre partes independientes. Es el método preferido.</p></div>
+<div class="metodo-card"><h4><span class="sigla">PR</span>Precio de Reventa</h4><p>Parte del precio de reventa del producto y resta el margen bruto que una empresa independiente obtendría. Para distribuidores.</p></div>
+<div class="metodo-card"><h4><span class="sigla">PC</span>Costo Adicionado</h4><p>Parte del costo del proveedor y agrega un margen de utilidad bruta comparable. Para fabricantes y prestadores de servicios.</p></div>
+<div class="metodo-card"><h4><span class="sigla">MMNO</span>Margen Neto de la Operación</h4><p>Analiza el margen neto de la operación relativo a la base apropiada (costos, ventas, activos). Ampliamente usado por su flexibilidad.</p></div>
+<div class="metodo-card"><h4><span class="sigla">PC</span>Partición de Utilidades</h4><p>Distribuye la utilidad combinada de partes relacionadas según las contribuciones relativas de cada parte, como lo harían independientes.</p></div>
+<div class="metodo-card"><h4><span class="sigla">🌐</span>Métodos Alternativos</h4><p>Honduras acepta otros métodos reconocidos por la OCDE cuando los anteriores no sean aplicables, con debida justificación.</p></div>
+</div>
+</div>
+<div class="card">
+<h3>📋 Obligaciones de Documentación y Declaración</h3>
+<div class="steps">
+<div class="step"><div class="snum">1</div><div class="sbody"><h4>Identificar partes relacionadas y transacciones</h4><p>Mapear todas las operaciones con partes vinculadas durante el año fiscal.</p></div></div>
+<div class="step"><div class="snum">2</div><div class="sbody"><h4>Preparar el Estudio de Precios de Transferencia</h4><p>Análisis funcional y económico que demuestre que los precios pactados cumplen el principio de plena competencia.</p></div></div>
+<div class="step"><div class="snum">3</div><div class="sbody"><h4>Presentar la Declaración Informativa DJIAPT</h4><p>La Declaración Jurada Informativa Anual de Partes Relacionadas y Transacciones se presenta ante el SAR junto con la declaración anual del ISR (antes del 30 de abril).</p></div></div>
+<div class="step"><div class="snum">4</div><div class="sbody"><h4>Ajuste de precios si procede</h4><p>Si el SAR determina que los precios no son de plena competencia, puede ajustar la renta gravable y determinar impuesto adicional más multas.</p></div></div>
+</div>
+<div class="hl" style="margin-top:14px"><strong>¿Quiénes están obligados?</strong> Contribuyentes hondureños que realicen transacciones con partes relacionadas domiciliadas en el exterior o que sean residentes en paraísos fiscales. Los grandes contribuyentes con operaciones locales intercompany también pueden estar obligados.</div>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Análisis de Vinculación — Partes Relacionadas</p>
+<div class="sim-card">
+<h3>🔗 ¿Son partes relacionadas?</h3>
+<p style="font-size:14px;color:#374151;margin-bottom:16px">Ingresa el porcentaje de participación accionaria y determina si existe vinculación que obligue a documentación de precios de transferencia.</p>
+<div class="form-row"><label>Porcentaje de participación directa o indirecta (%)</label><input type="number" id="pct-part" placeholder="Ej: 30" min="0" max="100"></div>
+<div class="form-row"><label>Tipo de relación</label>
+<select id="tipo-rel">
+<option value="participacion">Participación accionaria</option>
+<option value="control">Control de administración o dirección</option>
+<option value="proveedor">Proveedor/cliente exclusivo</option>
+<option value="comun">Accionista común a ambas empresas</option>
+</select>
+</div>
+<button class="btn" onclick="analVinc()">Analizar Vinculación</button>
+<div class="result-box" id="vinc-result">
+<div class="result-row"><span>Participación indicada</span><span id="rv-pct">—</span></div>
+<div class="result-row"><span>Tipo de relación</span><span id="rv-tipo">—</span></div>
+<div class="result-row"><span>🔗 ¿Son partes relacionadas?</span><span id="rv-vinc">—</span></div>
+<div class="result-row"><span>📋 ¿Obliga a DJIAPT?</span><span id="rv-djiapt">—</span></div>
+<div class="result-row"><span>💡 Recomendación</span><span id="rv-rec">—</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu comprensión de Precios de Transferencia</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 8 — Precios de Transferencia · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:var(--teal);text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
+function analVinc(){
+  const pct=parseFloat(document.getElementById('pct-part').value)||0;
+  const tipo=document.getElementById('tipo-rel').value;
+  const tipoLabel={'participacion':'Participación accionaria','control':'Control de administración','proveedor':'Proveedor/cliente exclusivo','comun':'Accionista común'}[tipo];
+  let vinc=false,motivo='';
+  if(tipo==='participacion'&&pct>=25){vinc=true;motivo='Participación ≥ 25%';}
+  else if(tipo==='control'||tipo==='comun'){vinc=true;motivo='Control o accionista común';}
+  else if(tipo==='proveedor'){vinc=true;motivo='Dependencia económica';}
+  document.getElementById('rv-pct').textContent=pct+'%';
+  document.getElementById('rv-tipo').textContent=tipoLabel;
+  document.getElementById('rv-vinc').textContent=vinc?'✅ SÍ — Son partes relacionadas':'❌ NO — No hay vinculación (participación < 25%)';
+  document.getElementById('rv-vinc').style.color=vinc?'var(--teal)':'#6b7684';
+  document.getElementById('rv-djiapt').textContent=vinc?'Sí, si hay transacciones con el exterior':'No aplica por ahora';
+  document.getElementById('rv-rec').textContent=vinc?'Preparar estudio de PT y presentar DJIAPT con el ISR anual':'Documentar adecuadamente la relación comercial';
+  document.getElementById('vinc-result').classList.add('show');
+}
+const preguntas=[
+  {q:'¿Cuál es el principio fundamental de los Precios de Transferencia?',ops:['Principio de Territorialidad','Principio de Plena Competencia (Arm's Length)','Principio de Residencia','Principio de Neutralidad'],ok:1,exp:'El Principio de Plena Competencia (Arm's Length) exige que los precios entre partes relacionadas sean equivalentes a los pactados entre partes independientes.'},
+  {q:'¿Qué porcentaje mínimo de participación genera vinculación para efectos de PT en Honduras?',ops:['10%','15%','25%','51%'],ok:2,exp:'En Honduras, existe vinculación cuando hay participación directa o indirecta igual o superior al 25%.'},
+  {q:'¿Bajo qué decreto se regula los Precios de Transferencia en Honduras?',ops:['Decreto 24-98','Decreto 17-2018','Decreto 232-2011','Decreto 113-2011'],ok:2,exp:'La Ley de Regulación de Precios de Transferencia de Honduras fue aprobada por el Decreto 232-2011.'},
+  {q:'¿Cuál es el método de Precios de Transferencia más aceptado y preferido por la OCDE?',ops:['Precio de Reventa','Costo Adicionado','Precio Comparable No Controlado (CUP)','Margen Neto de la Operación'],ok:2,exp:'El método CUP (Precio Comparable No Controlado) es el más directo y preferido por la OCDE cuando existen comparables disponibles.'},
+  {q:'¿Cómo se llama la declaración anual que deben presentar los contribuyentes con operaciones con partes relacionadas?',ops:['DNCT','DJIAPT','DAR-PT','FDTPT'],ok:1,exp:'La Declaración Jurada Informativa Anual de Partes Relacionadas y Transacciones (DJIAPT) es la declaración requerida por el SAR.'},
+  {q:'¿Cuándo debe presentarse la DJIAPT ante el SAR?',ops:['31 de enero','28 de febrero','30 de marzo','Junto con la declaración anual del ISR (30 de abril)'],ok:3,exp:'La DJIAPT se presenta junto con la declaración anual del ISR, antes del 30 de abril del año siguiente al período fiscal.'},
+  {q:'El método "Margen Neto de la Operación" (MMNO) analiza:',ops:['El precio unitario del producto','El margen neto relativo a ventas, costos o activos','Solo los costos de producción','El precio de mercado de acciones'],ok:1,exp:'El MMNO analiza el margen neto de la operación relativo a una base apropiada (ventas, costos totales o activos), siendo muy flexible y ampliamente utilizado.'},
+  {q:'¿Qué puede hacer el SAR si determina que los precios entre partes relacionadas no cumplen el principio de plena competencia?',ops:['Solo emite una advertencia','Ajusta la renta gravable y puede determinar impuesto adicional','Cancela el RTN de la empresa','Solo multa al representante legal'],ok:1,exp:'Si el SAR determina incumplimiento, puede ajustar la renta gravable, determinar ISR adicional y aplicar las multas y recargos correspondientes.'},
+  {q:'¿Cuál de los siguientes es un ejemplo claro de partes relacionadas?',ops:['Un banco y su cliente individual','Una empresa y su proveedor con precios de mercado','Una empresa matriz y su subsidiaria al 80%','Dos empresas que compiten en el mismo mercado'],ok:2,exp:'Una empresa matriz y su subsidiaria al 80% son claramente partes relacionadas, ya que existe control directo por parte de la matriz.'},
+  {q:'El estudio de Precios de Transferencia incluye principalmente:',ops:['Solo el análisis contable de la empresa','Análisis funcional, análisis de comparabilidad y aplicación del método de PT','El registro de ventas del año','La declaración del ISV mensual'],ok:1,exp:'El estudio de PT incluye análisis funcional (qué hace cada parte), análisis de comparabilidad y la determinación y aplicación del método más apropiado.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'var(--teal)':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Felicitaciones! Completaste todos los módulos del curso.':'📚 Repasa el material. Necesitas al menos 70% para aprobar.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
