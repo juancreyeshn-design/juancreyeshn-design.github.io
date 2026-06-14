@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 1 – El ISV | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--blue:#3b82f6;--green:#10b981;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--blue)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px;transition:color .2s}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--blue);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:.5px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900;line-height:1.2}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;gap:0;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+/* CONCEPTO */
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.concept-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.concept-card h3{font-size:16px;font-weight:900;margin-bottom:10px;color:var(--dark)}
+.concept-card p{font-size:14px;line-height:1.7;color:#374151}
+.highlight-box{background:#eff6ff;border-left:4px solid var(--blue);padding:14px 18px;border-radius:0 10px 10px 0;margin:12px 0;font-size:13.5px;line-height:1.6}
+.highlight-box strong{color:#1d4ed8}
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.rate-card{border-radius:10px;padding:16px;text-align:center}
+.rate-card.r15{background:#dbeafe;border:2px solid #93c5fd}
+.rate-card.r18{background:#fef3c7;border:2px solid #fcd34d}
+.rate-card .rate-num{font-size:32px;font-weight:900;line-height:1}
+.rate-card .rate-label{font-size:12px;font-weight:700;margin-top:6px;color:#374151}
+.rate-card .rate-items{font-size:12px;color:#6b7684;margin-top:8px;line-height:1.6}
+.flow-steps{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #f0f2f5}
+.flow-step:last-child{border-bottom:none}
+.step-num{min-width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+.step-body h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.step-body p{font-size:13px;color:#374151;line-height:1.5}
+.formula-box{background:#1B2638;color:#fff;border-radius:10px;padding:16px 20px;font-size:14px;font-family:monospace;line-height:1.8;margin:14px 0}
+.formula-box .comment{color:#9aa3ad;font-size:12px}
+/* SIMULACIÓN */
+.sim-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:16px}
+.sim-card h3{font-size:16px;font-weight:900;margin-bottom:16px;color:var(--dark)}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:5px}
+.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--dark);transition:border-color .2s}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:var(--blue)}
+.btn{display:inline-block;padding:11px 24px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn:hover{background:#2563eb}
+.btn.green{background:var(--green)}.btn.green:hover{background:#059669}
+.result-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #bbf7d0;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:var(--green)}
+.result-label{color:#374151}
+.result-val{font-weight:700;color:var(--dark)}
+/* MINIJUEGO */
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-question{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;transition:all .2s;font-weight:600}
+.option:hover:not(.disabled){background:#eff6ff;border-color:#93c5fd}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900;color:var(--blue)}
+.score-label{font-size:15px;color:#374151;margin-top:6px}
+.score-msg{margin-top:12px;font-size:14px;color:#6b7684}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 1</div>
+<h1>El <span>ISV</span> — Impuesto Sobre Ventas</h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<!-- PANEL CONCEPTO -->
+<div class="panel active" id="concepto">
+<p class="section-title">¿Qué es el ISV?</p>
+<div class="concept-card">
+<h3>🧾 Definición y Base Legal</h3>
+<p>El <strong>Impuesto Sobre Ventas (ISV)</strong> es un impuesto indirecto que grava la transferencia de bienes muebles, la prestación de servicios y la importación de bienes. En Honduras está regulado por el <strong>Decreto 24-98</strong> (Ley del ISV) y sus reformas, incluyendo el Decreto 59-2022.</p>
+<div class="highlight-box"><strong>Artículo 1 Ley ISV:</strong> El ISV se aplica a nivel nacional sobre las ventas de bienes muebles y prestación de servicios, con dos tasas: 15% (tasa general) y 18% (tasa especial).</div>
+</div>
+<div class="concept-card">
+<h3>📊 Las dos tasas del ISV</h3>
+<div class="rate-grid">
+<div class="rate-card r15">
+<div class="rate-num" style="color:#1d4ed8">15%</div>
+<div class="rate-label">Tasa General</div>
+<div class="rate-items">Mayoría de bienes y servicios<br>Ropa, electrónicos, ferretería<br>Servicios profesionales<br>Restaurantes, hoteles</div>
+</div>
+<div class="rate-card r18">
+<div class="rate-num" style="color:#92400e">18%</div>
+<div class="rate-label">Tasa Especial</div>
+<div class="rate-items">Bebidas alcohólicas<br>Cigarrillos y tabaco<br>Agua carbonatada azucarada<br>Telefonía (servicio)</div>
+</div>
+</div>
+</div>
+<div class="concept-card">
+<h3>🔗 Mecanismo del ISV: Débito y Crédito Fiscal</h3>
+<div class="formula-box">ISV a pagar = Débito Fiscal − Crédito Fiscal<span class="comment" style="display:block;margin-top:8px">Débito Fiscal: ISV cobrado en tus ventas (lo que debes al SAR)
+Crédito Fiscal: ISV pagado en tus compras (lo que el SAR te reconoce)
+Si Débito &gt; Crédito → pagas la diferencia al SAR
+Si Crédito &gt; Débito → tienes saldo a favor (crédito acumulado)</span></div>
+<div class="highlight-box"><strong>Ejemplo:</strong> Vendiste L. 50,000 y cobré L. 7,500 de ISV (15%). Compraste insumos por L. 20,000 y pagué L. 3,000 de ISV. Tu ISV a pagar = L. 7,500 − L. 3,000 = <strong>L. 4,500</strong>.</div>
+</div>
+<div class="concept-card">
+<h3>📅 Declaración Mensual al SAR</h3>
+<div class="flow-steps">
+<div class="flow-step"><div class="step-num">1</div><div class="step-body"><h4>Registrar todas las ventas del mes</h4><p>Facturas emitidas con CAI vigente. Cada factura debe desglosar precio neto + ISV.</p></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-body"><h4>Registrar todas las compras del mes</h4><p>Solo se puede tomar crédito fiscal de proveedores inscritos en el SAR con facturas válidas.</p></div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-body"><h4>Calcular débito − crédito</h4><p>Si el resultado es positivo, esa es la cantidad a pagar al SAR.</p></div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-body"><h4>Presentar y pagar en el SIISAR</h4><p>La declaración ISV (Formulario SAR-350) debe presentarse a más tardar el <strong>día 10 del mes siguiente</strong>. Las empresas grandes tienen hasta el día 20.</p></div></div>
+</div>
+</div>
+<div class="concept-card">
+<h3>🚫 Exenciones del ISV</h3>
+<p>No están sujetos al ISV (Artículo 15 Ley ISV):</p>
+<div class="highlight-box">• <strong>Productos básicos:</strong> Maíz, frijoles, arroz, trigo y tortillas<br>• <strong>Medicamentos:</strong> Todos los medicamentos registrados en Salud<br>• <strong>Educación:</strong> Colegiaturas, libros, útiles escolares<br>• <strong>Exportaciones:</strong> Tasa cero (0%), con derecho a crédito fiscal<br>• <strong>Servicios financieros:</strong> Intereses de préstamos, seguros de vida</div>
+</div>
+</div>
+
+<!-- PANEL SIMULACIÓN -->
+<div class="panel" id="simulacion">
+<p class="section-title">Simulador de Declaración ISV</p>
+<div class="sim-card">
+<h3>⚡ Calcula tu ISV mensual</h3>
+<div class="form-row">
+<label>Total de Ventas Gravadas del Mes (Lempiras)</label>
+<input type="number" id="ventas" placeholder="Ej: 150000" min="0">
+</div>
+<div class="form-row">
+<label>Tasa aplicable a tus ventas</label>
+<select id="tasa">
+<option value="0.15">15% — Tasa General</option>
+<option value="0.18">18% — Tasa Especial (licores, tabaco, etc.)</option>
+</select>
+</div>
+<div class="form-row">
+<label>Total de Compras Gravadas del Mes (Lempiras)</label>
+<input type="number" id="compras" placeholder="Ej: 80000" min="0">
+</div>
+<div class="form-row">
+<label>Tasa del ISV pagado en compras</label>
+<select id="tasa_compras">
+<option value="0.15">15%</option>
+<option value="0.18">18%</option>
+</select>
+</div>
+<button class="btn" onclick="calcularISV()">Calcular ISV a Pagar</button>
+<div class="result-box" id="isv-result">
+<div class="result-row"><span class="result-label">Ventas netas</span><span class="result-val" id="r-ventas">—</span></div>
+<div class="result-row"><span class="result-label">🔴 Débito Fiscal (ISV cobrado)</span><span class="result-val" id="r-debito">—</span></div>
+<div class="result-row"><span class="result-label">Compras netas</span><span class="result-val" id="r-compras">—</span></div>
+<div class="result-row"><span class="result-label">🟢 Crédito Fiscal (ISV pagado)</span><span class="result-val" id="r-credito">—</span></div>
+<div class="result-row"><span class="result-label">💰 ISV a Pagar / Saldo a Favor</span><span class="result-val" id="r-pagar">—</span></div>
+</div>
+</div>
+<div class="sim-card">
+<h3>📋 Caso Práctico — Ferretería Don Marcos</h3>
+<p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:14px">La Ferretería Don Marcos (persona jurídica, régimen general) tuvo en marzo:<br>• Ventas de materiales de construcción: <strong>L. 180,000</strong><br>• Compras de inventario a proveedores con factura: <strong>L. 95,000</strong><br>• Compras de papelería (para uso interno): <strong>L. 3,000</strong></p>
+<button class="btn green" onclick="mostrarCasoPractico()">Ver Resolución Paso a Paso</button>
+<div class="result-box" id="caso-result">
+<div class="result-row"><span class="result-label">Ventas gravadas</span><span class="result-val">L. 180,000</span></div>
+<div class="result-row"><span class="result-label">🔴 Débito Fiscal (180,000 × 15%)</span><span class="result-val">L. 27,000</span></div>
+<div class="result-row"><span class="result-label">Compras gravadas (inventario + papelería)</span><span class="result-val">L. 98,000</span></div>
+<div class="result-row"><span class="result-label">🟢 Crédito Fiscal (98,000 × 15%)</span><span class="result-val">L. 14,700</span></div>
+<div class="result-row"><span class="result-label">💰 ISV a Pagar al SAR</span><span class="result-val" style="color:var(--blue)">L. 12,300</span></div>
+<p style="font-size:12px;color:#6b7684;margin-top:10px">📌 Don Marcos debe declarar y pagar L. 12,300 antes del día 10 de abril en el SIISAR usando el Formulario SAR-350.</p>
+</div>
+</div>
+</div>
+
+<!-- PANEL MINI-JUEGO -->
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu comprensión del ISV</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div class="score-label" id="score-label">—</div>
+<div class="score-msg" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 1 — ISV · Impuestos Interactivos · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:#3b82f6;text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function fmt(n) { return 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function calcularISV() {
+  const ventas = parseFloat(document.getElementById('ventas').value) || 0;
+  const tasa = parseFloat(document.getElementById('tasa').value);
+  const compras = parseFloat(document.getElementById('compras').value) || 0;
+  const tasaC = parseFloat(document.getElementById('tasa_compras').value);
+  const debito = ventas * tasa;
+  const credito = compras * tasaC;
+  const pagar = debito - credito;
+  document.getElementById('r-ventas').textContent = fmt(ventas);
+  document.getElementById('r-debito').textContent = fmt(debito);
+  document.getElementById('r-compras').textContent = fmt(compras);
+  document.getElementById('r-credito').textContent = fmt(credito);
+  const rPagar = document.getElementById('r-pagar');
+  if (pagar >= 0) {
+    rPagar.textContent = fmt(pagar) + ' (a pagar)';
+    rPagar.style.color = '#dc2626';
+  } else {
+    rPagar.textContent = fmt(Math.abs(pagar)) + ' (saldo a favor)';
+    rPagar.style.color = '#059669';
+  }
+  const box = document.getElementById('isv-result');
+  box.classList.add('show');
+}
+
+function mostrarCasoPractico() {
+  document.getElementById('caso-result').classList.add('show');
+}
+
+const preguntas = [
+  {q:'¿Cuál es la tasa general del ISV en Honduras?', ops:['10%','12%','15%','18%'], ok:2, exp:'La tasa general del ISV es 15% según el Artículo 22 de la Ley del ISV (Decreto 24-98).'},
+  {q:'¿Cuál es la tasa especial del ISV que aplica a bebidas alcohólicas?', ops:['12%','15%','18%','20%'], ok:2, exp:'La tasa especial del 18% aplica a bebidas alcohólicas, cigarrillos, agua carbonatada y telefonía.'},
+  {q:'El ISV que una empresa cobra a sus clientes se llama:', ops:['Crédito Fiscal','Débito Fiscal','Anticipo ISV','Retención ISV'], ok:1, exp:'El Débito Fiscal es el ISV que el contribuyente cobra en sus ventas y debe trasladar al SAR.'},
+  {q:'El ISV que una empresa paga a sus proveedores se llama:', ops:['Débito Fiscal','Retención','Crédito Fiscal','ISR'], ok:2, exp:'El Crédito Fiscal es el ISV que el contribuyente paga en sus compras y puede descontar del débito.'},
+  {q:'¿Cuándo vence la declaración mensual del ISV para empresas medianas?', ops:['Día 5 del mes siguiente','Día 10 del mes siguiente','Día 20 del mes siguiente','Día 30 del mes siguiente'], ok:1, exp:'La declaración ISV vence el día 10 del mes siguiente para la mayoría de contribuyentes.'},
+  {q:'¿Cuál de estos productos ESTÁ EXENTO del ISV?', ops:['Cerveza','Televisor','Maíz y frijoles','Teléfono celular'], ok:2, exp:'Los granos básicos (maíz, frijoles, arroz) están exentos del ISV según el Artículo 15 de la Ley.'},
+  {q:'Si el Crédito Fiscal supera al Débito Fiscal, el contribuyente:', ops:['Debe pagar la diferencia al SAR','Tiene un saldo a favor acumulable','Debe pagar con recargo','Pierde el excedente'], ok:1, exp:'Cuando el crédito supera al débito, se genera un saldo a favor que puede aplicarse en meses posteriores.'},
+  {q:'¿En qué formulario se presenta la declaración mensual del ISV al SAR?', ops:['SAR-100','SAR-350','SAR-500','SAR-220'], ok:1, exp:'El Formulario SAR-350 es el utilizado para la declaración mensual del ISV ante el SAR.'},
+  {q:'Una empresa exportadora tiene tasa del ISV de:', ops:['15%','18%','0% (con derecho a crédito fiscal)','5%'], ok:2, exp:'Las exportaciones tienen tasa cero (0%) y el exportador conserva el derecho a crédito fiscal por sus compras.'},
+  {q:'¿Qué sucede si se presenta la declaración ISV después del día 10?', ops:['Nada, hay un período de gracia de 30 días','Se aplica multa por declaración tardía según el Código Tributario','El SAR la rechaza','Se cancela el RTN'], ok:1, exp:'El Código Tributario establece multas por declaración tardía: 1% mensual de la deuda más recargos.'}
+];
+
+let respuestas = [];
+let actual = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  preguntas.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = 'q' + i;
+    card.innerHTML = '<div class="quiz-num">Pregunta ' + (i+1) + ' de ' + preguntas.length + '</div>' +
+      '<div class="quiz-question">' + p.q + '</div>' +
+      '<div class="options">' + p.ops.map((o,j) =>
+        '<div class="option" onclick="responder(' + i + ',' + j + ',this)">' + o + '</div>'
+      ).join('') + '</div>' +
+      '<div class="feedback" id="fb' + i + '"></div>';
+    container.appendChild(card);
+  });
+}
+
+function responder(qi, selIdx, el) {
+  const p = preguntas[qi];
+  const opts = el.parentElement.querySelectorAll('.option');
+  if (opts[0].classList.contains('disabled')) return;
+  opts.forEach((o,j) => {
+    o.classList.add('disabled');
+    if (j === p.ok) o.classList.add('correct');
+  });
+  const fb = document.getElementById('fb' + qi);
+  if (selIdx === p.ok) {
+    el.classList.add('correct');
+    respuestas[qi] = true;
+    fb.className = 'feedback show ok';
+    fb.textContent = '✅ ' + p.exp;
+  } else {
+    el.classList.add('wrong');
+    respuestas[qi] = false;
+    fb.className = 'feedback show fail';
+    fb.textContent = '❌ ' + p.exp;
+  }
+  actual++;
+  if (actual === preguntas.length) setTimeout(mostrarPuntaje, 600);
+}
+
+function mostrarPuntaje() {
+  const correctas = respuestas.filter(Boolean).length;
+  const pct = Math.round(correctas / preguntas.length * 100);
+  document.getElementById('score-num').textContent = pct + '%';
+  document.getElementById('score-label').textContent = correctas + ' de ' + preguntas.length + ' correctas';
+  let msg = pct >= 70 ? '🎉 ¡Excelente! Puedes avanzar al siguiente módulo.' : '📚 Repasa el material y vuelve a intentarlo. Necesitas al menos 70%.';
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-box').classList.add('show');
+  document.getElementById('score-num').style.color = pct >= 70 ? 'var(--green)' : '#ef4444';
+}
+
+function reiniciarQuiz() {
+  respuestas = []; actual = 0;
+  document.getElementById('score-box').classList.remove('show');
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
