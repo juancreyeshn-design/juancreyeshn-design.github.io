@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 5 – Retenciones en la Fuente | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--red:#ef4444;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--red)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--red);border-bottom-color:var(--red)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#fef2f2;border-left:4px solid var(--red);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#991b1b}
+.ret-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+.ret-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+.ret-table td{padding:10px 14px;border-bottom:1px solid #f0f2f5}
+.ret-table tr:nth-child(even) td{background:#f9fafb}
+.ret-table .rate{font-weight:900;color:var(--red)}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:var(--red)}
+.btn{padding:11px 24px;background:var(--red);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:#dc2626}
+.result-box{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #fecaca;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:var(--red)}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#fef2f2;border-color:#fca5a5}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 5</div>
+<h1>Retenciones <span>en la Fuente</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">Sistema de Retenciones Tributarias en Honduras</p>
+<div class="card">
+<h3>✂️ ¿Qué es una Retención en la Fuente?</h3>
+<p>Es el mecanismo por el cual un <strong>Agente de Retención</strong> (quien paga) descuenta un porcentaje del pago que realiza a un proveedor o empleado, lo entrega al SAR en nombre del beneficiario (el retenido), y emite una constancia de retención.</p>
+<div class="hl"><strong>Principio:</strong> "Quien paga retiene, quien recibe recibe menos, pero el SAR recibe antes." El retenido usa la constancia de retención como crédito contra su impuesto anual.</div>
+</div>
+<div class="card">
+<h3>📊 Tasas de Retención del ISR</h3>
+<table class="ret-table">
+<thead><tr><th>Tipo de Pago</th><th>Tasa de Retención</th><th>Observaciones</th></tr></thead>
+<tbody>
+<tr><td>Servicios profesionales (honorarios)</td><td class="rate">12.5%</td><td>Médicos, abogados, ingenieros, contadores</td></tr>
+<tr><td>Sueldos y salarios (relación de dependencia)</td><td class="rate">Escala progresiva</td><td>Según tabla ISR personas naturales</td></tr>
+<tr><td>Dividendos a residentes</td><td class="rate">10%</td><td>Decreto 113-2011</td></tr>
+<tr><td>Dividendos a no residentes</td><td class="rate">10%</td><td>Salvo convenio de doble tributación</td></tr>
+<tr><td>Arrendamiento de bienes inmuebles</td><td class="rate">12.5%</td><td>Pagado a personas naturales</td></tr>
+<tr><td>Compras a personas naturales no inscritas</td><td class="rate">1%</td><td>Sobre el valor bruto de la factura</td></tr>
+<tr><td>Servicios de transporte terrestre</td><td class="rate">1%</td><td>Transporte de carga y pasajeros</td></tr>
+<tr><td>Pagos al exterior (remesas)</td><td class="rate">25%</td><td>Sobre rentas de fuente hondureña</td></tr>
+<tr><td>Intereses pagados a residentes</td><td class="rate">10%</td><td>Sobre intereses brutos</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card">
+<h3>🔖 Retenciones del ISV</h3>
+<table class="ret-table">
+<thead><tr><th>Tipo de Agente Retenedor del ISV</th><th>% a Retener</th></tr></thead>
+<tbody>
+<tr><td>Instituciones del Estado (Gobierno Central y descentralizadas)</td><td class="rate">100% del ISV</td></tr>
+<tr><td>Grandes contribuyentes designados por el SAR</td><td class="rate">100% del ISV</td></tr>
+<tr><td>Exportadores (sobre compras locales)</td><td class="rate">100% del ISV</td></tr>
+</tbody>
+</table>
+<div class="hl" style="margin-top:10px"><strong>Nota:</strong> Cuando el Gobierno compra servicios o bienes, retiene el 100% del ISV y lo entera directamente al SAR, en lugar de que el proveedor lo declare.</div>
+</div>
+<div class="card">
+<h3>📋 Obligaciones del Agente Retenedor</h3>
+<p>1. <strong>Retener</strong> el porcentaje correcto al momento del pago.<br>2. <strong>Emitir constancia</strong> de retención al beneficiario con nombre, RTN, monto, tasa y fecha.<br>3. <strong>Declarar y enterar</strong> las retenciones al SAR a más tardar el <strong>día 10 del mes siguiente</strong> (Formulario SAR-230).<br>4. <strong>No es opcional:</strong> Si no retiene cuando debe hacerlo, el agente es responsable solidario del impuesto no retenido más multas.</p>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Simulador de Retenciones</p>
+<div class="card">
+<h3>✂️ Calcular Retención</h3>
+<div class="form-row"><label>Tipo de Pago / Retención</label>
+<select id="tipo-ret">
+<option value="0.125">Honorarios profesionales (12.5%)</option>
+<option value="0.10">Dividendos a residentes (10%)</option>
+<option value="0.125">Arrendamiento de inmueble (12.5%)</option>
+<option value="0.01">Compras a natural no inscrito (1%)</option>
+<option value="0.01">Transporte terrestre (1%)</option>
+<option value="0.25">Pagos al exterior/remesas (25%)</option>
+<option value="0.10">Intereses a residentes (10%)</option>
+</select>
+</div>
+<div class="form-row"><label>Monto Bruto del Pago (Lempiras)</label><input type="number" id="monto-ret" placeholder="Ej: 50000" min="0"></div>
+<button class="btn" onclick="calcRet()">Calcular Retención</button>
+<div class="result-box" id="ret-result">
+<div class="result-row"><span>Monto bruto del pago</span><span id="rr-bruto">—</span></div>
+<div class="result-row"><span>✂️ Retención aplicada</span><span id="rr-ret">—</span></div>
+<div class="result-row"><span>💰 Neto a pagar al beneficiario</span><span id="rr-neto">—</span></div>
+<div class="result-row"><span>📋 Monto a enterar al SAR</span><span id="rr-sar">—</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu comprensión de las Retenciones</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 5 — Retenciones en la Fuente · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:var(--red);text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
+function fmt(n){return 'L. '+n.toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function calcRet(){
+  const tasa=parseFloat(document.getElementById('tipo-ret').value);
+  const monto=parseFloat(document.getElementById('monto-ret').value)||0;
+  const ret=monto*tasa;
+  const neto=monto-ret;
+  document.getElementById('rr-bruto').textContent=fmt(monto);
+  document.getElementById('rr-ret').textContent=fmt(ret)+' ('+Math.round(tasa*100)+'%)';
+  document.getElementById('rr-neto').textContent=fmt(neto);
+  document.getElementById('rr-sar').textContent=fmt(ret);
+  document.getElementById('ret-result').classList.add('show');
+}
+const preguntas=[
+  {q:'¿Qué porcentaje se retiene sobre honorarios profesionales (médicos, abogados, contadores)?',ops:['1%','10%','12.5%','25%'],ok:2,exp:'Los honorarios profesionales tienen una retención del 12.5% del ISR sobre el monto bruto pagado.'},
+  {q:'¿Cuándo debe enterarse al SAR la retención practicada en el mes?',ops:['Día 5 del mes siguiente','Día 10 del mes siguiente','Día 20 del mes siguiente','Día 30 del mes siguiente'],ok:1,exp:'Las retenciones deben declararse y pagarse al SAR a más tardar el día 10 del mes siguiente.'},
+  {q:'¿Qué tasa de retención aplica sobre pagos al exterior (remesas)?',ops:['10%','12.5%','15%','25%'],ok:3,exp:'Los pagos al exterior por rentas de fuente hondureña tienen una retención del 25%.'},
+  {q:'¿Qué documento debe emitir el agente retenedor al beneficiario?',ops:['Factura de retención','Constancia de retención','Recibo de caja','Comprobante SAR'],ok:1,exp:'El agente retenedor debe emitir una constancia de retención indicando nombre, RTN, monto, tasa y fecha.'},
+  {q:'¿En qué formulario se declaran las retenciones al SAR?',ops:['SAR-110','SAR-230','SAR-350','SAR-520'],ok:1,exp:'El formulario SAR-230 es el utilizado para declarar y pagar las retenciones del ISR.'},
+  {q:'Si una empresa NO retiene cuando debe hacerlo, ¿qué consecuencia tiene?',ops:['Solo se le notifica','Se suspende su RTN','Es responsable solidaria del impuesto más multas','No pasa nada si el monto es menor a L.5,000'],ok:2,exp:'El agente que no retiene se convierte en responsable solidario del impuesto no retenido más las multas y recargos correspondientes.'},
+  {q:'¿Qué porcentaje retiene el Gobierno del ISV sobre las compras que realiza?',ops:['15%','50%','100%','12.5%'],ok:2,exp:'El Gobierno Central y las instituciones descentralizadas retienen el 100% del ISV a sus proveedores.'},
+  {q:'¿Qué tasa de retención aplica sobre dividendos pagados a residentes?',ops:['5%','10%','15%','25%'],ok:1,exp:'La retención sobre dividendos pagados a residentes es del 10% según el Decreto 113-2011.'},
+  {q:'Los servicios de transporte terrestre están sujetos a una retención de:',ops:['0.5%','1%','5%','12.5%'],ok:1,exp:'El transporte terrestre de carga y pasajeros está sujeto a una retención del ISR del 1%.'},
+  {q:'La constancia de retención que recibe un beneficiario sirve para:',ops:['Exonerarse del pago de impuestos','Acreditarla contra su impuesto anual a declarar','Solicitar devolución al SAR automáticamente','No tiene ningún uso posterior'],ok:1,exp:'La constancia de retención es un comprobante que el beneficiario usa como crédito contra su declaración anual del ISR.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'#10b981':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Excelente! Puedes avanzar al siguiente módulo.':'📚 Repasa el material. Necesitas al menos 70%.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
