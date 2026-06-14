@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 3 – ISR Personas Jurídicas | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--purple:#8b5cf6;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--purple)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--purple);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#f5f3ff;border-left:4px solid var(--purple);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#5b21b6}
+.big-rate{text-align:center;padding:24px;background:#f5f3ff;border-radius:12px;margin:14px 0}
+.big-rate .num{font-size:64px;font-weight:900;color:var(--purple);line-height:1}
+.big-rate .label{font-size:14px;color:#374151;margin-top:6px}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f0f2f5}
+.step:last-child{border-bottom:none}
+.snum{min-width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center}
+.sbody h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.sbody p{font-size:13px;color:#374151;line-height:1.5}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.form-row input{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px}
+.form-row input:focus{outline:none;border-color:var(--purple)}
+.btn{padding:11px 24px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:#7c3aed}
+.result-box{background:#f5f3ff;border:1.5px solid #c4b5fd;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #ddd6fe;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:var(--purple)}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#f5f3ff;border-color:#c4b5fd}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 3</div>
+<h1>ISR — <span>Personas Jurídicas</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">ISR para Personas Jurídicas (Empresas)</p>
+<div class="card">
+<h3>🏢 ¿Quién es persona jurídica para efectos del ISR?</h3>
+<p>Toda sociedad mercantil (S.A., S. de R.L., S.C.A.), asociaciones, fundaciones y cualquier ente con personalidad jurídica propia que opere en Honduras y genere rentas gravadas. La base legal es la <strong>Ley del ISR (Decreto 25-63)</strong> y el <strong>Decreto 113-2011</strong>.</p>
+<div class="hl"><strong>Incluye:</strong> Empresas nacionales, sucursales de empresas extranjeras, maquiladoras (con excepciones), cooperativas y entes sin fines de lucro que realicen actividades económicas gravadas.</div>
+</div>
+<div class="card">
+<h3>📊 Tasa del ISR para Personas Jurídicas</h3>
+<div class="big-rate">
+<div class="num">25%</div>
+<div class="label">Sobre la Renta Neta Gravable<br><span style="font-size:12px;color:#6b7684">Tasa fija — No es progresiva como en personas naturales</span></div>
+</div>
+<div class="hl"><strong>Tasa alternativa mínima:</strong> El ISR a pagar no puede ser menor al <strong>1% de los ingresos brutos</strong> del período fiscal (impuesto mínimo). Si el 25% de la renta neta resulta menor al 1% de ingresos brutos, se paga el mínimo.</div>
+</div>
+<div class="card">
+<h3>📐 ¿Cómo se calcula la Renta Neta Gravable?</h3>
+<div class="steps">
+<div class="step"><div class="snum">1</div><div class="sbody"><h4>Renta Bruta</h4><p>Total de ingresos del período fiscal (ventas, servicios, rentas, intereses, dividendos si aplica, etc.).</p></div></div>
+<div class="step"><div class="snum">2</div><div class="sbody"><h4>(-) Costos y Gastos Deducibles</h4><p>Costo de ventas, planilla, alquileres, servicios, depreciaciones, intereses de préstamos productivos, publicidad, etc. Deben ser necesarios para producir la renta y estar documentados con factura.</p></div></div>
+<div class="step"><div class="snum">3</div><div class="sbody"><h4>= Renta Neta Gravable</h4><p>Sobre esta se aplica el 25%. Si es negativa (pérdida fiscal), puede arrastrarse hasta 3 años.</p></div></div>
+<div class="step"><div class="snum">4</div><div class="sbody"><h4>Comparar con el 1% de Ingresos Brutos</h4><p>Se paga el mayor entre: 25% de Renta Neta vs. 1% de Ingresos Brutos.</p></div></div>
+</div>
+</div>
+<div class="card">
+<h3>📅 Anticipos Mensuales (1% sobre Ingresos Brutos)</h3>
+<p style="margin-bottom:10px">Las personas jurídicas deben pagar anticipos mensuales del ISR durante el año, calculados como el <strong>1% de los ingresos brutos mensuales</strong>. Estos anticipos se acreditan contra el ISR anual definitivo.</p>
+<div class="hl"><strong>Vencimiento:</strong> Los anticipos se pagan a más tardar el <strong>día 20 del mes siguiente</strong> mediante el formulario SAR-520 en el SIISAR.</div>
+</div>
+<div class="card">
+<h3>📋 Declaración Anual del ISR Jurídico</h3>
+<p>La declaración anual (Formulario SAR-520) se presenta a más tardar el <strong>30 de abril</strong> del año siguiente al período fiscal. Si los anticipos pagados superan el ISR determinado, se genera un saldo a favor.</p>
+<div class="hl"><strong>Gastos NO deducibles:</strong> Multas, donaciones sin respaldo, gastos personales de socios, exceso en gastos de representación, pagos a partes relacionadas en condiciones no arm's length.</div>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Simulador ISR — Persona Jurídica</p>
+<div class="card">
+<h3>⚡ Calcular ISR Anual de Empresa</h3>
+<div class="form-row"><label>Ingresos Brutos del Período (Lempiras)</label><input type="number" id="ig" placeholder="Ej: 5000000" min="0"></div>
+<div class="form-row"><label>Costos y Gastos Deducibles (Lempiras)</label><input type="number" id="gastos" placeholder="Ej: 3800000" min="0"></div>
+<div class="form-row"><label>Anticipos Mensuales ya Pagados (Lempiras)</label><input type="number" id="anticipos" placeholder="Ej: 45000" min="0"></div>
+<button class="btn" onclick="calcISRJ()">Calcular ISR Empresarial</button>
+<div class="result-box" id="isr-j-result">
+<div class="result-row"><span>Ingresos Brutos</span><span id="rj-ig">—</span></div>
+<div class="result-row"><span>(-) Costos y Gastos</span><span id="rj-gastos">—</span></div>
+<div class="result-row"><span>= Renta Neta Gravable</span><span id="rj-rng">—</span></div>
+<div class="result-row"><span>ISR calculado (25% RNG)</span><span id="rj-25">—</span></div>
+<div class="result-row"><span>Impuesto Mínimo (1% Ingr. Brutos)</span><span id="rj-min">—</span></div>
+<div class="result-row"><span>💰 ISR Determinado (el mayor)</span><span id="rj-det">—</span></div>
+<div class="result-row"><span>(-) Anticipos Pagados</span><span id="rj-ant">—</span></div>
+<div class="result-row"><span>💳 ISR a Pagar / Saldo a Favor</span><span id="rj-pagar">—</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu comprensión del ISR para Empresas</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 3 — ISR Personas Jurídicas · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:var(--purple);text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
+function fmt(n){return 'L. '+n.toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function calcISRJ(){
+  const ig=parseFloat(document.getElementById('ig').value)||0;
+  const gastos=parseFloat(document.getElementById('gastos').value)||0;
+  const anticipos=parseFloat(document.getElementById('anticipos').value)||0;
+  const rng=Math.max(0,ig-gastos);
+  const isr25=rng*0.25;
+  const isrMin=ig*0.01;
+  const det=Math.max(isr25,isrMin);
+  const pagar=det-anticipos;
+  document.getElementById('rj-ig').textContent=fmt(ig);
+  document.getElementById('rj-gastos').textContent=fmt(gastos);
+  document.getElementById('rj-rng').textContent=fmt(rng);
+  document.getElementById('rj-25').textContent=fmt(isr25);
+  document.getElementById('rj-min').textContent=fmt(isrMin);
+  document.getElementById('rj-det').textContent=fmt(det)+' ('+(det===isr25?'25% RNG':'1% Ingr. Brutos')+')';
+  document.getElementById('rj-ant').textContent=fmt(anticipos);
+  const rp=document.getElementById('rj-pagar');
+  rp.textContent=pagar>=0?fmt(pagar)+' (a pagar)':fmt(Math.abs(pagar))+' (saldo a favor)';
+  rp.style.color=pagar>=0?'#dc2626':'#059669';
+  document.getElementById('isr-j-result').classList.add('show');
+}
+const preguntas=[
+  {q:'¿Cuál es la tasa del ISR para personas jurídicas en Honduras?',ops:['15%','20%','25%','30%'],ok:2,exp:'La tasa fija del ISR para personas jurídicas es 25% sobre la renta neta gravable.'},
+  {q:'¿Cuál es el impuesto mínimo alternativo para personas jurídicas?',ops:['0.5% ingresos brutos','1% ingresos brutos','2% ingresos brutos','5% utilidad'],ok:1,exp:'El impuesto mínimo alternativo es 1% de los ingresos brutos. Se paga el mayor entre 25% RNG y 1% IB.'},
+  {q:'Los anticipos mensuales del ISR para empresas vencen el:',ops:['Día 5 del mes siguiente','Día 10 del mes siguiente','Día 20 del mes siguiente','Día 30 del mes siguiente'],ok:2,exp:'Los anticipos mensuales del ISR empresarial vencen el día 20 del mes siguiente.'},
+  {q:'¿Cuántos años puede arrastrarse una pérdida fiscal de una empresa?',ops:['1 año','2 años','3 años','No se puede arrastrar'],ok:2,exp:'Las pérdidas fiscales pueden arrastrarse hasta 3 años para compensarse con utilidades futuras.'},
+  {q:'¿Cuál de estos gastos NO es deducible para el ISR empresarial?',ops:['Planilla de empleados','Alquiler de oficina','Multas y sanciones','Depreciación de activos'],ok:2,exp:'Las multas y sanciones pagadas al SAR u otras entidades no son gastos deducibles para el ISR.'},
+  {q:'La declaración anual del ISR de empresas vence el:',ops:['28 de febrero','31 de marzo','30 de abril','30 de junio'],ok:2,exp:'La declaración anual del ISR de personas jurídicas vence el 30 de abril del año siguiente.'},
+  {q:'¿En qué formulario se presenta la declaración del ISR de personas jurídicas?',ops:['SAR-110','SAR-350','SAR-520','SAR-100'],ok:2,exp:'El formulario SAR-520 es el utilizado para el ISR de personas jurídicas y sus anticipos mensuales.'},
+  {q:'Si los anticipos pagados superan el ISR anual determinado:',ops:['Se pierde el excedente','Se genera una multa','Se genera un saldo a favor aplicable','Hay que pagar recargos'],ok:2,exp:'El exceso de anticipos sobre el ISR determinado genera un saldo a favor que puede aplicarse o solicitarse en devolución.'},
+  {q:'¿Cuál es la diferencia principal entre ISR de persona natural y jurídica?',ops:['La tasa','La base imponible','La tasa es fija para jurídicas y progresiva para naturales','El plazo de pago'],ok:2,exp:'El ISR de personas naturales es progresivo (0%-25%) según tramos, mientras el de jurídicas es una tasa fija del 25%.'},
+  {q:'Los dividendos distribuidos a socios por una empresa hondureña están sujetos a:',ops:['ISR del 25%','Retención del 10%','No pagan ISR si ya pagó la empresa','ISV del 15%'],ok:1,exp:'Los dividendos pagados a residentes están sujetos a una retención del 10% según el Decreto 113-2011.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';d.id='q'+i;
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'var(--purple)':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Excelente! Puedes avanzar al siguiente módulo.':'📚 Repasa el material. Necesitas al menos 70%.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
