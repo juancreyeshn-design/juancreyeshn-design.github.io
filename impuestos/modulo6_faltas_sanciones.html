@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 6 – Faltas y Sanciones | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--cyan:#06b6d4;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--cyan)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--cyan);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#ecfeff;border-left:4px solid var(--cyan);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#0e7490}
+.sanc-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
+.sanc-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+.sanc-table td{padding:10px 14px;border-bottom:1px solid #f0f2f5;vertical-align:top}
+.sanc-table tr:nth-child(even) td{background:#f9fafb}
+.sanc-table .amount{font-weight:900;color:#ef4444}
+.badge-tipo{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.formal{background:#e0f2fe;color:#0369a1}
+.material{background:#fef2f2;color:#991b1b}
+.defraud{background:#fef9c3;color:#92400e}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:var(--cyan)}
+.btn{padding:11px 24px;background:var(--cyan);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:#0891b2}
+.result-box{background:#ecfeff;border:1.5px solid #a5f3fc;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #cffafe;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:#0e7490}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#ecfeff;border-color:#a5f3fc}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 6</div>
+<h1>Faltas y <span>Sanciones Tributarias</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">Sistema de Infracciones y Sanciones — Código Tributario Honduras</p>
+<div class="card">
+<h3>⚠️ Tipos de Infracciones Tributarias</h3>
+<p>El <strong>Código Tributario (Decreto 22-97)</strong> y sus reformas establecen tres categorías de infracciones:</p>
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+<div style="padding:14px;background:#e0f2fe;border-radius:10px;border-left:4px solid #0369a1"><strong style="color:#0369a1">📋 INFRACCIONES FORMALES:</strong> Incumplimiento de obligaciones de forma (no presentar declaración, no emitir factura, no llevar libros). No requieren perjuicio económico al Estado.</div>
+<div style="padding:14px;background:#fef2f2;border-radius:10px;border-left:4px solid #991b1b"><strong style="color:#991b1b">💰 INFRACCIONES MATERIALES:</strong> Incumplimiento que causa un perjuicio económico al Estado (evasión parcial, pago tardío, retenciones no enteradas).</div>
+<div style="padding:14px;background:#fef9c3;border-radius:10px;border-left:4px solid #92400e"><strong style="color:#92400e">🚨 DEFRAUDACIÓN FISCAL:</strong> Actos dolosos para sustraerse del pago (facturación falsa, doble contabilidad, declaraciones fraudulentas). Puede tener consecuencias penales.</div>
+</div>
+</div>
+<div class="card">
+<h3>📊 Tabla de Sanciones Principales</h3>
+<table class="sanc-table">
+<thead><tr><th>Infracción</th><th>Tipo</th><th>Sanción</th></tr></thead>
+<tbody>
+<tr><td>No presentar declaración en plazo</td><td><span class="badge-tipo formal">Formal</span></td><td class="amount">Multa: 1% de la deuda por mes + recargos del 1% mensual</td></tr>
+<tr><td>No emitir facturas o emitirlas sin CAI</td><td><span class="badge-tipo formal">Formal</span></td><td class="amount">Multa: L. 10,000 a L. 50,000 según Acuerdo SAR</td></tr>
+<tr><td>No llevar libros contables</td><td><span class="badge-tipo formal">Formal</span></td><td class="amount">Multa: L. 10,000 primera vez; L. 20,000 reincidencia</td></tr>
+<tr><td>Evasión tributaria (omisión de impuesto)</td><td><span class="badge-tipo material">Material</span></td><td class="amount">Multa: 75% del impuesto evadido + el impuesto + recargos</td></tr>
+<tr><td>No enterar retenciones practicadas</td><td><span class="badge-tipo material">Material</span></td><td class="amount">Multa: 75% del monto no enterado + intereses</td></tr>
+<tr><td>Defraudación fiscal (dolo)</td><td><span class="badge-tipo defraud">Defraud.</span></td><td class="amount">Multa: 100% del impuesto defraudado + proceso penal</td></tr>
+<tr><td>No atender requerimientos del SAR</td><td><span class="badge-tipo formal">Formal</span></td><td class="amount">Multa: L. 5,000 por cada requerimiento no atendido</td></tr>
+<tr><td>Pago tardío de impuesto declarado</td><td><span class="badge-tipo material">Material</span></td><td class="amount">Recargo: 1% mensual sobre el saldo pendiente</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card">
+<h3>💸 Recargos e Intereses (Artículo 177 Código Tributario)</h3>
+<div class="hl"><strong>Recargo por mora:</strong> 1% mensual sobre el saldo insoluto (capital + impuesto original), calculado desde la fecha de vencimiento hasta el pago.<br><strong>Descuento por pronto pago:</strong> Si el contribuyente presenta y paga espontáneamente antes de que el SAR notifique, puede obtener una reducción de hasta el 50% en multas formales.<br><strong>Prescripción:</strong> 5 años para determinar y exigir el pago (10 años en caso de dolo o defraudación).</div>
+</div>
+<div class="card">
+<h3>🔍 Proceso de Fiscalización del SAR</h3>
+<p>El SAR puede auditar a cualquier contribuyente dentro del período de prescripción. El proceso incluye: <strong>1) Notificación de auditoría</strong> → <strong>2) Requerimiento de documentos</strong> → <strong>3) Acta de cargos</strong> → <strong>4) Resolución de determinación</strong> → <strong>5) Recurso de reposición</strong> (15 días) → <strong>6) Recurso de apelación</strong> ante Tribunal Tributario → <strong>7) Vía judicial</strong> si procede.</p>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Simulador de Multas y Recargos</p>
+<div class="card">
+<h3>⚠️ Calcular Multa por Declaración y Pago Tardío</h3>
+<div class="form-row"><label>Impuesto determinado (Lempiras)</label><input type="number" id="imp" placeholder="Ej: 25000" min="0"></div>
+<div class="form-row"><label>Meses de atraso</label><input type="number" id="meses" placeholder="Ej: 3" min="1" max="120"></div>
+<div class="form-row"><label>Tipo de presentación</label>
+<select id="tipo-pres">
+<option value="espontanea">Espontánea (antes de requerimiento SAR)</option>
+<option value="requerida">Requerida por el SAR</option>
+</select>
+</div>
+<button class="btn" onclick="calcMulta()">Calcular Obligación Total</button>
+<div class="result-box" id="multa-result">
+<div class="result-row"><span>Impuesto original</span><span id="rm-imp">—</span></div>
+<div class="result-row"><span>Multa por declaración tardía (1% x mes)</span><span id="rm-multa">—</span></div>
+<div class="result-row"><span>Recargo por mora (1% x mes)</span><span id="rm-recargo">—</span></div>
+<div class="result-row"><span>⚠️ TOTAL A PAGAR AL SAR</span><span id="rm-total">—</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu conocimiento de las Sanciones Tributarias</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 6 — Faltas y Sanciones · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:var(--cyan);text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');}
+function fmt(n){return 'L. '+n.toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function calcMulta(){
+  const imp=parseFloat(document.getElementById('imp').value)||0;
+  const meses=parseInt(document.getElementById('meses').value)||1;
+  const tipo=document.getElementById('tipo-pres').value;
+  let multa=imp*0.01*meses;
+  if(tipo==='espontanea') multa=multa*0.5;
+  const recargo=imp*0.01*meses;
+  const total=imp+multa+recargo;
+  document.getElementById('rm-imp').textContent=fmt(imp);
+  document.getElementById('rm-multa').textContent=fmt(multa)+(tipo==='espontanea'?' (con 50% descuento)':'');
+  document.getElementById('rm-recargo').textContent=fmt(recargo);
+  document.getElementById('rm-total').textContent=fmt(total);
+  document.getElementById('multa-result').classList.add('show');
+}
+const preguntas=[
+  {q:'¿Cuál es el recargo mensual por pago tardío de impuestos en Honduras?',ops:['0.5%','1%','2%','5%'],ok:1,exp:'El recargo por mora es del 1% mensual sobre el saldo pendiente, según el Código Tributario.'},
+  {q:'¿Cuál es el período de prescripción tributaria ordinaria?',ops:['3 años','5 años','7 años','10 años'],ok:1,exp:'La prescripción ordinaria es de 5 años. En caso de dolo o defraudación, se extiende a 10 años.'},
+  {q:'Una infracción formal es aquella que:',ops:['Causa daño económico al Estado','Incumple obligaciones de forma sin necesariamente causar daño económico','Siempre implica cárcel','Solo aplica a empresas grandes'],ok:1,exp:'Las infracciones formales son incumplimientos de obligaciones procedimentales (declarar, facturar, llevar libros) sin necesariamente causar perjuicio económico.'},
+  {q:'¿Qué multa se aplica por evasión tributaria (omisión de impuesto)?',ops:['25% del impuesto','50% del impuesto','75% del impuesto','100% del impuesto'],ok:2,exp:'La evasión tributaria (infracción material) se sanciona con una multa del 75% del impuesto evadido, más el impuesto y recargos.'},
+  {q:'¿Cuántos días tiene un contribuyente para interponer un recurso de reposición ante el SAR?',ops:['5 días','10 días','15 días','30 días'],ok:2,exp:'El contribuyente tiene 15 días hábiles para interponer el recurso de reposición ante el SAR tras recibir la resolución.'},
+  {q:'La defraudación fiscal se distingue de la evasión porque:',ops:['La defraudación es solo para empresas','La defraudación implica dolo (intención)','La defraudación tiene menor sanción','Son lo mismo, diferentes nombres'],ok:1,exp:'La defraudación fiscal implica dolo (intención maliciosa) y puede resultar en proceso penal, a diferencia de la evasión por negligencia.'},
+  {q:'Si un contribuyente presenta su declaración tardía espontáneamente (antes de requerimiento), ¿qué beneficio tiene?',ops:['No paga nada','Reducción de hasta 50% en multas','Solo paga el impuesto sin multa','Dos años adicionales de plazo'],ok:1,exp:'La presentación espontánea antes de requerimiento del SAR permite una reducción de hasta el 50% en las multas formales.'},
+  {q:'¿Qué sanción aplica por no emitir facturas o emitirlas sin CAI vigente?',ops:['L. 1,000','L. 5,000 a L. 10,000','L. 10,000 a L. 50,000','Cierre del negocio inmediato'],ok:2,exp:'No emitir facturas o hacerlo sin CAI vigente se sanciona con multa de L. 10,000 a L. 50,000 según el tamaño del contribuyente.'},
+  {q:'¿Qué es el proceso de fiscalización del SAR?',ops:['Un trámite voluntario','Una auditoría que el SAR puede iniciar para verificar el cumplimiento tributario','Una multa automática','El proceso de inscripción del RTN'],ok:1,exp:'La fiscalización es el proceso mediante el cual el SAR audita al contribuyente para verificar el correcto cumplimiento de sus obligaciones tributarias.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'var(--cyan)':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Excelente! Puedes avanzar al siguiente módulo.':'📚 Repasa el material. Necesitas al menos 70%.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
