@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impuestos Interactivos | Juan Carlos Reyes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--bg:#F5F7FA;--card-r:16px;--shadow:0 6px 24px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:28px 20px 22px;text-align:center;border-bottom:4px solid var(--gold)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+header h1{font-size:clamp(22px,4vw,34px);font-weight:900;line-height:1.2}
+header h1 span{color:var(--gold)}
+.badges{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700}
+.navbar{background:#fff;border-bottom:2px solid #e0e4ea;padding:12px 16px;display:flex;align-items:center;justify-content:center;gap:8px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.nav-label{font-size:12px;font-weight:700;color:#6b7684}
+.nav-nums{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.nn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.nn:hover{transform:scale(1.15);box-shadow:0 4px 12px rgba(0,0,0,.22)}
+.n1{background:#3b82f6}.n2{background:#10b981}.n3{background:#8b5cf6}.n4{background:#f59e0b}
+.n5{background:#ef4444}.n6{background:#06b6d4}.n7{background:#ec4899}.n8{background:#14b8a6}
+.aviso{background:#fffbeb;border-left:4px solid var(--gold);margin:18px 16px 0;padding:12px 16px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.6}
+.aviso strong{color:#92400e}
+.sec{max-width:900px;margin:20px auto;padding:0 16px}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:14px}
+.instr-grid{display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:var(--card-r);border:1px solid #e0e4ea;overflow:hidden;box-shadow:var(--shadow)}
+@media(max-width:580px){.instr-grid{grid-template-columns:1fr}}
+.instr-col{padding:22px 24px}
+.instr-col:first-child{border-right:1px solid #e0e4ea}
+.instr-col h3{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#6b7684;margin-bottom:14px}
+.ii{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.ii-ico{width:30px;height:30px;min-width:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ib{background:#dbeafe}.ia{background:#fef3c7}.ir{background:#fee2e2}
+.ii p{font-size:13.5px;line-height:1.5;color:#374151}
+.ii strong{color:var(--dark)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{background:#fff;border-radius:var(--card-r);border:1px solid #e0e4ea;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;position:relative;box-shadow:var(--shadow)}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.13)}
+.c-bar{height:5px}.c-body{padding:20px 20px 14px;flex:1}
+.c-num{width:36px;height:36px;border-radius:50%;color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.c-icon{font-size:38px;margin-bottom:10px;display:block}
+.c-title{font-size:17px;font-weight:900;margin-bottom:6px;color:var(--dark)}
+.c-desc{font-size:13px;color:#6b7684;line-height:1.5}
+.c-foot{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid #f0f2f5}
+.c-tag{font-size:11.5px;font-weight:700;color:#6b7684;background:#f0f2f5;padding:3px 10px;border-radius:20px}
+.c-arr{color:#9aa3ad;font-size:18px}
+.b-new{position:absolute;top:14px;right:14px;background:#10b981;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+.bg1{background:#3b82f6}.bg2{background:#10b981}.bg3{background:#8b5cf6}.bg4{background:#f59e0b}
+.bg5{background:#ef4444}.bg6{background:#06b6d4}.bg7{background:#ec4899}.bg8{background:#14b8a6}
+footer{text-align:center;padding:28px 16px;font-size:12.5px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+footer strong{color:var(--dark)}
+footer a{color:#3b82f6;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">🏦 Juan Carlos Reyes</div>
+  <h1>Impuestos <span>Interactivos</span></h1>
+  <div class="badges">
+    <span class="badge">📚 8 Módulos</span>
+    <span class="badge">🇭🇳 Contexto Hondureño</span>
+    <span class="badge">📱 Táctil &amp; Offline</span>
+    <span class="badge">🏛️ SAR · ISV · ISR</span>
+  </div>
+</header>
+<nav class="navbar">
+  <span class="nav-label">📊 Módulos disponibles</span>
+  <div class="nav-nums">
+    <a class="nn n1" href="#m1">1</a><a class="nn n2" href="#m2">2</a>
+    <a class="nn n3" href="#m3">3</a><a class="nn n4" href="#m4">4</a>
+    <a class="nn n5" href="#m5">5</a><a class="nn n6" href="#m6">6</a>
+    <a class="nn n7" href="#m7">7</a><a class="nn n8" href="#m8">8</a>
+  </div>
+  <span style="font-size:12px;color:#9aa3ad;margin-left:6px">Toca una tarjeta para comenzar</span>
+</nav>
+<div class="aviso">💡 <strong>Navegación:</strong> Al abrir un módulo, usa el botón <strong>← Atrás</strong> para regresar. Todos los módulos funcionan <strong>sin conexión a internet</strong>.</div>
+<section class="sec" style="margin-top:20px">
+  <p class="sec-label">¿Cómo usar los módulos?</p>
+  <div class="instr-grid">
+    <div class="instr-col">
+      <h3>📋 Estructura de cada módulo</h3>
+      <div class="ii"><span class="ii-ico ib">📘</span><p><strong>Concepto:</strong> Explicación visual con ejemplos hondureños (SAR, persona natural, empresa)</p></div>
+      <div class="ii"><span class="ii-ico ia">⚡</span><p><strong>Simulación:</strong> Calcula impuestos paso a paso con casos prácticos</p></div>
+      <div class="ii"><span class="ii-ico ir">🎯</span><p><strong>Mini-Juego:</strong> Evalúa tu comprensión con puntaje inmediato</p></div>
+    </div>
+    <div class="instr-col">
+      <h3>📌 Recomendaciones</h3>
+      <div class="ii"><span class="ii-ico ib">1️⃣</span><p>Estudia los módulos <strong>en orden</strong> — cada uno construye sobre el anterior</p></div>
+      <div class="ii"><span class="ii-ico ib">🔁</span><p>Repite el mini-juego hasta obtener <strong>70% o más</strong> antes de avanzar</p></div>
+      <div class="ii"><span class="ii-ico ib">📖</span><p>Complementa con el <strong>Código Tributario</strong> y disposiciones del SAR</p></div>
+    </div>
+  </div>
+</section>
+<section class="sec" style="margin-top:22px;margin-bottom:40px">
+  <p class="sec-label">Módulos del curso</p>
+  <div class="grid">
+    <a class="card" href="modulo1_isv.html" id="m1"><div class="c-bar bg1"></div><div class="c-body"><div class="c-num bg1">1</div><span class="c-icon">🧾</span><div class="c-title">El ISV</div><div class="c-desc">Impuesto Sobre Ventas 15% y 18%. Hecho generador, débito fiscal, crédito fiscal y declaración mensual al SAR.</div></div><div class="c-foot"><span class="c-tag">Base del sistema</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo2_isr_natural.html" id="m2"><div class="c-bar bg2"></div><div class="c-body"><div class="c-num bg2">2</div><span class="c-icon">👤</span><div class="c-title">ISR — Personas Naturales</div><div class="c-desc">Escala progresiva 0% al 25%. Deducciones permitidas, aportación solidaria y retenciones en la fuente.</div></div><div class="c-foot"><span class="c-tag">Renta · Escala progresiva</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo3_isr_juridica.html" id="m3"><div class="c-bar bg3"></div><div class="c-body"><div class="c-num bg3">3</div><span class="c-icon">🏢</span><div class="c-title">ISR — Personas Jurídicas</div><div class="c-desc">Tasa del 25%. Renta bruta, renta neta, gastos deducibles. Anticipo mensual y declaración anual.</div></div><div class="c-foot"><span class="c-tag">Empresas · 25%</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo4_sar_siisar.html" id="m4"><div class="c-bar bg4"></div><div class="c-body"><div class="c-num bg4">4</div><span class="c-icon">🏛️</span><div class="c-title">El SAR y el SIISAR</div><div class="c-desc">Servicio de Administración de Rentas. Inscripción de contribuyente, declaración y pago en línea.</div></div><div class="c-foot"><span class="c-tag">Administración tributaria</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo5_retenciones.html" id="m5"><div class="c-bar bg5"></div><div class="c-body"><div class="c-num bg5">5</div><span class="c-icon">✂️</span><div class="c-title">Retenciones en la Fuente</div><div class="c-desc">Agentes de retención, porcentajes del 1%, 12.5% y 25%. Obligaciones del retenedor. Constancias.</div></div><div class="c-foot"><span class="c-tag">ISR · ISV · Retenciones</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo6_faltas_sanciones.html" id="m6"><div class="c-bar bg6"></div><div class="c-body"><div class="c-num bg6">6</div><span class="c-icon">⚠️</span><div class="c-title">Faltas y Sanciones</div><div class="c-desc">Infracciones formales y materiales. Multas por declaración tardía, evasión y defraudación fiscal.</div></div><div class="c-foot"><span class="c-tag">Código Tributario</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo7_ciclo_tributario.html" id="m7"><div class="c-bar bg7"></div><div class="c-body"><div class="c-num bg7">7</div><span class="c-icon">📅</span><div class="c-title">El Ciclo Tributario Anual</div><div class="c-desc">Calendario fiscal hondureño. Fechas de ISV mensual, ISR anual, anticipos trimestrales y planificación.</div></div><div class="c-foot"><span class="c-tag">Calendario · Planificación</span><span class="c-arr">→</span></div></a>
+    <a class="card" href="modulo8_precios_transferencia.html" id="m8"><div class="c-bar bg8"></div><div class="c-body"><div class="c-num bg8">8</div><span class="c-icon">🔗</span><div class="c-title">Precios de Transferencia</div><div class="c-desc">Partes relacionadas, principio de plena competencia. Métodos OCDE. Declaración informativa al SAR.</div></div><div class="c-foot"><span class="c-tag">Internacional · OCDE</span><span class="c-arr">→</span></div><span class="b-new">NUEVO</span></a>
+  </div>
+</section>
+<footer>Herramienta didáctica interactiva desarrollada por &nbsp;·&nbsp; <strong>Juan Carlos Reyes</strong> &nbsp;·&nbsp; <a href="mailto:juancreyes.hn@gmail.com">✉️ juancreyes.hn@gmail.com</a><br><span style="font-size:11px;color:#c0c8d4;margin-top:6px;display:block">Impuestos Interactivos · 8 módulos · SAR Honduras</span></footer>
+</body>
+  </html>
