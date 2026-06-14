@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 2 – ISR Personas Naturales | Impuestos Interactivos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap');
+:root{--dark:#1B2638;--gold:#F4A811;--green:#10b981;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--green)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px;transition:color .2s}
+.back-btn:hover{color:#fff}
+.mod-badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+header h1{font-size:clamp(20px,4vw,30px);font-weight:900}
+header h1 span{color:var(--gold)}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid #e0e4ea;position:sticky;top:0;z-index:100;overflow-x:auto}
+.tab{padding:14px 22px;font-size:14px;font-weight:700;color:#6b7684;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab:hover:not(.active){color:var(--dark)}
+.panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 40px}
+.panel.active{display:block}
+.section-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#9aa3ad;margin-bottom:16px}
+.card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:22px 24px;margin-bottom:16px;box-shadow:var(--sh)}
+.card h3{font-size:16px;font-weight:900;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.7;color:#374151}
+.hl{background:#f0fdf4;border-left:4px solid var(--green);padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;font-size:13.5px;line-height:1.6}
+.hl strong{color:#065f46}
+.scale-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+.scale-table th{background:var(--dark);color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+.scale-table td{padding:10px 14px;border-bottom:1px solid #f0f2f5}
+.scale-table tr:nth-child(even) td{background:#f9fafb}
+.scale-table .rate{font-weight:900;color:var(--green)}
+.badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.badge{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:8px 14px;font-size:13px;color:#065f46;font-weight:700}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:5px}
+.form-row input{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--dark)}
+.form-row input:focus{outline:none;border-color:var(--green)}
+.btn{padding:11px 24px;background:var(--green);color:#fff;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer}
+.btn:hover{background:#059669}
+.result-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:18px 20px;margin-top:16px;display:none}
+.result-box.show{display:block}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #bbf7d0;font-size:14px}
+.result-row:last-child{border-bottom:none;font-weight:900;font-size:15px;color:#065f46}
+.quiz-card{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;box-shadow:var(--sh);margin-bottom:14px}
+.quiz-num{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#9aa3ad;margin-bottom:6px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 16px;border:1.5px solid #e0e4ea;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s}
+.option:hover:not(.disabled){background:#f0fdf4;border-color:#86efac}
+.option.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.option.wrong{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.option.disabled{cursor:default}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#f0fdf4;color:#166534}
+.feedback.fail{background:#fef2f2;color:#991b1b}
+.score-box{background:#fff;border-radius:var(--r);border:1px solid #e0e4ea;padding:24px;text-align:center;box-shadow:var(--sh);display:none}
+.score-box.show{display:block}
+.score-num{font-size:48px;font-weight:900}
+footer{text-align:center;padding:24px 16px;font-size:12px;color:#9aa3ad;border-top:1px solid #e0e4ea;background:#fff}
+</style>
+</head>
+<body>
+<header>
+<a class="back-btn" href="menu.html">← Regresar al Menú</a>
+<div class="mod-badge">MÓDULO 2</div>
+<h1>ISR — <span>Personas Naturales</span></h1>
+</header>
+<div class="tab-bar">
+<div class="tab active" onclick="showTab('concepto',this)">📘 Concepto</div>
+<div class="tab" onclick="showTab('simulacion',this)">⚡ Simulación</div>
+<div class="tab" onclick="showTab('juego',this)">🎯 Mini-Juego</div>
+</div>
+
+<div class="panel active" id="concepto">
+<p class="section-title">ISR para Personas Naturales — Escala Progresiva</p>
+<div class="card">
+<h3>👤 ¿Quién paga el ISR como persona natural?</h3>
+<p>Toda persona natural domiciliada o residente en Honduras que obtiene ingresos por sueldos, salarios, honorarios, arrendamientos, actividades comerciales o cualquier otra fuente gravada. La base legal es la <strong>Ley del ISR (Decreto 25-63)</strong> y sus reformas, incluyendo el Decreto 113-2011.</p>
+<div class="hl"><strong>Ingreso gravado:</strong> Renta bruta menos las deducciones permitidas = Renta Neta Gravable. Sobre esta se aplica la escala progresiva.</div>
+</div>
+<div class="card">
+<h3>📊 Escala Progresiva ISR — Personas Naturales 2024</h3>
+<table class="scale-table">
+<thead><tr><th>Tramo de Renta Neta Gravable</th><th>Tasa</th><th>ISR del Tramo</th></tr></thead>
+<tbody>
+<tr><td>De L. 0 a L. 176,554.47</td><td class="rate">0%</td><td>Exento</td></tr>
+<tr><td>De L. 176,554.48 a L. 271,698.00</td><td class="rate">15%</td><td>Sobre exceso de L. 176,554.47</td></tr>
+<tr><td>De L. 271,698.01 a L. 543,397.00</td><td class="rate">20%</td><td>Sobre exceso de L. 271,698.00</td></tr>
+<tr><td>Más de L. 543,397.00</td><td class="rate">25%</td><td>Sobre exceso de L. 543,397.00</td></tr>
+</tbody>
+</table>
+<div class="hl" style="margin-top:14px"><strong>Nota:</strong> Estos valores se actualizan anualmente con el IPC. Los montos vigentes son los publicados por el SAR cada año fiscal.</div>
+</div>
+<div class="card">
+<h3>🔖 Deducciones Permitidas (Artículo 11 Ley ISR)</h3>
+<div class="badge-row">
+<div class="badge">👶 Gastos personales — hasta 25% de la renta</div>
+<div class="badge">🏥 Servicios médicos — con recibo</div>
+<div class="badge">📚 Educación — colegiaturas con factura</div>
+<div class="badge">🏠 Arrendamiento de vivienda — con contrato</div>
+<div class="badge">💳 Intereses hipotecarios — primera vivienda</div>
+<div class="badge">🧾 Aportación solidaria — ISR adicional sobre excedentes</div>
+</div>
+<div class="hl" style="margin-top:14px"><strong>Límite de deducciones:</strong> Las deducciones personales no pueden exceder el 25% de la renta bruta ni L. 40,000 anuales para ciertos conceptos. Las facturas y recibos son obligatorios.</div>
+</div>
+<div class="card">
+<h3>✂️ Aportación Solidaria (Decreto 17-2010 y 113-2011)</h3>
+<p style="margin-bottom:10px">Además del ISR normal, las personas naturales con renta neta gravable superior a L. 1,000,000 pagan una <strong>Aportación Solidaria adicional del 5%</strong> sobre el excedente de ese monto.</p>
+<div class="hl"><strong>Fórmula:</strong> Si Renta Neta &gt; L. 1,000,000 → Aportación Solidaria = (Renta Neta − 1,000,000) × 5%</div>
+</div>
+<div class="card">
+<h3>📅 Obligaciones del Contribuyente Natural</h3>
+<p>Las personas en relación de dependencia (empleados) reciben <strong>retenciones mensuales</strong> efectuadas por el empleador. Si tienen otras fuentes de ingreso, deben presentar la <strong>Declaración Anual del ISR</strong> (Formulario SAR-110) a más tardar el <strong>30 de abril</strong> del año siguiente.</p>
+</div>
+</div>
+
+<div class="panel" id="simulacion">
+<p class="section-title">Simulador de ISR para Persona Natural</p>
+<div class="card">
+<h3>⚡ Calcular ISR Anual</h3>
+<div class="form-row"><label>Ingresos Brutos Anuales (Lempiras)</label><input type="number" id="brutos" placeholder="Ej: 350000" min="0"></div>
+<div class="form-row"><label>Deducciones Comprobadas (gastos médicos, educación, etc.)</label><input type="number" id="deducciones" placeholder="Ej: 30000" min="0"></div>
+<button class="btn" onclick="calcISR()">Calcular ISR Anual</button>
+<div class="result-box" id="isr-result">
+<div class="result-row"><span>Ingresos brutos</span><span id="r-brutos">—</span></div>
+<div class="result-row"><span>(-) Deducciones</span><span id="r-ded">—</span></div>
+<div class="result-row"><span>= Renta Neta Gravable</span><span id="r-rng">—</span></div>
+<div class="result-row"><span>ISR Tramo 1 (0%)</span><span id="r-t1">L. 0.00</span></div>
+<div class="result-row"><span>ISR Tramo 2 (15%)</span><span id="r-t2">—</span></div>
+<div class="result-row"><span>ISR Tramo 3 (20%)</span><span id="r-t3">—</span></div>
+<div class="result-row"><span>ISR Tramo 4 (25%)</span><span id="r-t4">—</span></div>
+<div class="result-row"><span>Aportación Solidaria (5%)</span><span id="r-as">—</span></div>
+<div class="result-row"><span>💰 ISR TOTAL A PAGAR</span><span id="r-total">—</span></div>
+<div class="result-row"><span>📅 Retención Mensual Estimada</span><span id="r-mensual">—</span></div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="juego">
+<p class="section-title">Evalúa tu comprensión del ISR para Personas Naturales</p>
+<div id="quiz-container"></div>
+<div class="score-box" id="score-box">
+<div class="score-num" id="score-num">—</div>
+<div style="font-size:15px;color:#374151;margin-top:6px" id="score-label">—</div>
+<div style="font-size:14px;color:#6b7684;margin-top:10px" id="score-msg">—</div>
+<button class="btn" style="margin-top:16px" onclick="reiniciarQuiz()">🔁 Reintentar</button>
+</div>
+</div>
+
+<footer>Módulo 2 — ISR Personas Naturales · <strong>Juan Carlos Reyes</strong> · <a href="menu.html" style="color:#10b981;text-decoration:none">← Menú Principal</a></footer>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+function fmt(n){return 'L. '+n.toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function calcISR(){
+  const brutos = parseFloat(document.getElementById('brutos').value)||0;
+  const ded = parseFloat(document.getElementById('deducciones').value)||0;
+  const rng = Math.max(0, brutos - ded);
+  let t2=0,t3=0,t4=0,as=0;
+  if(rng>176554.47){
+    const base2=Math.min(rng,271698)-176554.47;
+    t2=base2*0.15;
+  }
+  if(rng>271698){
+    const base3=Math.min(rng,543397)-271698;
+    t3=base3*0.20;
+  }
+  if(rng>543397){
+    t4=(rng-543397)*0.25;
+  }
+  if(rng>1000000) as=(rng-1000000)*0.05;
+  const total=t2+t3+t4+as;
+  document.getElementById('r-brutos').textContent=fmt(brutos);
+  document.getElementById('r-ded').textContent=fmt(ded);
+  document.getElementById('r-rng').textContent=fmt(rng);
+  document.getElementById('r-t2').textContent=fmt(t2);
+  document.getElementById('r-t3').textContent=fmt(t3);
+  document.getElementById('r-t4').textContent=fmt(t4);
+  document.getElementById('r-as').textContent=fmt(as);
+  document.getElementById('r-total').textContent=fmt(total);
+  document.getElementById('r-mensual').textContent=fmt(total/12);
+  document.getElementById('isr-result').classList.add('show');
+}
+const preguntas=[
+  {q:'¿Cuál es la tasa mínima del ISR para personas naturales en Honduras?',ops:['0%','5%','10%','15%'],ok:0,exp:'El primer tramo (hasta L. 176,554.47) está exento; la tasa es 0%.'},
+  {q:'¿Cuál es la tasa máxima del ISR para personas naturales?',ops:['20%','25%','30%','35%'],ok:1,exp:'La tasa máxima es 25%, aplicable a la renta neta que exceda L. 543,397.'},
+  {q:'¿Cuántos tramos tiene la escala progresiva del ISR para personas naturales en Honduras?',ops:['2','3','4','5'],ok:2,exp:'La escala tiene 4 tramos: 0%, 15%, 20% y 25%.'},
+  {q:'La base sobre la que se calcula el ISR se llama:',ops:['Renta Bruta','Ingreso Total','Renta Neta Gravable','Utilidad Fiscal'],ok:2,exp:'La Renta Neta Gravable = Ingresos Brutos − Deducciones permitidas.'},
+  {q:'¿Cuándo vence la declaración anual del ISR para personas naturales?',ops:['31 de enero','28 de febrero','30 de abril','31 de julio'],ok:2,exp:'La declaración anual del ISR vence el 30 de abril del año siguiente.'},
+  {q:'La Aportación Solidaria aplica cuando la renta neta supera:',ops:['L. 500,000','L. 800,000','L. 1,000,000','L. 2,000,000'],ok:2,exp:'La Aportación Solidaria del 5% aplica sobre el excedente de L. 1,000,000 de renta neta.'},
+  {q:'¿Qué formulario se usa para la declaración anual del ISR de personas naturales?',ops:['SAR-100','SAR-110','SAR-350','SAR-220'],ok:1,exp:'El Formulario SAR-110 es el utilizado para la declaración anual del ISR de personas naturales.'},
+  {q:'Las retenciones de ISR en sueldos las realiza:',ops:['El empleado directamente','El SAR mensualmente','El empleador como agente retenedor','La Tesorería General'],ok:2,exp:'El empleador actúa como agente retenedor del ISR y debe retener y enterar mensualmente al SAR.'},
+  {q:'¿Qué tasa aplica al tramo entre L. 176,554.48 y L. 271,698?',ops:['10%','15%','20%','25%'],ok:1,exp:'El segundo tramo de la escala progresiva tiene una tasa del 15%.'},
+  {q:'¿Cuál deducción NO está permitida en el ISR de personas naturales?',ops:['Gastos médicos con recibo','Colegiatura con factura','Compra de automóvil personal','Intereses hipotecarios'],ok:2,exp:'La compra de un automóvil personal no es una deducción permitida. Solo se admiten gastos listados en el Art. 11.'}
+];
+let respuestas=[],actual=0;
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');c.innerHTML='';
+  preguntas.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='quiz-card';d.id='q'+i;
+    d.innerHTML='<div class="quiz-num">Pregunta '+(i+1)+' de '+preguntas.length+'</div><div class="quiz-q">'+p.q+'</div><div class="options">'+p.ops.map((o,j)=>'<div class="option" onclick="responder('+i+','+j+',this)">'+o+'</div>').join('')+'</div><div class="feedback" id="fb'+i+'"></div>';
+    c.appendChild(d);
+  });
+}
+function responder(qi,si,el){
+  const p=preguntas[qi];
+  const opts=el.parentElement.querySelectorAll('.option');
+  if(opts[0].classList.contains('disabled'))return;
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===p.ok)o.classList.add('correct');});
+  const fb=document.getElementById('fb'+qi);
+  if(si===p.ok){el.classList.add('correct');respuestas[qi]=true;fb.className='feedback show ok';fb.textContent='✅ '+p.exp;}
+  else{el.classList.add('wrong');respuestas[qi]=false;fb.className='feedback show fail';fb.textContent='❌ '+p.exp;}
+  actual++;
+  if(actual===preguntas.length)setTimeout(mostrarPuntaje,600);
+}
+function mostrarPuntaje(){
+  const ok=respuestas.filter(Boolean).length;
+  const pct=Math.round(ok/preguntas.length*100);
+  document.getElementById('score-num').textContent=pct+'%';
+  document.getElementById('score-num').style.color=pct>=70?'var(--green)':'#ef4444';
+  document.getElementById('score-label').textContent=ok+' de '+preguntas.length+' correctas';
+  document.getElementById('score-msg').textContent=pct>=70?'🎉 ¡Excelente! Puedes avanzar al siguiente módulo.':'📚 Repasa el material y vuelve a intentarlo. Necesitas al menos 70%.';
+  document.getElementById('score-box').classList.add('show');
+}
+function reiniciarQuiz(){respuestas=[];actual=0;document.getElementById('score-box').classList.remove('show');renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>
