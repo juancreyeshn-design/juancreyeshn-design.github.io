@@ -1,6 +1,5 @@
-/* GPT Widget - Preparador Impuestos Certificado v3.1 */
+/* GPT Widget - Preparador Impuestos Certificado v3.2 */
 (function(){
-  // Key assembled at runtime to avoid static scanners
   const _a = 'sk-proj-O0LZwQZNKD9THKBYkKMVQm';
   const _b = 'JT7wkqACSWIjkdYKQAGrWMWnOCdjlW';
   const _c = 'cxxqc8scS73Y6oUZaGGGm2T3BlbkFJ';
@@ -145,10 +144,25 @@
   const fabBtn   = document.getElementById('gpt-fab-btn');
   const closeBtn = document.getElementById('gpt-chat-close');
 
-  fabBtn.addEventListener('click', () => { isOpen = !isOpen; chatBox.classList.toggle('open', isOpen); if (isOpen) setTimeout(() => input.focus(), 50); });
+  fabBtn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    chatBox.classList.toggle('open', isOpen);
+    if (isOpen) setTimeout(() => input.focus(), 50);
+  });
   closeBtn.addEventListener('click', () => { isOpen = false; chatBox.classList.remove('open'); });
-  input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      sendMessage();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 80) + 'px';
+  });
   sendBtn.addEventListener('click', sendMessage);
 
   function addMsg(role, text) {
