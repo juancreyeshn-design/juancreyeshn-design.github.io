@@ -1,6 +1,5 @@
-/* GPT Widget - Preparador Impuestos Certificado v3.1 */
+/* GPT Widget - Preparador Impuestos Certificado v3.2 */
 (function(){
-  // Key assembled at runtime to avoid static scanners
   const _a = 'sk-proj-O0LZwQZNKD9THKBYkKMVQm';
   const _b = 'JT7wkqACSWIjkdYKQAGrWMWnOCdjlW';
   const _c = 'cxxqc8scS73Y6oUZaGGGm2T3BlbkFJ';
@@ -12,7 +11,6 @@
   let messages = [{ role: 'system', content: SYSTEM_PROMPT }];
   let isOpen = false;
 
-  // ── Styles ──────────────────────────────────────────────────────────────
   const css = `
     #gpt-fab-wrap {
       position: fixed; bottom: 24px; right: 20px;
@@ -104,7 +102,6 @@
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
-  // ── HTML ─────────────────────────────────────────────────────────────────
   const wrap = document.createElement('div');
   wrap.id = 'gpt-fab-wrap';
   wrap.innerHTML = `
@@ -140,7 +137,6 @@
   `;
   document.body.appendChild(wrap);
 
-  // ── Logic ────────────────────────────────────────────────────────────────
   const chatBox  = document.getElementById('gpt-chat-box');
   const msgs     = document.getElementById('gpt-chat-messages');
   const input    = document.getElementById('gpt-chat-input');
@@ -154,8 +150,20 @@
     if (isOpen) setTimeout(() => input.focus(), 50);
   });
   closeBtn.addEventListener('click', () => { isOpen = false; chatBox.classList.remove('open'); });
-  input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
-  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 80) + 'px'; });
+
+  // Fix Enter key: prevent default AND stop propagation to avoid page submit
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      sendMessage();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 80) + 'px';
+  });
   sendBtn.addEventListener('click', sendMessage);
 
   function addMsg(role, text) {
