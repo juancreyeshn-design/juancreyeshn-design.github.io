@@ -9,7 +9,7 @@
 :root{--dark:#1B2638;--gold:#F4A811;--teal:#14b8a6;--bg:#F5F7FA;--r:14px;--sh:0 4px 20px rgba(0,0,0,0.10)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
-header{background:var(--dark);color:#fff;padding:22px 20px 16px;border-bottom:4px solid var(--teal)}
+header{background:var(--dark);color:#fff;hpadding:22px 20px 16px;border-bottom:4px solid var(--teal)}
 .back-btn{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px}
 .back-btn:hover{color:#fff}
 .mod-badge{display:inline-block;background:var(--teal);color:#fff;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;margin-bottom:8px}
@@ -175,7 +175,7 @@ function analVinc(){
   document.getElementById('vinc-result').classList.add('show');
 }
 const preguntas=[
-  {q:'¿Cuál es el principio fundamental de los Precios de Transferencia?',ops:['Principio de Territorialidad','Principio de Plena Competencia (Arm's Length)','Principio de Residencia','Principio de Neutralidad'],ok:1,exp:'El Principio de Plena Competencia (Arm's Length) exige que los precios entre partes relacionadas sean equivalentes a los pactados entre partes independientes.'},
+  {q:'¿Cuál es el principio fundamental de los Precios de Transferencia?',ops:['Principio de Territorialidad','Principio de Plena Competencia (Arm\'s Length)','Principio de Residencia','Principio de Neutralidad'],ok:1,exp:'El Principio de Plena Competencia (Arm\'s Length) exige que los precios entre partes relacionadas sean equivalentes a los pactados entre partes independientes.'},
   {q:'¿Qué porcentaje mínimo de participación genera vinculación para efectos de PT en Honduras?',ops:['10%','15%','25%','51%'],ok:2,exp:'En Honduras, existe vinculación cuando hay participación directa o indirecta igual o superior al 25%.'},
   {q:'¿Bajo qué decreto se regula los Precios de Transferencia en Honduras?',ops:['Decreto 24-98','Decreto 17-2018','Decreto 232-2011','Decreto 113-2011'],ok:2,exp:'La Ley de Regulación de Precios de Transferencia de Honduras fue aprobada por el Decreto 232-2011.'},
   {q:'¿Cuál es el método de Precios de Transferencia más aceptado y preferido por la OCDE?',ops:['Precio de Reventa','Costo Adicionado','Precio Comparable No Controlado (CUP)','Margen Neto de la Operación'],ok:2,exp:'El método CUP (Precio Comparable No Controlado) es el más directo y preferido por la OCDE cuando existen comparables disponibles.'},
