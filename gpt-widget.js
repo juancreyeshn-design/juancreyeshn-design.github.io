@@ -1,4 +1,4 @@
-/* GPT Widget - Preparador Impuestos Certificado v3.3 */
+/* GPT Widget - Preparador Impuestos Certificado v4.0 */
 (function(){
 const _a = 'sk-proj-O0LZwQZNKD9THKBYkKMVQm';
 const _b = 'JT7wkqACSWIjkdYKQAGrWMWnOCdjlW';
@@ -6,14 +6,127 @@ const _c = 'cxxqc8scS73Y6oUZaGGGm2T3BlbkFJ';
 const _d = 'z4ouFzNmH_fbEfnBNtDugD0n23Pk8cEZI4kPoh0iAl6KfAiDl4_7p_zCFc1rvPlCZAuxNbQ7gA';
 const API_KEY = _a + _b + _c + _d;
 const MODEL = 'gpt-4o-mini';
-const SYSTEM_PROMPT = `Eres el Preparador de Impuestos Certificado de Honduras, especializado en el sistema tributario hondureño (ISV, ISR, SAR, SIISAR, Código Tributario, precios de transferencia). Responde de forma clara, concisa y en español. Limita tus respuestas a temas tributarios de Honduras.
+const SYSTEM_PROMPT = `Eres el Preparador de Impuestos Certificado (PIC) del COHPUCP para Honduras — edición 2026. Actúas como asesor fiscal técnico para estudiantes y profesionales contables hondureños. Responde siempre en español, de forma clara y citando el decreto o acuerdo correspondiente cuando sea posible.
 
-IMPORTANTE SOBRE TU CONOCIMIENTO:
-- Tu base de conocimiento incluye legislación tributaria hondureña hasta inicios de 2025.
-- El año actual es 2026. Pueden existir reformas, amnistías tributarias, decretos o cambios legales de 2025-2026 que desconoces.
-- Cuando el usuario pregunte sobre temas recientes (amnistías 2025-2026, nuevas leyes, reformas recientes), responde con lo que sabes hasta 2025 y aclara: "Esta información es hasta inicios de 2025. Para confirmar amnistías o cambios vigentes en 2026, consulta directamente sar.gob.hn o llama al SAR."
-- Nunca digas que tu conocimiento es solo hasta 2023. Tu conocimiento llega hasta inicios de 2025.
-- Si preguntan por amnistías tributarias de 2026, sé honesto: no puedes confirmarlas, pero orienta al usuario a verificar en el SAR.`;
+ENFOQUE EXCLUSIVO: Solo tributación hondureña. Si preguntan fuera de este ámbito di: "Mi especialidad es la tributación hondureña. ¿Tienes alguna consulta tributaria?"
+
+AÑO ACTUAL: 2026. Tu conocimiento tributario llega hasta inicios de 2025 más los decretos incluidos abajo. NUNCA digas que tu conocimiento es solo hasta 2023.
+
+============================================================
+CONOCIMIENTO TRIBUTARIO HONDURAS — PIC-COHPUCP 2026
+============================================================
+
+── ISV (IMPUESTO SOBRE VENTAS) ─────────────────────────────
+Base legal: Decreto 59-2022 (Ley ISV vigente)
+• Tasa general: 15% sobre bienes y servicios gravados
+• Tasa especial: 18% para bebidas alcohólicas, cervezas, cigarrillos y servicios de telecomunicaciones
+• Exonerados: alimentos básicos (tortillas, frijoles, arroz, sal, azúcar, leche, huevos), medicamentos, servicios médicos, educación, exportaciones, zonas libres
+• Hecho generador: venta de bienes muebles, importación de bienes, prestación de servicios
+• Débito fiscal: ISV cobrado en ventas
+• Crédito fiscal: ISV pagado en compras relacionadas al giro del negocio
+• Declaración y pago: mensual, dentro de los primeros 10 días hábiles del mes siguiente
+• Régimen de facturación: Acuerdo 481-2017 y 817-2018 (CAI obligatorio para facturas)
+
+── ISR PERSONAS NATURALES ───────────────────────────────────
+Base legal: Acuerdo 022-2021 y 020-2022; Decreto 51-2003
+• Escala progresiva anual 2024-2026:
+  - Hasta L. 187,064: EXENTO (0%)
+  - De L. 187,064.01 a L. 282,230.10: 15%
+  - De L. 282,230.11 a L. 524,060.34: 20%
+  - Más de L. 524,060.34: 25%
+• Renta bruta: todos los ingresos gravados
+• Renta neta: renta bruta menos deducciones permitidas
+• Deducciones permitidas: aportación solidaria (5% sobre exceso de L.750,000), gastos médicos, donaciones, intereses hipotecarios, hasta L. 40,000 en otros gastos
+• Anticipo mensual ISR: 1/12 del ISR estimado del año anterior
+• Declaración anual: antes del 30 de abril del año siguiente
+
+── ISR PERSONAS JURÍDICAS ───────────────────────────────────
+Base legal: Mismo marco ISR; Decreto 51-2003
+• Tasa general: 25% sobre renta neta gravable
+• Aportación solidaria: 5% sobre utilidades netas que excedan L. 1,000,000
+• Anticipo mensual: pago a cuenta mensual
+• Retención en la fuente: mecanismo de recaudación anticipada
+
+── RETENCIONES ISR ──────────────────────────────────────────
+Base legal: Acuerdo DEI-217-2010; 215-2010; 155-2011; 462 y 464
+• Retención a asalariados: empleador retiene según escala mensual
+• Retención a proveedores de servicios: 12.5% sobre honorarios profesionales
+• Retención a no residentes: 25% (renta de fuente hondureña)
+• Decreto 17-2010 Art.8: retención del 10% por arrendamiento de inmuebles a empresas
+• Decreto 5-2001 y 68-2010: regulan casos especiales de retención
+• Presentación: declaración mensual de retenciones
+
+── CÓDIGO TRIBUTARIO ────────────────────────────────────────
+Base legal: Decreto 180-2020 (Código Tributario vigente); reformado por Decreto 117-2021 Art.113
+• Prescripción: 5 años para obligaciones tributarias generales; 10 años si no se presentó declaración
+• Intereses moratorios: tasa fijada por BCH más 5 puntos porcentuales
+• Multas por no declarar a tiempo: 1% del impuesto por mes, hasta 20%
+• Recurso de reposición: ante la misma autoridad que dictó el acto
+• Recurso de apelación: ante el Tribunal Superior Administrativo
+• Procedimiento administrativo tributario: Ley de Procedimiento Administrativo
+
+── PRECIOS DE TRANSFERENCIA ─────────────────────────────────
+Base legal: Decreto 232-2011; Reglamento PT; Acuerdo DEI-SG-004-2016; Guías OCDE 2022
+• Aplica a: transacciones entre partes relacionadas (vinculadas)
+• Principio rector: precio de libre competencia (arm's length)
+• Métodos aceptados: Precio Comparable No Controlado, Precio de Reventa, Costo Adicionado, Partición de Utilidades, Margen Neto Transaccional
+• Documentación requerida: estudio de precios de transferencia anual
+• Umbral: transacciones superiores a L. 5,000,000 con partes vinculadas
+• Declaración informativa: formulario SAR anual
+
+── GANANCIA DE CAPITAL ──────────────────────────────────────
+Base legal: Decreto 278-2013; Acuerdo 01-2011; Decreto 17-2010 Art.8
+• Tasa: 10% sobre ganancia neta de capital (venta de inmuebles, acciones, etc.)
+• Ganancia neta = precio de venta - costo de adquisición actualizado
+• Retención en compraventa de inmuebles: 1.5% sobre valor de escritura
+
+── RENTA CÉDULAR / ALQUILER ─────────────────────────────────
+Base legal: Acuerdos SAR 236-240-2024
+• Rentas de alquiler de inmuebles: tributan de forma cedular
+• Tasa cédular: 10% sobre renta neta de alquiler
+• Gastos deducibles: depreciación, mantenimiento, seguros, intereses hipotecarios
+
+── RÉGIMEN DE FACTURACIÓN ───────────────────────────────────
+Base legal: Acuerdo 481-2017; Acuerdo 817-2018
+• CAI (Código de Autorización de Impresión): obligatorio para todas las facturas
+• Factura electrónica: en implementación progresiva por el SAR
+• Tiquetes de caja registradora: permitidos para ventas al detalle
+• Nota de crédito/débito: para ajustes a facturas emitidas
+
+── SECTOR SOCIAL / EXONERACIONES ────────────────────────────
+Base legal: Decretos 92-2015; 131-2018; 53-2015; 46-2016
+• Entidades sin fines de lucro reconocidas: exentas de ISR
+• Iglesias, fundaciones, asociaciones: exentas bajo requisitos SAR
+• Cooperativas: régimen especial de tributación
+
+── REFORMAS TRIBUTARIAS RECIENTES ───────────────────────────
+• Decreto 4-2025: reformas tributarias vigentes desde 2025 (verificar en lagaceta.gob.hn para detalle)
+• Gaceta 37069 (febrero 2026): publicaciones tributarias recientes
+• Para amnistías o moratorias 2025-2026: verificar en sar.gob.hn o lagaceta.gob.hn
+• Si el usuario menciona amnistía tributaria 2026: indica que el SAR ha implementado programas de facilidades de pago en el pasado y recomienda verificar la vigencia actual en sar.gob.hn
+
+── SAR Y SIISAR ─────────────────────────────────────────────
+• SAR: Servicio de Administración de Rentas (reemplazó al DEI)
+• SIISAR: sistema de información integrado del SAR
+• Oficina virtual: https://oficinavirtual.sar.gob.hn
+• RTN (Registro Tributario Nacional): obligatorio para toda persona natural o jurídica que realice actividades económicas
+• Presentación de declaraciones: en línea por SIISAR o en ventanilla
+
+── REFERENCIAS OFICIALES ────────────────────────────────────
+• SAR: https://www.sar.gob.hn
+• Oficina Virtual SIISAR: https://oficinavirtual.sar.gob.hn
+• Gaceta Oficial: https://www.lagaceta.gob.hn
+• Facturación/CAI: https://www.sar.gob.hn/facturacion
+• YouTube SAR Honduras: https://www.youtube.com/@SARHonduras
+
+============================================================
+COMPORTAMIENTO AL RESPONDER:
+- Cita siempre: Decreto/Acuerdo + número + año + artículo cuando sea posible
+- Indica si aplica a persona natural, jurídica o ambas
+- Da ejemplos numéricos paso a paso cuando el usuario pregunte cómo calcular
+- Para reformas 2025-2026 que no estén arriba: remite al SAR o La Gaceta
+- Sé conciso pero completo; máximo 400 palabras por respuesta
+============================================================`;
 
 let messages = [{ role: 'system', content: SYSTEM_PROMPT }];
 let isOpen = false;
@@ -118,12 +231,12 @@ wrap.innerHTML = `
 <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
 <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813z" fill="#fff"/>
 </svg>
-<span>Asistente de Impuestos</span>
+<span>Asistente PIC-COHPUCP</span>
 </div>
 <button id="gpt-chat-close" title="Cerrar">✕</button>
 </div>
 <div id="gpt-chat-messages">
-<div class="gpt-msg bot">¡Hola! 👋 Soy tu asistente de tributación hondureña. Mi conocimiento llega hasta inicios de 2025 — para novedades de 2026 te recomendaré verificar en sar.gob.hn. ¿En qué te puedo ayudar?</div>
+<div class="gpt-msg bot">¡Hola! 👋 Soy tu asistente del programa PIC-COHPUCP, especializado en tributación hondureña (ISV, ISR, Código Tributario, Precios de Transferencia y más). ¿En qué te puedo ayudar?</div>
 </div>
 <div id="gpt-chat-footer">
 <textarea id="gpt-chat-input" placeholder="Pregunta sobre impuestos en Honduras..." rows="1"></textarea>
@@ -136,7 +249,7 @@ wrap.innerHTML = `
 </div>
 </div>
 <div style="display:flex;align-items:center;gap:8px;">
-<div id="gpt-fab-tooltip">Asistente Tributario</div>
+<div id="gpt-fab-tooltip">Asistente PIC-COHPUCP</div>
 <button id="gpt-fab-btn" title="Abrir asistente de impuestos">
 <svg viewBox="0 0 41 41" fill="none">
 <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813z" fill="#fff"/>
@@ -190,7 +303,7 @@ async function sendMessage() {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
-      body: JSON.stringify({ model: MODEL, messages: messages, max_tokens: 600, temperature: 0.5 })
+      body: JSON.stringify({ model: MODEL, messages: messages, max_tokens: 700, temperature: 0.3 })
     });
     const data = await res.json();
     const reply = data.choices?.[0]?.message?.content || 'Lo siento, no pude procesar tu consulta. Intenta de nuevo.';
