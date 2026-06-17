@@ -1,4 +1,4 @@
-/* GPT Widget - Preparador Impuestos Certificado v4.0 */
+/* GPT Widget - Preparador Impuestos Certificado v4.1 */
 (function(){
 const _a = 'sk-proj-O0LZwQZNKD9THKBYkKMVQm';
 const _b = 'JT7wkqACSWIjkdYKQAGrWMWnOCdjlW';
@@ -231,7 +231,7 @@ wrap.innerHTML = `
 <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
 <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813z" fill="#fff"/>
 </svg>
-<span>Asistente PIC-COHPUCP</span>
+<span>Asistente Tributario</span>
 </div>
 <button id="gpt-chat-close" title="Cerrar">✕</button>
 </div>
@@ -249,7 +249,7 @@ wrap.innerHTML = `
 </div>
 </div>
 <div style="display:flex;align-items:center;gap:8px;">
-<div id="gpt-fab-tooltip">Asistente PIC-COHPUCP</div>
+<div id="gpt-fab-tooltip">Asistente Tributario</div>
 <button id="gpt-fab-btn" title="Abrir asistente de impuestos">
 <svg viewBox="0 0 41 41" fill="none">
 <path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835A9.964 9.964 0 0 0 18.306.5a10.079 10.079 0 0 0-9.614 6.977 9.967 9.967 0 0 0-6.664 4.834 10.08 10.08 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 7.516 3.35 10.078 10.078 0 0 0 9.617-6.981 9.967 9.967 0 0 0 6.663-4.834 10.079 10.079 0 0 0-1.243-11.813z" fill="#fff"/>
