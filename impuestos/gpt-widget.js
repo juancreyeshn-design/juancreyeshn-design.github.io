@@ -236,7 +236,7 @@ wrap.innerHTML = `
 <button id="gpt-chat-close" title="Cerrar">✕</button>
 </div>
 <div id="gpt-chat-messages">
-<div class="gpt-msg bot">¡Hola! 👋 Soy tu asistente del programa PIC-COHPUCP, especializado en tributación hondureña (ISV, ISR, Código Tributario, Precios de Transferencia y más). ¿En qué te puedo ayudar?</div>
+<div class="gpt-msg bot">¡Hola! 👋 Soy tu Asistente Tributario, especializado en tributación hondureña (ISV, ISR, Código Tributario, Precios de Transferencia y más). ¿En qué te puedo ayudar?</div>
 </div>
 <div id="gpt-chat-footer">
 <textarea id="gpt-chat-input" placeholder="Pregunta sobre impuestos en Honduras..." rows="1"></textarea>
