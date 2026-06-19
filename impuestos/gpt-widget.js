@@ -118,7 +118,7 @@ Base legal: Decretos 92-2015; 131-2018; 53-2015; 46-2016
 • Gaceta Oficial: https://www.lagaceta.gob.hn
 • Facturación/CAI: https://www.sar.gob.hn/facturacion
 • YouTube SAR Honduras: https://www.youtube.com/@SARHonduras
-
+• COHPUCP: https://www.cohpucphn.org
 ============================================================
 COMPORTAMIENTO AL RESPONDER:
 - Cita siempre: Decreto/Acuerdo + número + año + artículo cuando sea posible
