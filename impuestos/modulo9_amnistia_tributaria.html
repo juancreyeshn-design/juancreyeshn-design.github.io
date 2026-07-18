@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 9 – Amnistía Tributaria | Impuestos Interactivos</title>
+<style>
+  :root{--navy:#0f1b33;--teal:#14b8a6;--teal-light:#e6fbf8;--green:#22c55e;--orange:#f59e0b;--text:#1f2937;--gray:#6b7280;--border:#e5e7eb;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:#f9fafb;}
+  header.top{background:var(--navy);padding:24px 32px 28px;color:#fff;}
+  .back-link{color:#9ca3af;text-decoration:none;font-size:14px;}
+  .back-link:hover{color:#fff;}
+  .badges{margin:14px 0 10px;display:flex;gap:8px;}
+  .badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.5px;}
+  .badge.modulo{background:var(--teal);color:#fff;}
+  .badge.nuevo{background:var(--green);color:#fff;}
+  h1.title{margin:4px 0 0;font-size:32px;font-weight:800;}
+  h1.title .accent{background:linear-gradient(90deg,#f59e0b,#fbbf24);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  nav.tabs{background:#fff;display:flex;border-bottom:1px solid var(--border);padding:0 32px;}
+  nav.tabs button{background:none;border:none;padding:16px 20px;font-size:15px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;gap:6px;}
+  nav.tabs button.active{color:var(--teal);border-bottom-color:var(--teal);}
+  main{max-width:900px;margin:0 auto;padding:28px 24px 60px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .section-label{font-size:13px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:18px;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:18px;}
+  .card h3{margin:0 0 12px;font-size:18px;}
+  .card p{line-height:1.6;margin:0 0 10px;}
+  .highlight{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:8px;padding:14px 16px;margin-top:12px;}
+  .highlight b{color:#0f766e;}
+  ul.list{margin:10px 0 0;padding-left:20px;line-height:1.8;}
+  .example-box{background:#fff7ed;border-left:4px solid var(--orange);border-radius:8px;padding:14px 16px;margin-top:12px;}
+  label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px;}
+  input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;}
+  button.primary{margin-top:18px;background:var(--teal);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
+  button.primary:hover{background:#0d9488;}
+  #sim-result{margin-top:20px;background:var(--teal-light);border-radius:10px;padding:18px 20px;display:none;}
+  .result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(15,118,110,.12);font-size:14px;}
+  .result-row:last-child{border-bottom:none;font-weight:700;font-size:16px;color:#0f766e;}
+  .q-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
+  .q-num{font-size:12px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:8px;}
+  .q-text{font-weight:700;font-size:16px;margin-bottom:14px;}
+  .opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;}
+  .opt:hover{border-color:var(--teal);}
+  .opt.correct{background:#dcfce7;border-color:var(--green);}
+  .opt.incorrect{background:#fee2e2;border-color:#ef4444;}
+  #score-box{display:none;text-align:center;background:var(--navy);color:#fff;border-radius:12px;padding:26px;margin-top:10px;}
+  #score-num{font-size:40px;font-weight:800;color:var(--teal);}
+  footer.foot{text-align:center;padding:20px;color:var(--gray);font-size:13px;border-top:1px solid var(--border);background:#fff;}
+  footer.foot a{color:var(--teal);text-decoration:none;}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back-link" href="menu.html">← Regresar al Menú</a>
+  <div class="badges"><span class="badge modulo">MÓDULO 9</span><span class="badge nuevo">NUEVO</span></div>
+  <h1 class="title">Amnistía <span class="accent">Tributaria</span></h1>
+</header>
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="concepto">📘 Concepto</button>
+  <button class="tab-btn" data-tab="simulacion">⚡ Simulación</button>
+  <button class="tab-btn" data-tab="juego">🎯 Mini-Juego</button>
+</nav>
+<main>
+  <div id="concepto" class="panel active">
+    <div class="section-label">Amnistía Tributaria — Decreto Legislativo 78-2026</div>
+
+    <div class="card">
+      <h3>🔗 ¿Qué es la amnistía tributaria vigente?</h3>
+      <p>Es el beneficio establecido mediante el <b>Decreto Legislativo No. 78-2026</b>, publicado en el Diario Oficial La Gaceta No. 37,166 el <b>12 de junio de 2026</b>. Tiene una vigencia de <b>cuatro meses</b> desde su publicación, por lo que el plazo finaliza el <b>12 de octubre de 2026</b>.</p>
+      <div class="highlight"><b>Base legal:</b> Artículo 2, numeral 4 del Código Tributario (Decreto 170-2016), que define la amnistía como el beneficio concedido por ley para condonar parcial o totalmente las obligaciones pecuniarias accesorias de la deuda tributaria.</div>
+    </div>
+
+    <div class="card">
+      <h3>📋 ¿Qué obligaciones cubre?</h3>
+      <p>Comprende obligaciones tributarias materiales o formales correspondientes a períodos vencidos hasta el <b>31 de diciembre de 2025</b>, en los siguientes casos:</p>
+      <ul class="list">
+        <li>Declaraciones u obligaciones que no fueron presentadas o cumplidas.</li>
+        <li>Tributos declarados pero pendientes de pago total o parcial.</li>
+        <li>Obligaciones cumplidas fuera de plazo que generaron multas, recargos o intereses.</li>
+        <li>Sanciones accesorias derivadas del incumplimiento formal o material.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>✅ Beneficio concedido</h3>
+      <p>El Decreto permite la exoneración de:</p>
+      <ul class="list">
+        <li>Multas</li>
+        <li>Recargos</li>
+        <li>Intereses</li>
+        <li>Otras sanciones pecuniarias accesorias vinculadas con las obligaciones cubiertas</li>
+      </ul>
+      <div class="highlight"><b>Importante:</b> la amnistía no perdona el impuesto principal. El obligado tributario debe presentar las declaraciones omitidas y pagar el tributo correspondiente para regularizar su situación y conservar el beneficio.</div>
+    </div>
+
+    <div class="card">
+      <h3>💡 Ejemplo práctico</h3>
+      <div class="example-box">
+        Una empresa no presentó la declaración del ISV de noviembre de 2025:
+        <ul class="list">
+          <li>Presenta la declaración durante la vigencia de la amnistía.</li>
+          <li>Paga el ISV determinado (impuesto principal).</li>
+          <li>No paga la multa por presentación tardía, ni los recargos, ni los intereses — quedan amnistiados.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🌐 Otras amnistías incluidas en el Decreto 78-2026</h3>
+      <ul class="list">
+        <li><b>IHSS:</b> recargos, multas e intereses por aportaciones patronales y laborales (4 meses).</li>
+        <li><b>Tributos municipales:</b> multas, intereses, recargos y sobretasas en todas las municipalidades (4 meses), además de 30 días adicionales de descuento por pronto pago.</li>
+        <li><b>Agua potable y saneamiento:</b> multas, recargos e intereses moratorios y cargos de reconexión (4 meses).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>📜 Antecedente: Decreto 7-2026</h3>
+      <p>El Decreto 78-2026 <b>deroga expresamente el artículo 7 del Decreto 7-2026</b> (publicado el 13 de febrero de 2026), que contenía una amnistía tributaria anterior vigente del 13 de febrero al 13 de junio de 2026. La nueva amnistía sustituye aquella regulación y reinicia el plazo de cuatro meses desde el 12 de junio de 2026.</p>
+    </div>
+  </div>
+
+  <div id="simulacion" class="panel">
+    <div class="section-label">Calculadora — Ahorro por Amnistía Tributaria</div>
+    <div class="card">
+      <h3>🔗 ¿Cuánto puedes ahorrar?</h3>
+      <p>Ingresa los montos pendientes de tu obligación tributaria vencida (hasta el 31 de diciembre de 2025) para estimar el ahorro al acogerte a la amnistía del Decreto 78-2026.</p>
+      <label>Impuesto principal adeudado (L.)</label>
+      <input type="number" id="in-impuesto" placeholder="Ej: 50000">
+      <label>Multa (L.)</label>
+      <input type="number" id="in-multa" placeholder="Ej: 15000">
+      <label>Recargos (L.)</label>
+      <input type="number" id="in-recargos" placeholder="Ej: 5000">
+      <label>Intereses (L.)</label>
+      <input type="number" id="in-intereses" placeholder="Ej: 8000">
+      <button class="primary" id="btn-calc">Calcular Ahorro</button>
+
+      <div id="sim-result">
+        <div class="result-row"><span>Total sin amnistía (impuesto + multa + recargos + intereses)</span><span id="rs-total-sin"></span></div>
+        <div class="result-row"><span>Total a pagar con amnistía (solo impuesto principal)</span><span id="rs-total-con"></span></div>
+        <div class="result-row"><span>Ahorro total (exoneración)</span><span id="rs-ahorro"></span></div>
+        <div class="result-row"><span>Plazo para acogerse</span><span>Hasta el 12 de octubre de 2026</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="juego" class="panel">
+    <div class="section-label">Evalúa tu comprensión de la Amnistía Tributaria</div>
+    <div id="quiz-container"></div>
+    <div id="score-box">
+      <div id="score-num">0</div>
+      <div id="score-label">de 10 correctas</div>
+      <div id="score-msg" style="margin-top:10px;font-size:14px;color:#cbd5e1;"></div>
+    </div>
+  </div>
+</main>
+<footer class="foot">Módulo 9 — Amnistía Tributaria · Juan Carlos Reyes · <a href="menu.html">← Menú Principal</a></footer>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('btn-calc').addEventListener('click',()=>{
+  const imp = parseFloat(document.getElementById('in-impuesto').value)||0;
+  const multa = parseFloat(document.getElementById('in-multa').value)||0;
+  const rec = parseFloat(document.getElementById('in-recargos').value)||0;
+  const int = parseFloat(document.getElementById('in-intereses').value)||0;
+  const totalSin = imp+multa+rec+int;
+  const totalCon = imp;
+  const ahorro = multa+rec+int;
+  const fmt = n => 'L. ' + n.toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('rs-total-sin').textContent = fmt(totalSin);
+  document.getElementById('rs-total-con').textContent = fmt(totalCon);
+  document.getElementById('rs-ahorro').textContent = fmt(ahorro);
+  document.getElementById('sim-result').style.display='block';
+});
+
+const QUIZ = [
+  {q:'¿Qué decreto regula la amnistía tributaria actualmente vigente (2026)?', opts:['Decreto 170-2016','Decreto 7-2026','Decreto 78-2026','Decreto 232-2011'], correct:2},
+  {q:'¿En qué fecha se publicó el Decreto 78-2026?', opts:['13 de febrero de 2026','12 de junio de 2026','31 de diciembre de 2025','12 de octubre de 2026'], correct:1},
+  {q:'¿Cuánto dura la vigencia de la amnistía tributaria del SAR bajo el Decreto 78-2026?', opts:['30 días','2 meses','4 meses','1 año'], correct:2},
+  {q:'¿Cuál es la fecha límite para acogerse a la amnistía tributaria vigente?', opts:['13 de junio de 2026','12 de octubre de 2026','31 de diciembre de 2026','12 de junio de 2027'], correct:1},
+  {q:'¿Qué obligaciones cubre la amnistía?', opts:['Solo las de 2026 en adelante','Períodos vencidos hasta el 31 de diciembre de 2025','Solo el ISV','Solo el IHSS'], correct:1},
+  {q:'¿Qué elementos exonera la amnistía tributaria?', opts:['El impuesto principal','Multas, recargos e intereses','Solo las multas','Nada, solo da un plazo'], correct:1},
+  {q:'¿La amnistía perdona el impuesto principal adeudado?', opts:['Sí, siempre','No, debe pagarse para conservar el beneficio','Solo si es menor a L.10,000','Depende del municipio'], correct:1},
+  {q:'¿Qué artículo del Código Tributario (Decreto 170-2016) define legalmente la amnistía?', opts:['Artículo 1','Artículo 2, numeral 4','Artículo 78','Artículo 7'], correct:1},
+  {q:'Además de la tributaria ante el SAR, ¿qué otras amnistías incluye el Decreto 78-2026?', opts:['Solo la migratoria','IHSS, municipal y agua potable','Solo la vehicular','Ninguna otra'], correct:1},
+  {q:'¿Qué decreto anterior fue derogado (artículo 7) por el Decreto 78-2026?', opts:['Decreto 170-2016','Decreto 232-2011','Decreto 7-2026','Decreto 37166'], correct:2}
+];
+let score=0, answered=0;
+const container = document.getElementById('quiz-container');
+QUIZ.forEach((item,i)=>{
+  const card=document.createElement('div');
+  card.className='q-card';
+  card.innerHTML = '<div class="q-num">Pregunta '+(i+1)+' de '+QUIZ.length+'</div><div class="q-text">'+item.q+'</div>';
+  item.opts.forEach((opt,oi)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.textContent=opt;
+    b.addEventListener('click',()=>{
+      if(card.dataset.done) return;
+      card.dataset.done='1';
+      answered++;
+      const buttons = card.querySelectorAll('.opt');
+      if(oi===item.correct){ b.classList.add('correct'); score++; }
+      else { b.classList.add('incorrect'); buttons[item.correct].classList.add('correct'); }
+      if(answered===QUIZ.length){ showScore(); }
+    });
+    card.appendChild(b);
+  });
+  container.appendChild(card);
+});
+function showScore(){
+  const box=document.getElementById('score-box');
+  box.style.display='block';
+  document.getElementById('score-num').textContent=score;
+  let msg='';
+  if(score>=9) msg='Excelente dominio del tema.';
+  else if(score>=7) msg='Buen manejo, repasa los detalles de plazos.';
+  else msg='Te recomendamos repasar la sección de Concepto.';
+  document.getElementById('score-msg').textContent=msg;
+}
+</script>
+<script src="gpt-widget.js"></script>
+</body>
+</html>
