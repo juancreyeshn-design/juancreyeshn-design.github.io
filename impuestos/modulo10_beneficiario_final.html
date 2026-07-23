@@ -185,6 +185,62 @@ Si no puede identificarse a una persona natural por propiedad o control, la ley 
 </div>
 <p style="margin-top:12px;font-size:13px;color:var(--gray);">Además de la multa, las acciones no convertidas quedan sin valor ni efecto y se suspenden sus derechos hasta regularizar la situación.</p>
 </div>
+
+<div class="card">
+<h3>🔍 Calculadora 3: ¿Soy Beneficiario Final? (Art. 6)</h3>
+<p>Verifica si una persona natural califica como beneficiario final según los tres criterios del Artículo 6 del Decreto 127-2026.</p>
+<label>Porcentaje de participación directa o indirecta en el capital o patrimonio (%)</label>
+<input type="number" id="in-porcentaje" placeholder="Ej: 30" min="0" max="100">
+<label style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+<input type="checkbox" id="in-control" style="width:auto;">
+¿Ejerce control efectivo por medios distintos a la propiedad?
+</label>
+<label style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+<input type="checkbox" id="in-influencia" style="width:auto;">
+¿Puede nombrar, remover o influir sustancialmente en los órganos administrativos, o en decisiones financieras, operativas o comerciales?
+</label>
+<button class="primary" id="btn-calc-bf">Verificar</button>
+
+<div id="sim-result-bf" style="display:none;">
+<div class="result-row"><span>Criterio de propiedad (≥25%):</span><b id="rs-bf-prop">—</b></div>
+<div class="result-row"><span>Criterio de control efectivo:</span><b id="rs-bf-control">—</b></div>
+<div class="result-row"><span>Criterio de influencia/administración:</span><b id="rs-bf-influencia">—</b></div>
+<div class="result-row"><span>Resultado:</span><b id="rs-bf-final">—</b></div>
+</div>
+<p style="margin-top:12px;font-size:13px;color:var(--gray);">Si no puede identificarse a una persona natural por propiedad o control, la ley exige declarar al funcionario administrativo de mayor jerarquía, dejando constancia documental de la justificación (Art. 6).</p>
+</div>
+
+<div class="card">
+<h3>⏳ Calculadora 4: Plazos Clave del RCBF (Arts. 18, 19, 32 y 34)</h3>
+<p>Calcula las fechas límite legales a partir de la fecha de vigencia de la ley y de otras fechas de referencia.</p>
+
+<label>Fecha de vigencia de la ley (Decreto 127-2026)</label>
+<input type="date" id="in-fecha-vigencia" value="2026-07-03">
+<button class="primary" id="btn-calc-plazos-ley">Calcular plazos de la CNBS</button>
+<div id="sim-result-plazos-ley" style="display:none;">
+<div class="result-row"><span>Plazo máximo para reglamento, 60 días hábiles (Art. 34):</span><b id="rs-plazo-reglamento">—</b></div>
+<div class="result-row"><span>Plazo máximo para habilitar el Registro, 6 meses (Art. 32):</span><b id="rs-plazo-registro">—</b></div>
+</div>
+
+<label style="margin-top:20px;">Fecha de constitución de una entidad nueva (Art. 18)</label>
+<input type="date" id="in-fecha-constitucion">
+<button class="primary" id="btn-calc-constitucion">Calcular plazo de inscripción inicial</button>
+<div id="sim-result-constitucion" style="display:none;">
+<div class="result-row"><span>Plazo límite de inscripción, 1 mes después:</span><b id="rs-plazo-constitucion">—</b></div>
+</div>
+
+<label style="margin-top:20px;">Fecha de modificación de datos ya registrados (Art. 19)</label>
+<input type="date" id="in-fecha-modificacion">
+<button class="primary" id="btn-calc-modificacion">Calcular plazo de reporte de cambio</button>
+<div id="sim-result-modificacion" style="display:none;">
+<div class="result-row"><span>Plazo límite de reporte, primeros 10 días hábiles del mes siguiente:</span><b id="rs-plazo-modificacion">—</b></div>
+</div>
+
+<div class="highlight" style="margin-top:16px;">
+<b>Actualización anual (Art. 19):</b> toda entidad debe actualizar su información en el RCBF a más tardar el <b>30 de mayo</b> de cada año.
+</div>
+<p style="margin-top:12px;font-size:13px;color:var(--gray);">Nota: el cálculo de días hábiles excluye sábados y domingos, pero no considera días feriados oficiales. Verifica siempre las fechas con el reglamento vigente de la CNBS.</p>
+</div>
 </section>
 <section id="juego" class="panel">
 <p class="section-label">Pon a prueba tus conocimientos</p>
@@ -228,6 +284,86 @@ const base = salario * numsal;
 const fmt = n => 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, maximumFractionDigits:2});
 document.getElementById('rs-base-33').textContent = fmt(base);
 document.getElementById('sim-result-33').style.display='block';
+});
+
+
+function bfAddMonths(dateStr, months){
+const [y,m,d] = dateStr.split('-').map(Number);
+const dt = new Date(y, m-1, d);
+dt.setMonth(dt.getMonth()+months);
+return dt;
+}
+function bfIsBusinessDay(dt){
+const day = dt.getDay();
+return day!==0 && day!==6;
+}
+function bfAddBusinessDays(dateStr, days){
+const [y,m,d] = dateStr.split('-').map(Number);
+let dt = new Date(y, m-1, d);
+let added = 0;
+while(added < days){
+dt.setDate(dt.getDate()+1);
+if(bfIsBusinessDay(dt)) added++;
+}
+return dt;
+}
+function bfNthBusinessDayOfMonth(year, monthIndex, n){
+let dt = new Date(year, monthIndex, 1);
+let count = 0;
+while(true){
+if(bfIsBusinessDay(dt)){
+count++;
+if(count===n) return new Date(dt);
+}
+dt.setDate(dt.getDate()+1);
+}
+}
+function bfFmtDate(dt){
+return dt.toLocaleDateString('es-HN', {year:'numeric', month:'long', day:'numeric'});
+}
+
+document.getElementById('btn-calc-bf').addEventListener('click', ()=>{
+const pct = parseFloat(document.getElementById('in-porcentaje').value) || 0;
+const control = document.getElementById('in-control').checked;
+const influencia = document.getElementById('in-influencia').checked;
+const cumplePropiedad = pct >= 25;
+document.getElementById('rs-bf-prop').textContent = (cumplePropiedad ? 'S\u00ed' : 'No') + ' (' + pct + '%)';
+document.getElementById('rs-bf-control').textContent = control ? 'S\u00ed' : 'No';
+document.getElementById('rs-bf-influencia').textContent = influencia ? 'S\u00ed' : 'No';
+const esBeneficiario = cumplePropiedad || control || influencia;
+const resultEl = document.getElementById('rs-bf-final');
+resultEl.textContent = esBeneficiario ? 'Califica como Beneficiario Final' : 'No califica seg\u00fan estos criterios';
+resultEl.style.color = esBeneficiario ? '#dc2626' : '#16a34a';
+document.getElementById('sim-result-bf').style.display='block';
+});
+
+document.getElementById('btn-calc-plazos-ley').addEventListener('click', ()=>{
+const val = document.getElementById('in-fecha-vigencia').value;
+if(!val) return;
+const reglamento = bfAddBusinessDays(val, 60);
+const registro = bfAddMonths(val, 6);
+document.getElementById('rs-plazo-reglamento').textContent = bfFmtDate(reglamento);
+document.getElementById('rs-plazo-registro').textContent = bfFmtDate(registro);
+document.getElementById('sim-result-plazos-ley').style.display='block';
+});
+
+document.getElementById('btn-calc-constitucion').addEventListener('click', ()=>{
+const val = document.getElementById('in-fecha-constitucion').value;
+if(!val) return;
+const limite = bfAddMonths(val, 1);
+document.getElementById('rs-plazo-constitucion').textContent = bfFmtDate(limite);
+document.getElementById('sim-result-constitucion').style.display='block';
+});
+
+document.getElementById('btn-calc-modificacion').addEventListener('click', ()=>{
+const val = document.getElementById('in-fecha-modificacion').value;
+if(!val) return;
+const [y,m,d] = val.split('-').map(Number);
+const base = new Date(y, m-1, d);
+const nextMonth = new Date(base.getFullYear(), base.getMonth()+1, 1);
+const limite = bfNthBusinessDayOfMonth(nextMonth.getFullYear(), nextMonth.getMonth(), 10);
+document.getElementById('rs-plazo-modificacion').textContent = bfFmtDate(limite);
+document.getElementById('sim-result-modificacion').style.display='block';
 });
 
 const QUIZ = [
