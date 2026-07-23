@@ -35,7 +35,7 @@ label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px;}
 input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;}
 button.primary{margin-top:18px;background:var(--teal);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
 button.primary:hover{background:#4f46e5;}
-#sim-result{margin-top:20px;background:var(--teal-light);border-radius:10px;padding:18px 20px;display:none;}
+#sim-result,#sim-result-33{margin-top:20px;background:var(--teal-light);border-radius:10px;padding:18px 20px;display:none;}
 .result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(15,118,110,.12);font-size:14px;}
 .result-row:last-child{border-bottom:none;font-weight:700;font-size:16px;color:#4338ca;}
 .q-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
@@ -148,8 +148,10 @@ Si no puede identificarse a una persona natural por propiedad o control, la ley 
 </div>
 </section>
 <section id="simulacion" class="panel">
-<p class="section-label">Calculadora de Multa Estimada</p>
+<p class="section-label">Calculadoras de Multa Estimada</p>
+
 <div class="card">
+<h3>⚠️ Calculadora 1: Multa general por incumplimiento (Art. 27)</h3>
 <p>Estima el rango de la multa aplicable según el número de salarios mínimos que determine la autoridad, y si existe reincidencia.</p>
 <label>Salario mínimo mensual vigente (L.)</label>
 <input type="number" id="in-salario" placeholder="Ej: 11903">
@@ -159,7 +161,7 @@ Si no puede identificarse a una persona natural por propiedad o control, la ley 
 <input type="checkbox" id="in-reincidencia" style="width:auto;">
 ¿Existe reincidencia? (duplica la multa)
 </label>
-<button class="primary" id="btn-calc">Calcular Multa</button>
+<button class="primary" id="btn-calc">Calcular Multa (Art. 27)</button>
 
 <div id="sim-result" style="display:none;">
 <div class="result-row"><span>Multa base estimada:</span><b id="rs-base">L. 0.00</b></div>
@@ -167,9 +169,21 @@ Si no puede identificarse a una persona natural por propiedad o control, la ley 
 <div class="result-row"><span>Rango legal permitido:</span><b id="rs-rango">20 – 500 salarios mínimos</b></div>
 </div>
 </div>
+
 <div class="card">
-<h3>⚖️ Nota: multa por acciones al portador (Art. 33)</h3>
-<p>Esta calculadora estima la multa general del Art. 27. Recuerda que la sanción por no convertir acciones al portador en nominativas es independiente y oscila entre <b>10 y 100 salarios mínimos</b>.</p>
+<h3>⚖️ Calculadora 2: Multa por acciones al portador (Art. 33)</h3>
+<p>Estima la multa aplicable a las sociedades que no conviertan sus acciones al portador en acciones nominativas dentro del plazo legal.</p>
+<label>Salario mínimo mensual vigente (L.)</label>
+<input type="number" id="in-salario-33" placeholder="Ej: 11903">
+<label>Número de salarios mínimos de la infracción (entre 10 y 100)</label>
+<input type="number" id="in-numsal-33" placeholder="Ej: 40" min="10" max="100">
+<button class="primary" id="btn-calc-33">Calcular Multa (Art. 33)</button>
+
+<div id="sim-result-33" style="display:none;">
+<div class="result-row"><span>Multa estimada:</span><b id="rs-base-33">L. 0.00</b></div>
+<div class="result-row"><span>Rango legal permitido:</span><b id="rs-rango-33">10 – 100 salarios mínimos</b></div>
+</div>
+<p style="margin-top:12px;font-size:13px;color:var(--gray);">Además de la multa, las acciones no convertidas quedan sin valor ni efecto y se suspenden sus derechos hasta regularizar la situación.</p>
 </div>
 </section>
 <section id="juego" class="panel">
@@ -205,6 +219,15 @@ const fmt = n => 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, max
 document.getElementById('rs-base').textContent = fmt(base);
 document.getElementById('rs-final').textContent = fmt(final);
 document.getElementById('sim-result').style.display='block';
+});
+
+document.getElementById('btn-calc-33').addEventListener('click', ()=>{
+const salario = parseFloat(document.getElementById('in-salario-33').value) || 0;
+const numsal = parseFloat(document.getElementById('in-numsal-33').value) || 0;
+const base = salario * numsal;
+const fmt = n => 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, maximumFractionDigits:2});
+document.getElementById('rs-base-33').textContent = fmt(base);
+document.getElementById('sim-result-33').style.display='block';
 });
 
 const QUIZ = [
