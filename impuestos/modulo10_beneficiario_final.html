@@ -5,227 +5,256 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Módulo 10 – Beneficiario Final | Impuestos Interactivos</title>
 <style>
-  :root{--navy:#0f1b33;--teal:#6366f1;--teal-light:#eef2ff;--green:#22c55e;--orange:#f59e0b;--text:#1f2937;--gray:#6b7280;--border:#e5e7eb;}
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:#f9fafb;}
-  header.top{background:var(--navy);padding:24px 32px 28px;color:#fff;}
-  .back-link{color:#9ca3af;text-decoration:none;font-size:14px;}
-  .back-link:hover{color:#fff;}
-  .badges{margin:14px 0 10px;display:flex;gap:8px;}
-  .badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.5px;}
-  .badge.modulo{background:var(--teal);color:#fff;}
-  .badge.nuevo{background:var(--green);color:#fff;}
-  h1.title{margin:4px 0 0;font-size:32px;font-weight:800;}
-  h1.title .accent{background:linear-gradient(90deg,#6366f1,#a5b4fc);-webkit-background-clip:text;background-clip:text;color:transparent;}
-  nav.tabs{background:#fff;display:flex;border-bottom:1px solid var(--border);padding:0 32px;}
-  nav.tabs button{background:none;border:none;padding:16px 20px;font-size:15px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;gap:6px;}
-  nav.tabs button.active{color:var(--teal);border-bottom-color:var(--teal);}
-  main{max-width:900px;margin:0 auto;padding:28px 24px 60px;}
-  .panel{display:none;}
-  .panel.active{display:block;}
-  .section-label{font-size:13px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:18px;}
-  .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:18px;}
-  .card h3{margin:0 0 12px;font-size:18px;}
-  .card p{line-height:1.6;margin:0 0 10px;}
-  .highlight{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:8px;padding:14px 16px;margin-top:12px;}
-  .highlight b{color:#4338ca;}
-  ul.list{margin:10px 0 0;padding-left:20px;line-height:1.8;}
-  .example-box{background:#fff7ed;border-left:4px solid var(--orange);border-radius:8px;padding:14px 16px;margin-top:12px;}
-  label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px;}
-  input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;}
-  button.primary{margin-top:18px;background:var(--teal);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
-  button.primary:hover{background:#4f46e5;}
-  #sim-result{margin-top:20px;background:var(--teal-light);border-radius:10px;padding:18px 20px;display:none;}
-  .result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(15,118,110,.12);font-size:14px;}
-  .result-row:last-child{border-bottom:none;font-weight:700;font-size:16px;color:#4338ca;}
-  .q-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
-  .q-num{font-size:12px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:8px;}
-  .q-text{font-weight:700;font-size:16px;margin-bottom:14px;}
-  .opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;}
-  .opt:hover{border-color:var(--teal);}
-  .opt.correct{background:#dcfce7;border-color:var(--green);}
-  .opt.incorrect{background:#fee2e2;border-color:#ef4444;}
-  #score-box{display:none;text-align:center;background:var(--navy);color:#fff;border-radius:12px;padding:26px;margin-top:10px;}
-  #score-num{font-size:40px;font-weight:800;color:var(--teal);}
-  footer.foot{text-align:center;padding:20px;color:var(--gray);font-size:13px;border-top:1px solid var(--border);background:#fff;}
-  footer.foot a{color:var(--teal);text-decoration:none;}
+:root{--navy:#0f1b33;--teal:#6366f1;--teal-light:#eef2ff;--green:#22c55e;--orange:#f59e0b;--text:#1f2937;--gray:#6b7280;--border:#e5e7eb;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Arial,sans-serif;color:var(--text);background:#f9fafb;}
+header.top{background:var(--navy);padding:24px 32px 28px;color:#fff;}
+.back-link{color:#9ca3af;text-decoration:none;font-size:14px;}
+.back-link:hover{color:#fff;}
+.badges{margin:14px 0 10px;display:flex;gap:8px;}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:.5px;}
+.badge.modulo{background:var(--teal);color:#fff;}
+.badge.nuevo{background:var(--green);color:#fff;}
+h1.title{margin:4px 0 0;font-size:32px;font-weight:800;}
+h1.title .accent{background:linear-gradient(90deg,#6366f1,#a5b4fc);-webkit-background-clip:text;background-clip:text;color:transparent;}
+nav.tabs{background:#fff;display:flex;border-bottom:1px solid var(--border);padding:0 32px;}
+nav.tabs button{background:none;border:none;padding:16px 20px;font-size:15px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;gap:6px;}
+nav.tabs button.active{color:var(--teal);border-bottom-color:var(--teal);}
+main{max-width:900px;margin:0 auto;padding:28px 24px 60px;}
+.panel{display:none;}
+.panel.active{display:block;}
+.section-label{font-size:13px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:18px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:18px;}
+.card h3{margin:0 0 12px;font-size:18px;}
+.card p{line-height:1.6;margin:0 0 10px;}
+.highlight{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:8px;padding:14px 16px;margin-top:12px;}
+.highlight b{color:#4338ca;}
+ul.list{margin:10px 0 0;padding-left:20px;line-height:1.8;}
+.example-box{background:#fff7ed;border-left:4px solid var(--orange);border-radius:8px;padding:14px 16px;margin-top:12px;}
+label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px;}
+input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:15px;}
+button.primary{margin-top:18px;background:var(--teal);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;}
+button.primary:hover{background:#4f46e5;}
+#sim-result{margin-top:20px;background:var(--teal-light);border-radius:10px;padding:18px 20px;display:none;}
+.result-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(15,118,110,.12);font-size:14px;}
+.result-row:last-child{border-bottom:none;font-weight:700;font-size:16px;color:#4338ca;}
+.q-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
+.q-num{font-size:12px;letter-spacing:1px;color:var(--gray);text-transform:uppercase;margin-bottom:8px;}
+.q-text{font-weight:700;font-size:16px;margin-bottom:14px;}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:14px;}
+.opt:hover{border-color:var(--teal);}
+.opt.correct{background:#dcfce7;border-color:var(--green);}
+.opt.incorrect{background:#fee2e2;border-color:#ef4444;}
+#score-box{display:none;text-align:center;background:var(--navy);color:#fff;border-radius:12px;padding:26px;margin-top:10px;}
+#score-num{font-size:40px;font-weight:800;color:var(--teal);}
+footer.foot{text-align:center;padding:20px;color:var(--gray);font-size:13px;border-top:1px solid var(--border);background:#fff;}
+footer.foot a{color:var(--teal);text-decoration:none;}
 </style>
 </head>
 <body>
 <header class="top">
-  <a class="back-link" href="menu.html">← Módulos</a>
-  <div class="badges">
-    <span class="badge modulo">MÓDULO 10</span>
-    <span class="badge nuevo">NUEVO</span>
-  </div>
-  <h1 class="title">Beneficiario <span class="accent">Final</span></h1>
+<a class="back-link" href="menu.html">← Módulos</a>
+<div class="badges">
+<span class="badge modulo">MÓDULO 10</span>
+<span class="badge nuevo">NUEVO</span>
+</div>
+<h1 class="title">Beneficiario <span class="accent">Final</span></h1>
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn active" data-tab="concepto">📖 Concepto</button>
-  <button class="tab-btn" data-tab="simulacion">🧮 Simulación</button>
-  <button class="tab-btn" data-tab="juego">🎮 Mini-Juego</button>
+<button class="tab-btn active" data-tab="concepto">📖 Concepto</button>
+<button class="tab-btn" data-tab="simulacion">🧮 Simulación</button>
+<button class="tab-btn" data-tab="juego">🎮 Mini-Juego</button>
 </nav>
 
 <main>
 <section id="concepto" class="panel active">
-  <p class="section-label">¿Qué necesitas saber?</p>
+<p class="section-label">¿Qué necesitas saber?</p>
 
-  <div class="card">
-    <h3>📜 Marco legal</h3>
-    <p>La <b>Ley de Transparencia y Registro Centralizado de Beneficiario Final</b> fue aprobada mediante el <b>Decreto Legislativo No. 127-2026</b>, publicado en La Gaceta el 3 de julio de 2026. Contiene 36 artículos y ya se encuentra vigente, aunque su aplicación operativa depende de la reglamentación y de la puesta en marcha del registro.</p>
-  </div>
+<div class="card">
+<h3>📜 Marco legal</h3>
+<p>La <b>Ley de Transparencia y Registro Centralizado de Beneficiario Final</b> fue aprobada mediante el <b>Decreto Legislativo No. 127-2026</b>, publicado en La Gaceta el 3 de julio de 2026. Contiene 36 artículos y ya se encuentra vigente, aunque su aplicación operativa depende de la reglamentación y de la puesta en marcha del registro.</p>
+</div>
 
-  <div class="card">
-    <h3>🗂️ El Registro Centralizado (RCBF)</h3>
-    <p>La ley crea el <b>Registro Centralizado de Beneficiarios Finales (RCBF)</b>, administrado por la <b>Comisión Nacional de Bancos y Seguros (CNBS)</b>. Se proyecta que entre en plena operación durante 2027.</p>
-  </div>
+<div class="card">
+<h3>🗂️ El Registro Centralizado (RCBF)</h3>
+<p>La ley crea el <b>Registro Centralizado de Beneficiarios Finales (RCBF)</b>, administrado por la <b>Comisión Nacional de Bancos y Seguros (CNBS)</b>. Se proyecta que entre en plena operación durante 2027.</p>
+</div>
 
-  <div class="card">
-    <h3>🏢 ¿Quiénes deben inscribirse?</h3>
-    <ul class="list">
-      <li>Sociedades mercantiles constituidas en Honduras</li>
-      <li>Sociedades extranjeras autorizadas para operar en el país</li>
-      <li>Fideicomisos</li>
-      <li>Fondos de inversión</li>
-      <li>Otras estructuras jurídicas obligadas por la ley</li>
-    </ul>
-  </div>
+<div class="card">
+<h3>🏢 ¿Quiénes deben inscribirse? (Art. 4)</h3>
+<ul class="list">
+<li>Sociedades mercantiles constituidas en Honduras</li>
+<li>Sociedades extranjeras autorizadas para operar en el país</li>
+<li>Fideicomisos</li>
+<li>Fondos de inversión</li>
+<li>Otras estructuras jurídicas obligadas por la ley</li>
+</ul>
+<p style="margin-top:10px;"><b>Exclusiones (Art. 5):</b> entidades totalmente controladas por el Estado, embajadas y organismos internacionales, y fondos soberanos o entidades públicas extranjeras. La exclusión no cubre alianzas público-privadas ni fideicomisos con participación pública.</p>
+</div>
 
-  <div class="highlight">
-    <b>¿Quién es el beneficiario final?</b> Es la persona natural que cumple al menos una de estas condiciones:
-    <ul class="list">
-      <li>Posee, directa o indirectamente, <b>25% o más</b> del capital o patrimonio</li>
-      <li>Ejerce <b>control efectivo</b> por otros medios distintos a la propiedad</li>
-      <li>Puede nombrar, remover o influir sustancialmente en los órganos administrativos, o en las decisiones financieras, operativas o comerciales</li>
-    </ul>
-    Si no puede identificarse a una persona natural por propiedad o control, la ley exige declarar al <b>funcionario administrativo de mayor jerarquía</b>, dejando constancia documental de la justificación.
-  </div>
+<div class="highlight">
+<b>¿Quién es el beneficiario final? (Art. 6)</b> Es la persona natural que cumple al menos una de estas condiciones:
+<ul class="list">
+<li>Posee, directa o indirectamente, <b>25% o más</b> del capital o patrimonio</li>
+<li>Ejerce <b>control efectivo</b> por otros medios distintos a la propiedad</li>
+<li>Puede nombrar, remover o influir sustancialmente en los órganos administrativos, o en las decisiones financieras, operativas o comerciales</li>
+</ul>
+Si no puede identificarse a una persona natural por propiedad o control, la ley exige declarar al <b>funcionario administrativo de mayor jerarquía</b>, dejando constancia documental de la justificación. El Artículo 7 extiende estos criterios a sociedades de hecho, asociaciones temporales y otras estructuras sin personería jurídica.
+</div>
 
-  <div class="card">
-    <h3>✅ Obligaciones principales</h3>
-    <ul class="list">
-      <li>Inscribirse en el RCBF</li>
-      <li>Presentar información adecuada, exacta y actualizada</li>
-      <li>Documentar la cadena de propiedad y control</li>
-      <li>Reportar modificaciones dentro del plazo legal</li>
-      <li>Actualizar la información cada año, a más tardar el <b>30 de mayo</b></li>
-      <li>Conservar la documentación de respaldo durante al menos <b>5 años</b></li>
-      <li>Convertir las acciones al portador en acciones nominativas dentro del plazo que establece la ley</li>
-    </ul>
-  </div>
+<div class="card">
+<h3>✅ Obligaciones principales (Arts. 11-15)</h3>
+<ul class="list">
+<li>Inscribirse en el RCBF</li>
+<li>Presentar información adecuada, exacta y actualizada</li>
+<li>Documentar la cadena de propiedad y control</li>
+<li>Reportar modificaciones dentro del plazo legal</li>
+<li>Actualizar la información cada año, a más tardar el <b>30 de mayo</b></li>
+<li>Conservar la documentación de respaldo durante al menos <b>5 años</b></li>
+<li>Convertir las acciones al portador en acciones nominativas dentro del plazo que establece la ley</li>
+</ul>
+<p style="margin-top:10px;">El responsable de presentar la información varía según el tipo de entidad: representante legal, gerente general, liquidador, fiduciario, mandatario, o presidente de fundación u ONG (Art. 13).</p>
+</div>
 
-  <div class="example-box">
-    <b>Ejemplo:</b> una sociedad mercantil hondureña con cuatro socios, donde uno de ellos posee el 30% de las acciones a través de otra empresa, debe identificar y declarar a esa persona natural como beneficiario final, documentando la cadena de propiedad que conecta ambas sociedades.
-  </div>
+<div class="example-box">
+<b>Ejemplo:</b> una sociedad mercantil hondureña con cuatro socios, donde uno de ellos posee el 30% de las acciones a través de otra empresa, debe identificar y declarar a esa persona natural como beneficiario final, documentando la cadena de propiedad que conecta ambas sociedades.
+</div>
 
-  <div class="card">
-    <h3>⚠️ Sanciones y responsables</h3>
-    <p>Las multas por infracción pueden oscilar entre <b>20 y 500 salarios mínimos</b>, y esta cifra puede <b>duplicarse en caso de reincidencia</b>. La responsabilidad principal del reporte recae, según la estructura de que se trate, en el <b>representante legal, gerente general, liquidador o fiduciario</b>.</p>
-  </div>
+<div class="card">
+<h3>⚠️ Sanción general por incumplimiento (Art. 27)</h3>
+<p>Las multas por infracción pueden oscilar entre <b>20 y 500 salarios mínimos</b>, y esta cifra puede <b>duplicarse en caso de reincidencia</b>. La responsabilidad principal del reporte recae, según la estructura de que se trate, en el <b>representante legal, gerente general, liquidador o fiduciario</b>. La multa se gradúa según gravedad, tamaño, naturaleza y capacidad económica del infractor, y requiere un reglamento de sanciones que diferencie incumplimientos formales, materiales, subsanables y conductas dolosas.</p>
+</div>
+
+<div class="card">
+<h3>⚖️ Multa específica por acciones al portador (Art. 33)</h3>
+<p>Además de la multa general, existe una sanción independiente para las sociedades que no conviertan sus acciones al portador en acciones nominativas dentro del plazo legal: <b>10 a 100 salarios mínimos</b>. Mientras no se realice la conversión, esas acciones <b>quedan sin valor ni efecto</b>, se <b>suspenden sus derechos</b> y no pueden pagarse dividendos, además de requerir la adecuación de estatutos y documentos societarios.</p>
+</div>
+
+<div class="card">
+<h3>🧑‍💼 Responsabilidad de funcionarios públicos (Arts. 28-29)</h3>
+<p>El acceso no autorizado, la copia, alteración, destrucción o divulgación indebida de la información del RCBF por parte de funcionarios puede generar falta administrativa grave, despido sin responsabilidad patronal, responsabilidad civil y, en algunos casos, responsabilidad penal por el delito de <b>Revelación de Secreto</b> conforme al Código Penal, incluyendo denuncia obligatoria ante el Ministerio Público.</p>
+</div>
+
+<div class="card">
+<h3>⏳ Plazos operativos clave</h3>
+<ul class="list">
+<li>La CNBS tiene hasta <b>6 meses</b> desde la vigencia de la ley para organizar y habilitar el Registro (Art. 32)</li>
+<li>La CNBS debe emitir el reglamento dentro de <b>60 días hábiles</b> desde la entrada en vigencia (Art. 34)</li>
+<li>Una vez operativo el registro, las entidades obligadas tienen <b>4 meses</b> para su inscripción inicial (Art. 18)</li>
+<li>Las entidades de nueva creación deben registrarse dentro del <b>mes siguiente</b> a su constitución</li>
+<li>Los cambios de información deben reportarse dentro de los primeros <b>10 días hábiles</b> del mes siguiente a la modificación (Art. 19)</li>
+</ul>
+</div>
 </section>
 <section id="simulacion" class="panel">
-  <p class="section-label">Calculadora de Multa Estimada</p>
-  <div class="card">
-    <p>Estima el rango de la multa aplicable según el número de salarios mínimos que determine la autoridad, y si existe reincidencia.</p>
-    <label>Salario mínimo mensual vigente (L.)</label>
-    <input type="number" id="in-salario" placeholder="Ej: 11903">
-    <label>Número de salarios mínimos de la infracción (entre 20 y 500)</label>
-    <input type="number" id="in-numsal" placeholder="Ej: 50" min="20" max="500">
-    <label style="display:flex;align-items:center;gap:8px;margin-top:12px;">
-      <input type="checkbox" id="in-reincidencia" style="width:auto;">
-      ¿Existe reincidencia? (duplica la multa)
-    </label>
-    <button class="primary" id="btn-calc">Calcular Multa</button>
+<p class="section-label">Calculadora de Multa Estimada</p>
+<div class="card">
+<p>Estima el rango de la multa aplicable según el número de salarios mínimos que determine la autoridad, y si existe reincidencia.</p>
+<label>Salario mínimo mensual vigente (L.)</label>
+<input type="number" id="in-salario" placeholder="Ej: 11903">
+<label>Número de salarios mínimos de la infracción (entre 20 y 500)</label>
+<input type="number" id="in-numsal" placeholder="Ej: 50" min="20" max="500">
+<label style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+<input type="checkbox" id="in-reincidencia" style="width:auto;">
+¿Existe reincidencia? (duplica la multa)
+</label>
+<button class="primary" id="btn-calc">Calcular Multa</button>
 
-    <div id="sim-result" style="display:none;">
-      <div class="result-row"><span>Multa base estimada:</span><b id="rs-base">L. 0.00</b></div>
-      <div class="result-row"><span>Multa final aplicable:</span><b id="rs-final">L. 0.00</b></div>
-      <div class="result-row"><span>Rango legal permitido:</span><b id="rs-rango">20 – 500 salarios mínimos</b></div>
-    </div>
-  </div>
+<div id="sim-result" style="display:none;">
+<div class="result-row"><span>Multa base estimada:</span><b id="rs-base">L. 0.00</b></div>
+<div class="result-row"><span>Multa final aplicable:</span><b id="rs-final">L. 0.00</b></div>
+<div class="result-row"><span>Rango legal permitido:</span><b id="rs-rango">20 – 500 salarios mínimos</b></div>
+</div>
+</div>
+<div class="card">
+<h3>⚖️ Nota: multa por acciones al portador (Art. 33)</h3>
+<p>Esta calculadora estima la multa general del Art. 27. Recuerda que la sanción por no convertir acciones al portador en nominativas es independiente y oscila entre <b>10 y 100 salarios mínimos</b>.</p>
+</div>
 </section>
 <section id="juego" class="panel">
-  <p class="section-label">Pon a prueba tus conocimientos</p>
-  <div id="quiz-container"></div>
-  <div id="score-box" class="panel" style="display:none;">
-    <div id="score-num"></div>
-    <p id="score-label">de 10 respuestas correctas</p>
-    <p id="score-msg"></p>
-    <button class="primary" onclick="location.reload()">Reintentar</button>
-  </div>
+<p class="section-label">Pon a prueba tus conocimientos</p>
+<div id="quiz-container"></div>
+<div id="score-box" class="panel" style="display:none;">
+<div id="score-num"></div>
+<p id="score-label">de 12 respuestas correctas</p>
+<p id="score-msg"></p>
+<button class="primary" onclick="location.reload()">Reintentar</button>
+</div>
 </section>
 </main>
 
 <footer class="foot">Módulo 10 · Beneficiario Final · Juan Carlos Reyes · <a href="menu.html">← Menú Principal</a></footer>
 <script>
 document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
-  });
+btn.addEventListener('click',()=>{
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+btn.classList.add('active');
+document.getElementById(btn.dataset.tab).classList.add('active');
+});
 });
 
 document.getElementById('btn-calc').addEventListener('click', ()=>{
-  const salario = parseFloat(document.getElementById('in-salario').value) || 0;
-  const numsal = parseFloat(document.getElementById('in-numsal').value) || 0;
-  const reincidencia = document.getElementById('in-reincidencia').checked;
-  const base = salario * numsal;
-  const final = reincidencia ? base * 2 : base;
-  const fmt = n => 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, maximumFractionDigits:2});
-  document.getElementById('rs-base').textContent = fmt(base);
-  document.getElementById('rs-final').textContent = fmt(final);
-  document.getElementById('sim-result').style.display='block';
+const salario = parseFloat(document.getElementById('in-salario').value) || 0;
+const numsal = parseFloat(document.getElementById('in-numsal').value) || 0;
+const reincidencia = document.getElementById('in-reincidencia').checked;
+const base = salario * numsal;
+const final = reincidencia ? base * 2 : base;
+const fmt = n => 'L. ' + n.toLocaleString('es-HN', {minimumFractionDigits:2, maximumFractionDigits:2});
+document.getElementById('rs-base').textContent = fmt(base);
+document.getElementById('rs-final').textContent = fmt(final);
+document.getElementById('sim-result').style.display='block';
 });
 
 const QUIZ = [
-  {q:'¿Qué decreto crea la Ley de Beneficiario Final?', opts:['Decreto Legislativo No. 127-2026','Decreto Legislativo No. 78-2026','Decreto Legislativo No. 7-2026','Decreto Legislativo No. 25-2026'], correct:0},
-  {q:'¿Qué institución administra el RCBF?', opts:['El SAR','La CNBS','El Congreso Nacional','La Corte Suprema'], correct:1},
-  {q:'¿Qué significa RCBF?', opts:['Registro Central de Beneficios Fiscales','Registro Centralizado de Beneficiarios Finales','Reglamento de Control de Bienes y Fondos','Registro de Capital y Beneficios Fijos'], correct:1},
-  {q:'¿Cuál es uno de los criterios para ser beneficiario final?', opts:['Poseer directa o indirectamente 25% o más del capital','Trabajar en la empresa más de 5 años','Ser el contador de la sociedad','Tener nacionalidad hondureña'], correct:0},
-  {q:'Si no puede identificarse a una persona natural por propiedad o control, ¿qué debe hacerse?', opts:['No declarar a nadie','Declarar al funcionario administrativo de mayor jerarquía','Declarar al primer accionista registrado','Dejar el campo vacío en el RCBF'], correct:1},
-  {q:'¿Qué tipo de estructuras están obligadas a inscribirse en el RCBF?', opts:['Solo sociedades extranjeras','Solo fideicomisos','Sociedades mercantiles, extranjeras autorizadas, fideicomisos y fondos de inversión','Únicamente personas naturales'], correct:2},
-  {q:'¿Cada cuánto debe actualizarse la información en el RCBF?', opts:['Cada mes','Cada año, a más tardar el 30 de mayo','Cada 5 años','Solo cuando lo solicite la CNBS'], correct:1},
-  {q:'¿Durante cuánto tiempo debe conservarse la documentación de respaldo?', opts:['1 año','2 años','Al menos 5 años','10 años'], correct:2},
-  {q:'¿Qué deben convertir las sociedades con acciones al portador?', opts:['Sus acciones en bonos','Sus acciones al portador en acciones nominativas','Su capital en dólares','Sus activos en fideicomiso'], correct:1},
-  {q:'¿Entre qué rango pueden oscilar las multas por infracción?', opts:['5 y 50 salarios mínimos','20 y 500 salarios mínimos','100 y 1000 salarios mínimos','1 y 10 salarios mínimos'], correct:1}
+{q:'¿Qué decreto crea la Ley de Beneficiario Final?', opts:['Decreto Legislativo No. 127-2026','Decreto Legislativo No. 78-2026','Decreto Legislativo No. 7-2026','Decreto Legislativo No. 25-2026'], correct:0},
+{q:'¿Qué institución administra el RCBF?', opts:['El SAR','La CNBS','El Congreso Nacional','La Corte Suprema'], correct:1},
+{q:'¿Qué significa RCBF?', opts:['Registro Central de Beneficios Fiscales','Registro Centralizado de Beneficiarios Finales','Reglamento de Control de Bienes y Fondos','Registro de Capital y Beneficios Fijos'], correct:1},
+{q:'¿Cuál es uno de los criterios para ser beneficiario final?', opts:['Poseer directa o indirectamente 25% o más del capital','Trabajar en la empresa más de 5 años','Ser el contador de la sociedad','Tener nacionalidad hondureña'], correct:0},
+{q:'Si no puede identificarse a una persona natural por propiedad o control, ¿qué debe hacerse?', opts:['No declarar a nadie','Declarar al funcionario administrativo de mayor jerarquía','Declarar al primer accionista registrado','Dejar el campo vacío en el RCBF'], correct:1},
+{q:'¿Qué tipo de estructuras están obligadas a inscribirse en el RCBF?', opts:['Solo sociedades extranjeras','Solo fideicomisos','Sociedades mercantiles, extranjeras autorizadas, fideicomisos y fondos de inversión','Únicamente personas naturales'], correct:2},
+{q:'¿Cada cuánto debe actualizarse la información en el RCBF?', opts:['Cada mes','Cada año, a más tardar el 30 de mayo','Cada 5 años','Solo cuando lo solicite la CNBS'], correct:1},
+{q:'¿Durante cuánto tiempo debe conservarse la documentación de respaldo?', opts:['1 año','2 años','Al menos 5 años','10 años'], correct:2},
+{q:'¿Qué deben convertir las sociedades con acciones al portador?', opts:['Sus acciones en bonos','Sus acciones al portador en acciones nominativas','Su capital en dólares','Sus activos en fideicomiso'], correct:1},
+{q:'¿Entre qué rango pueden oscilar las multas por infracción general (Art. 27)?', opts:['5 y 50 salarios mínimos','20 y 500 salarios mínimos','100 y 1000 salarios mínimos','1 y 10 salarios mínimos'], correct:1},
+{q:'¿Cuál es la multa específica por no convertir acciones al portador en nominativas (Art. 33)?', opts:['10 a 100 salarios mínimos','20 a 500 salarios mínimos','1 a 10 salarios mínimos','50 a 300 salarios mínimos'], correct:0},
+{q:'¿Qué consecuencia adicional tienen las acciones al portador no convertidas, además de la multa?', opts:['Se convierten automáticamente en bonos','Quedan sin valor ni efecto y se suspenden sus derechos','Pasan a ser propiedad del Estado','Ninguna, solo se paga la multa'], correct:1}
 ];
 
 let score=0, answered=0;
 const container = document.getElementById('quiz-container');
 QUIZ.forEach((item,i)=>{
-  const card=document.createElement('div');
-  card.className='q-card';
-  card.innerHTML = '<div class="q-num">Pregunta '+(i+1)+' de '+QUIZ.length+'</div><div class="q-text">'+item.q+'</div>';
-  item.opts.forEach((opt,oi)=>{
-    const b=document.createElement('button');
-    b.className='opt';
-    b.textContent=opt;
-    b.addEventListener('click',()=>{
-      const buttons = card.querySelectorAll('.opt');
-      buttons.forEach(x=>x.disabled=true);
-      if(oi===item.correct){ b.classList.add('correct'); score++; }
-      else { b.classList.add('wrong'); buttons[item.correct].classList.add('correct'); }
-      answered++;
-      if(answered===QUIZ.length){ showScore(); }
-    });
-    card.appendChild(b);
-  });
-  container.appendChild(card);
+const card=document.createElement('div');
+card.className='q-card';
+card.innerHTML = '<div class="q-num">Pregunta '+(i+1)+' de '+QUIZ.length+'</div><div class="q-text">'+item.q+'</div>';
+item.opts.forEach((opt,oi)=>{
+const b=document.createElement('button');
+b.className='opt';
+b.textContent=opt;
+b.addEventListener('click',()=>{
+const buttons = card.querySelectorAll('.opt');
+buttons.forEach(x=>x.disabled=true);
+if(oi===item.correct){ b.classList.add('correct'); score++; }
+else { b.classList.add('wrong'); buttons[item.correct].classList.add('correct'); }
+answered++;
+if(answered===QUIZ.length){ showScore(); }
+});
+card.appendChild(b);
+});
+container.appendChild(card);
 });
 
 function showScore(){
-  const box=document.getElementById('score-box');
-  box.style.display='block';
-  document.getElementById('score-num').textContent=score;
-  let msg='';
-  if(score>=9) msg='Excelente dominio del tema.';
-  else if(score>=7) msg='Buen desempeño, sigue repasando.';
-  else if(score>=5) msg='Vas por buen camino, repasa los conceptos clave.';
-  else msg='Te recomendamos repasar el módulo antes de continuar.';
-  document.getElementById('score-msg').textContent=msg;
+const box=document.getElementById('score-box');
+box.style.display='block';
+document.getElementById('score-num').textContent=score;
+let msg='';
+if(score>=11) msg='Excelente dominio del tema.';
+else if(score>=8) msg='Buen desempeño, sigue repasando.';
+else if(score>=6) msg='Vas por buen camino, repasa los conceptos clave.';
+else msg='Te recomendamos repasar el módulo antes de continuar.';
+document.getElementById('score-msg').textContent=msg;
 }
 </script>
 </body>
