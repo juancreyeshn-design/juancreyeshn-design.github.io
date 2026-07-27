@@ -78,6 +78,20 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .sipoc-tabla td{padding:8px 6px;border-bottom:1px solid #f0f0f0;vertical-align:top}
 .sipoc-tabla tr:nth-child(even){background:var(--gris-claro)}
 
+.sop-tool{margin-top:4px}
+.sop-inputs{display:grid;grid-template-columns:1fr;gap:14px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+@media(min-width:800px){.sop-inputs{grid-template-columns:repeat(2,1fr)}.sop-inputs .full{grid-column:1/-1}}
+.sop-inputs label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:6px}
+.sop-inputs input,.sop-inputs textarea{width:100%;padding:8px;border:1px solid #d7dce3;border-radius:8px;font-size:.85rem;font-family:inherit;resize:vertical}
+.sop-resultado{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.sop-doc h3{color:var(--azul);font-size:1rem;margin-bottom:6px}
+.sop-doc .sop-meta{font-size:.78rem;color:#888;margin-bottom:14px}
+.sop-doc h4{color:var(--morado);font-size:.85rem;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+.sop-doc p{font-size:.88rem;line-height:1.6;margin-bottom:8px}
+.sop-doc ol{padding-left:20px;font-size:.88rem;line-height:1.8}
+.sop-doc ul{padding-left:20px;font-size:.88rem;line-height:1.8}
+
+
 
 .mod-list{list-style:none;margin-top:10px}
 .mod-list li{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}
@@ -232,6 +246,45 @@ Gerencia</textarea>
 </div>
 </section>
 
+
+<section class="sm">
+<h2>Generador de Procedimientos (SOP)</h2>
+<p>Completa el objetivo, alcance y responsables del proceso para generar automaticamente un Procedimiento Estandar de Operacion (SOP) a partir de los pasos definidos en el Analizador de Cuellos de Botella.</p>
+<div class="sop-tool">
+<div class="sop-inputs">
+<div>
+<label for="sopCodigo">Codigo del documento</label>
+<input type="text" id="sopCodigo" value="SOP-001">
+</div>
+<div>
+<label for="sopVersion">Version</label>
+<input type="text" id="sopVersion" value="1.0">
+</div>
+<div class="full">
+<label for="sopObjetivo">Objetivo</label>
+<textarea id="sopObjetivo" rows="2">Estandarizar la ejecucion del proceso para asegurar consistencia, calidad y cumplimiento de los tiempos definidos.</textarea>
+</div>
+<div class="full">
+<label for="sopAlcance">Alcance</label>
+<textarea id="sopAlcance" rows="2">Aplica a todo el personal involucrado en la ejecucion de este proceso dentro de la organizacion.</textarea>
+</div>
+<div class="full">
+<label for="sopResponsables">Responsables (uno por linea)</label>
+<textarea id="sopResponsables" rows="3">Lider de proceso
+Equipo operativo
+Area de control interno</textarea>
+</div>
+</div>
+<div class="bpmn-buttons" style="margin:14px 0">
+<button onclick="generarSOP()">Generar procedimiento</button>
+<button onclick="copiarSOP()">Copiar procedimiento</button>
+</div>
+<div id="resultadoSOP" class="sop-resultado">
+<p style="color:#999">Completa los campos y presiona "Generar procedimiento" para ver el documento.</p>
+</div>
+</div>
+</section>
+
 <section class="sm">
 <h2>Proximos componentes del modulo</h2>
 <ul class="mod-list">
@@ -240,7 +293,7 @@ Gerencia</textarea>
 <li><span class="ok">&#10003;</span> Simulador de optimizacion de procesos</li>
 <li><span class="ok">&#10003;</span> Panel de indicadores KPI de procesos</li>
 <li><span class="ok">&#10003;</span> Caracterizador de procesos (SIPOC)</li>
-<li><span class="soon">Proximamente</span> Generador de procedimientos (SOP)</li>
+<li><span class="ok">&#10003;</span> Generador de procedimientos (SOP)</li>
 <li><span class="soon">Proximamente</span> Analizador de brechas AS-IS vs TO-BE</li>
 </ul>
 </section>
@@ -519,6 +572,89 @@ html += '<table class="sipoc-tabla"><thead><tr><th>Proveedores (S)</th><th>Entra
 document.getElementById('resultadoSIPOC').innerHTML = html;
 }
 
+
+function generarSOP(){
+var pasosFilas = document.querySelectorAll('#pasosBody tr');
+if(pasosFilas.length === 0){
+document.getElementById('resultadoSOP').innerHTML = '<p style="color:#c0392b">Primero define los pasos del proceso en el Analizador de Cuellos de Botella.</p>';
+return;
+}
+var codigo = document.getElementById('sopCodigo').value || 'SOP-001';
+var version = document.getElementById('sopVersion').value || '1.0';
+var objetivo = document.getElementById('sopObjetivo').value || '';
+var alcance = document.getElementById('sopAlcance').value || '';
+var responsables = listaDesdeTexto('sopResponsables');
+
+var pasos = [];
+pasosFilas.forEach(function(fila){
+var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+pasos.push({nombre:nombre, ciclo:ciclo});
+});
+
+var fecha = new Date().toLocaleDateString('es-ES');
+
+var responsablesHtml = '';
+responsables.forEach(function(r){ responsablesHtml += '<li>' + r + '</li>'; });
+
+var pasosHtml = '';
+pasos.forEach(function(p){
+pasosHtml += '<li>' + p.nombre + ' (tiempo estimado: ' + p.ciclo + ' min).</li>';
+});
+
+var html = '<div class="sop-doc">';
+html += '<h3>Procedimiento Estandar de Operacion</h3>';
+html += '<div class="sop-meta">Codigo: ' + codigo + ' &middot; Version: ' + version + ' &middot; Fecha: ' + fecha + '</div>';
+html += '<h4>1. Objetivo</h4><p>' + objetivo + '</p>';
+html += '<h4>2. Alcance</h4><p>' + alcance + '</p>';
+html += '<h4>3. Responsables</h4><ul>' + responsablesHtml + '</ul>';
+html += '<h4>4. Descripcion del procedimiento</h4><ol>' + pasosHtml + '</ol>';
+html += '</div>';
+
+document.getElementById('resultadoSOP').innerHTML = html;
+}
+
+function textoSOPPlano(){
+var pasosFilas = document.querySelectorAll('#pasosBody tr');
+var codigo = document.getElementById('sopCodigo').value || 'SOP-001';
+var version = document.getElementById('sopVersion').value || '1.0';
+var objetivo = document.getElementById('sopObjetivo').value || '';
+var alcance = document.getElementById('sopAlcance').value || '';
+var responsables = listaDesdeTexto('sopResponsables');
+var salto = String.fromCharCode(10);
+var texto = 'PROCEDIMIENTO ESTANDAR DE OPERACION' + salto;
+texto += 'Codigo: ' + codigo + ' - Version: ' + version + salto + salto;
+texto += '1. OBJETIVO' + salto + objetivo + salto + salto;
+texto += '2. ALCANCE' + salto + alcance + salto + salto;
+texto += '3. RESPONSABLES' + salto;
+responsables.forEach(function(r){ texto += '- ' + r + salto; });
+texto += salto + '4. DESCRIPCION DEL PROCEDIMIENTO' + salto;
+pasosFilas.forEach(function(fila, idx){
+var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+texto += (idx+1) + '. ' + nombre + ' (tiempo estimado: ' + ciclo + ' min)' + salto;
+});
+return texto;
+}
+
+function copiarSOP(){
+var texto = textoSOPPlano();
+navigator.clipboard.writeText(texto).then(function(){
+var el = document.getElementById('avisoCopiaSOP');
+if(!el){
+el = document.createElement('p');
+el.id = 'avisoCopiaSOP';
+el.style.color = '#22c55e';
+el.style.fontSize = '.82rem';
+el.style.marginTop = '10px';
+document.getElementById('resultadoSOP').appendChild(el);
+}
+el.textContent = 'Procedimiento copiado al portapapeles.';
+}).catch(function(){
+alert('No se pudo copiar automaticamente. Copia el texto manualmente.');
+});
+}
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
@@ -528,6 +664,7 @@ analizarProceso();
 simularOptimizacion();
 calcularKPIs();
 generarSIPOC();
+generarSOP();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
