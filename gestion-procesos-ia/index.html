@@ -68,6 +68,17 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .kpi-barra-fondo{background:#eee;border-radius:6px;height:10px;margin-top:10px;overflow:hidden}
 .kpi-barra-relleno{background:var(--morado);height:100%}
 
+.sipoc-tool{margin-top:4px}
+.sipoc-inputs{display:grid;grid-template-columns:1fr;gap:14px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+@media(min-width:800px){.sipoc-inputs{grid-template-columns:repeat(2,1fr)}}
+.sipoc-inputs label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:6px}
+.sipoc-inputs input,.sipoc-inputs textarea{width:100%;padding:8px;border:1px solid #d7dce3;border-radius:8px;font-size:.85rem;font-family:inherit;resize:vertical}
+.sipoc-tabla{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:4px}
+.sipoc-tabla th{background:var(--azul);color:white;padding:8px 6px;text-align:left;font-size:.75rem}
+.sipoc-tabla td{padding:8px 6px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+.sipoc-tabla tr:nth-child(even){background:var(--gris-claro)}
+
+
 .mod-list{list-style:none;margin-top:10px}
 .mod-list li{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}
 .mod-list li:last-child{border-bottom:none}
@@ -176,6 +187,51 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 </div>
 </section>
 
+
+<section class="sm">
+<h2>Caracterizador de Procesos (SIPOC)</h2>
+<p>Define los proveedores, entradas, salidas y clientes de tu proceso para construir una ficha de caracterizacion SIPOC (Proveedores, Entradas, Proceso, Salidas, Clientes). La columna "Proceso" se completa automaticamente con los pasos definidos en el Analizador de Cuellos de Botella.</p>
+<div class="sipoc-tool">
+<div class="sipoc-inputs">
+<div>
+<label for="sipocNombre">Nombre del proceso</label>
+<input type="text" id="sipocNombre" value="Proceso de aprobacion de solicitudes">
+</div>
+<div></div>
+<div>
+<label for="sipocProveedores">Proveedores (uno por linea)</label>
+<textarea id="sipocProveedores" rows="4">Cliente externo
+Area comercial
+Sistema de gestion documental</textarea>
+</div>
+<div>
+<label for="sipocEntradas">Entradas (uno por linea)</label>
+<textarea id="sipocEntradas" rows="4">Solicitud del cliente
+Documentacion de soporte
+Politicas internas</textarea>
+</div>
+<div>
+<label for="sipocSalidas">Salidas (uno por linea)</label>
+<textarea id="sipocSalidas" rows="4">Solicitud aprobada o rechazada
+Notificacion al cliente
+Registro en el sistema</textarea>
+</div>
+<div>
+<label for="sipocClientes">Clientes (uno por linea)</label>
+<textarea id="sipocClientes" rows="4">Cliente externo
+Area de auditoria
+Gerencia</textarea>
+</div>
+</div>
+<div class="bpmn-buttons" style="margin:14px 0">
+<button onclick="generarSIPOC()">Generar ficha SIPOC</button>
+</div>
+<div id="resultadoSIPOC">
+<p style="color:#999">Completa los campos y presiona "Generar ficha SIPOC" para ver la tabla.</p>
+</div>
+</div>
+</section>
+
 <section class="sm">
 <h2>Proximos componentes del modulo</h2>
 <ul class="mod-list">
@@ -183,6 +239,9 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 <li><span class="ok">&#10003;</span> Analizador de cuellos de botella con IA</li>
 <li><span class="ok">&#10003;</span> Simulador de optimizacion de procesos</li>
 <li><span class="ok">&#10003;</span> Panel de indicadores KPI de procesos</li>
+<li><span class="ok">&#10003;</span> Caracterizador de procesos (SIPOC)</li>
+<li><span class="soon">Proximamente</span> Generador de procedimientos (SOP)</li>
+<li><span class="soon">Proximamente</span> Analizador de brechas AS-IS vs TO-BE</li>
 </ul>
 </section>
 </main>
@@ -417,6 +476,49 @@ document.getElementById('resultadoKPI').innerHTML = html;
 }
 
 
+
+function listaDesdeTexto(id){
+var texto = document.getElementById(id).value;
+return texto.split(String.fromCharCode(10)).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+}
+
+function generarSIPOC(){
+var proveedores = listaDesdeTexto('sipocProveedores');
+var entradas = listaDesdeTexto('sipocEntradas');
+var salidas = listaDesdeTexto('sipocSalidas');
+var clientes = listaDesdeTexto('sipocClientes');
+var nombreProceso = document.getElementById('sipocNombre').value || 'Proceso';
+
+var pasosFilas = document.querySelectorAll('#pasosBody tr');
+var pasos = [];
+pasosFilas.forEach(function(fila){
+var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+pasos.push(nombre);
+});
+if(pasos.length === 0){
+pasos = [nombreProceso];
+}
+
+var maxFilas = Math.max(proveedores.length, entradas.length, pasos.length, salidas.length, clientes.length, 1);
+
+var filasHtml = '';
+for(var i=0;i<maxFilas;i++){
+filasHtml += '<tr>';
+filasHtml += '<td>' + (proveedores[i] || '') + '</td>';
+filasHtml += '<td>' + (entradas[i] || '') + '</td>';
+filasHtml += '<td>' + (pasos[i] || '') + '</td>';
+filasHtml += '<td>' + (salidas[i] || '') + '</td>';
+filasHtml += '<td>' + (clientes[i] || '') + '</td>';
+filasHtml += '</tr>';
+}
+
+var html = '';
+html += '<h3 style="color:var(--azul);font-size:.95rem;margin-bottom:10px">Ficha SIPOC: ' + nombreProceso + '</h3>';
+html += '<table class="sipoc-tabla"><thead><tr><th>Proveedores (S)</th><th>Entradas (I)</th><th>Proceso (P)</th><th>Salidas (O)</th><th>Clientes (C)</th></tr></thead><tbody>' + filasHtml + '</tbody></table>';
+
+document.getElementById('resultadoSIPOC').innerHTML = html;
+}
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
@@ -425,6 +527,7 @@ cargarEjemploProceso();
 analizarProceso();
 simularOptimizacion();
 calcularKPIs();
+generarSIPOC();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
