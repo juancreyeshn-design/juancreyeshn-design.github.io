@@ -34,6 +34,8 @@ main{max-width:960px;margin:0 auto;padding:36px 16px}
 .bottleneck-tool{display:grid;grid-template-columns:1fr;gap:20px;margin-top:16px}
 @media(min-width:800px){.bottleneck-tool{grid-template-columns:1.3fr 1fr}}
 .bottleneck-controls{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.bottleneck-controls label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:6px}
+.bottleneck-controls input[type=range]{width:100%;margin:0 0 14px}
 table.pasos-tabla{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:12px}
 table.pasos-tabla th{text-align:left;color:var(--azul);padding:6px 4px;border-bottom:2px solid var(--morado);font-size:.78rem}
 table.pasos-tabla td{padding:4px}
@@ -47,6 +49,10 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .resumen-metricas{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 .resumen-metricas div{background:var(--gris-claro);border-radius:10px;padding:10px 14px;font-size:.82rem;color:var(--azul);font-weight:700;flex:1;min-width:120px;text-align:center}
 .resumen-metricas div span{display:block;font-size:1.1rem;color:var(--morado);margin-top:4px}
+.comparacion-tabla{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:10px}
+.comparacion-tabla th{text-align:left;color:var(--azul);padding:6px 4px;border-bottom:2px solid var(--morado);font-size:.78rem}
+.comparacion-tabla td{padding:6px 4px;border-bottom:1px solid #f0f0f0}
+.mejora-positiva{color:#22c55e;font-weight:700}
 .mod-list{list-style:none;margin-top:10px}
 .mod-list li{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}
 .mod-list li:last-child{border-bottom:none}
@@ -109,11 +115,31 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 </div>
 </section>
 <section class="sm">
+<h2>Simulador de Optimizacion de Procesos</h2>
+<p>Utiliza los pasos definidos en el Analizador de Cuellos de Botella como base y simula el impacto de aplicar mejoras tipicas de optimizacion: reducir tiempos de espera, disminuir el retrabajo y automatizar los pasos mas criticos.</p>
+<div class="bottleneck-tool">
+<div class="bottleneck-controls">
+<label>Reduccion de tiempo de espera: <span id="valEspera">30</span>%</label>
+<input type="range" id="sliderEspera" min="0" max="100" value="30" oninput="document.getElementById('valEspera').textContent=this.value">
+<label>Reduccion de retrabajo: <span id="valRetrabajo">50</span>%</label>
+<input type="range" id="sliderRetrabajo" min="0" max="100" value="50" oninput="document.getElementById('valRetrabajo').textContent=this.value">
+<label>Automatizacion de pasos criticos (reduccion de tiempo de ciclo): <span id="valCiclo">20</span>%</label>
+<input type="range" id="sliderCiclo" min="0" max="100" value="20" oninput="document.getElementById('valCiclo').textContent=this.value">
+<div class="bpmn-buttons">
+<button onclick="simularOptimizacion()">Simular optimizacion</button>
+</div>
+</div>
+<div class="bottleneck-resultado" id="resultadoSimulacion">
+<p style="color:#999">Define los pasos en el Analizador de Cuellos de Botella y presiona "Simular optimizacion" para ver la comparacion.</p>
+</div>
+</div>
+</section>
+<section class="sm">
 <h2>Proximos componentes del modulo</h2>
 <ul class="mod-list">
 <li><span class="ok">&#10003;</span> Diagramador de Procesos BPMN (Mermaid.js)</li>
 <li><span class="ok">&#10003;</span> Analizador de cuellos de botella con IA</li>
-<li><span class="soon">Proximamente</span> Simulador de optimizacion de procesos</li>
+<li><span class="ok">&#10003;</span> Simulador de optimizacion de procesos</li>
 <li><span class="soon">Proximamente</span> Panel de indicadores KPI de procesos</li>
 </ul>
 </section>
@@ -227,12 +253,69 @@ html += '<div class="paso-flag ' + nivel + '"><strong>' + p.nombre + '</strong> 
 document.getElementById('resultadoAnalisis').innerHTML = html;
 }
 
+function simularOptimizacion(){
+var filas = document.querySelectorAll('#pasosBody tr');
+if(filas.length === 0){
+document.getElementById('resultadoSimulacion').innerHTML = '<p style="color:#c0392b">Primero define los pasos del proceso en el Analizador de Cuellos de Botella.</p>';
+return;
+}
+var reduccionEspera = parseFloat(document.getElementById('sliderEspera').value) / 100;
+var reduccionRetrabajo = parseFloat(document.getElementById('sliderRetrabajo').value) / 100;
+var reduccionCiclo = parseFloat(document.getElementById('sliderCiclo').value) / 100;
+
+var pasos = [];
+filas.forEach(function(fila){
+var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
+var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo});
+});
+
+var totalAntes = 0, totalDespues = 0;
+var filasHtml = '';
+
+pasos.forEach(function(p){
+var tiempoRetrabajoAntes = p.ciclo * (p.retrabajo / 100);
+var totalA = p.ciclo + p.espera + tiempoRetrabajoAntes;
+
+var esCritico = (p.espera > p.ciclo * 2 && p.espera > 0);
+
+var esperaD = p.espera * (1 - reduccionEspera);
+var retrabajoD = p.retrabajo * (1 - reduccionRetrabajo);
+var cicloD = esCritico ? p.ciclo * (1 - reduccionCiclo) : p.ciclo;
+var tiempoRetrabajoDespues = cicloD * (retrabajoD / 100);
+var totalD = cicloD + esperaD + tiempoRetrabajoDespues;
+
+totalAntes += totalA;
+totalDespues += totalD;
+
+var reduccionPaso = totalA > 0 ? Math.round((1 - totalD / totalA) * 100) : 0;
+
+filasHtml += '<tr><td>' + p.nombre + (esCritico ? ' &#9888;' : '') + '</td><td>' + Math.round(totalA) + ' min</td><td>' + Math.round(totalD) + ' min</td><td class="mejora-positiva">-' + reduccionPaso + '%</td></tr>';
+});
+
+var reduccionTotal = totalAntes > 0 ? Math.round((1 - totalDespues / totalAntes) * 100) : 0;
+
+var html = '';
+html += '<div class="resumen-metricas">';
+html += '<div>Tiempo total antes<span>' + Math.round(totalAntes) + ' min</span></div>';
+html += '<div>Tiempo total despues<span>' + Math.round(totalDespues) + ' min</span></div>';
+html += '<div>Reduccion estimada<span>' + reduccionTotal + '%</span></div>';
+html += '</div>';
+html += '<table class="comparacion-tabla"><thead><tr><th>Paso</th><th>Antes</th><th>Despues</th><th>Mejora</th></tr></thead><tbody>' + filasHtml + '</tbody></table>';
+html += '<p style="margin-top:12px;font-size:.85rem;color:#666">&#9888; Los pasos marcados fueron identificados como criticos (cuello de botella) y reciben el beneficio de la automatizacion simulada.</p>';
+
+document.getElementById('resultadoSimulacion').innerHTML = html;
+}
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
 renderDiagram();
 cargarEjemploProceso();
 analizarProceso();
+simularOptimizacion();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
