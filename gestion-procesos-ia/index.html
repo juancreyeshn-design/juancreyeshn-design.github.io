@@ -53,6 +53,21 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .comparacion-tabla th{text-align:left;color:var(--azul);padding:6px 4px;border-bottom:2px solid var(--morado);font-size:.78rem}
 .comparacion-tabla td{padding:6px 4px;border-bottom:1px solid #f0f0f0}
 .mejora-positiva{color:#22c55e;font-weight:700}
+.kpi-tool{margin-top:4px}
+.kpi-inputs{display:flex;flex-wrap:wrap;gap:16px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:16px}
+.kpi-inputs div{flex:1;min-width:160px}
+.kpi-inputs label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:6px}
+.kpi-inputs input{width:100%;padding:8px;border:1px solid #d7dce3;border-radius:8px;font-size:.85rem}
+.kpi-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.kpi-card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-top:4px solid var(--azul-medio)}
+.kpi-card.bueno{border-top-color:#22c55e}
+.kpi-card.malo{border-top-color:#dc2626}
+.kpi-card h3{font-size:.75rem;color:var(--gris-texto);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.kpi-card .valor{font-size:1.6rem;font-weight:700;color:var(--azul)}
+.kpi-card .detalle{font-size:.78rem;color:#888;margin-top:6px;line-height:1.4}
+.kpi-barra-fondo{background:#eee;border-radius:6px;height:10px;margin-top:10px;overflow:hidden}
+.kpi-barra-relleno{background:var(--morado);height:100%}
+
 .mod-list{list-style:none;margin-top:10px}
 .mod-list li{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}
 .mod-list li:last-child{border-bottom:none}
@@ -135,12 +150,39 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 </div>
 </section>
 <section class="sm">
+<h2>Panel de Indicadores KPI de Procesos</h2>
+<p>Define el volumen de trabajo, el costo operativo y la meta de tiempo de entrega para calcular indicadores clave (KPI) a partir de los pasos definidos en el Analizador de Cuellos de Botella: lead time promedio, porcentaje de valor agregado, throughput estimado, costo por unidad y cumplimiento de meta.</p>
+<div class="kpi-tool">
+<div class="kpi-inputs">
+<div>
+<label for="kpiTurno">Duracion de turno (min)</label>
+<input type="number" id="kpiTurno" value="480" min="1">
+</div>
+<div>
+<label for="kpiCostoHora">Costo operativo (USD/hora)</label>
+<input type="number" id="kpiCostoHora" value="25" min="0">
+</div>
+<div>
+<label for="kpiMeta">Meta de lead time (min)</label>
+<input type="number" id="kpiMeta" value="90" min="1">
+</div>
+</div>
+<div class="bpmn-buttons" style="margin-bottom:16px">
+<button onclick="calcularKPIs()">Calcular indicadores</button>
+</div>
+<div id="resultadoKPI">
+<p style="color:#999">Define los pasos en el Analizador de Cuellos de Botella y presiona "Calcular indicadores".</p>
+</div>
+</div>
+</section>
+
+<section class="sm">
 <h2>Proximos componentes del modulo</h2>
 <ul class="mod-list">
 <li><span class="ok">&#10003;</span> Diagramador de Procesos BPMN (Mermaid.js)</li>
 <li><span class="ok">&#10003;</span> Analizador de cuellos de botella con IA</li>
 <li><span class="ok">&#10003;</span> Simulador de optimizacion de procesos</li>
-<li><span class="soon">Proximamente</span> Panel de indicadores KPI de procesos</li>
+<li><span class="ok">&#10003;</span> Panel de indicadores KPI de procesos</li>
 </ul>
 </section>
 </main>
@@ -309,6 +351,72 @@ html += '<p style="margin-top:12px;font-size:.85rem;color:#666">&#9888; Los paso
 document.getElementById('resultadoSimulacion').innerHTML = html;
 }
 
+function calcularKPIs(){
+var filas = document.querySelectorAll('#pasosBody tr');
+if(filas.length === 0){
+document.getElementById('resultadoKPI').innerHTML = '<p style="color:#c0392b">Primero define los pasos del proceso en el Analizador de Cuellos de Botella.</p>';
+return;
+}
+var turno = parseFloat(document.getElementById('kpiTurno').value) || 480;
+var costoHora = parseFloat(document.getElementById('kpiCostoHora').value) || 0;
+var metaLeadTime = parseFloat(document.getElementById('kpiMeta').value) || 1;
+
+var tiempoValor = 0, tiempoTotal = 0;
+filas.forEach(function(fila){
+var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
+var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var tiempoRetrabajo = ciclo * (retrabajo / 100);
+tiempoValor += ciclo;
+tiempoTotal += ciclo + espera + tiempoRetrabajo;
+});
+
+var pctValorAgregado = tiempoTotal > 0 ? Math.round((tiempoValor / tiempoTotal) * 100) : 0;
+var throughputTurno = tiempoTotal > 0 ? Math.floor(turno / tiempoTotal) : 0;
+var costoPorUnidad = (tiempoTotal / 60) * costoHora;
+var cumpleMeta = tiempoTotal <= metaLeadTime;
+var desviacion = Math.round(((tiempoTotal - metaLeadTime) / metaLeadTime) * 100);
+
+var html = '';
+html += '<div class="kpi-cards">';
+
+html += '<div class="kpi-card">';
+html += '<h3>Lead Time promedio</h3>';
+html += '<div class="valor">' + Math.round(tiempoTotal) + ' min</div>';
+html += '<div class="detalle">Tiempo total estimado por unidad procesada</div>';
+html += '</div>';
+
+html += '<div class="kpi-card">';
+html += '<h3>% Valor agregado</h3>';
+html += '<div class="valor">' + pctValorAgregado + '%</div>';
+html += '<div class="kpi-barra-fondo"><div class="kpi-barra-relleno" style="width:' + pctValorAgregado + '%"></div></div>';
+html += '<div class="detalle">Proporcion del tiempo que agrega valor real</div>';
+html += '</div>';
+
+html += '<div class="kpi-card">';
+html += '<h3>Throughput estimado</h3>';
+html += '<div class="valor">' + throughputTurno + ' und/turno</div>';
+html += '<div class="detalle">Unidades procesables en un turno de ' + turno + ' min</div>';
+html += '</div>';
+
+html += '<div class="kpi-card">';
+html += '<h3>Costo estimado por unidad</h3>';
+html += '<div class="valor">$' + costoPorUnidad.toFixed(2) + '</div>';
+html += '<div class="detalle">Con base en costo operativo de $' + costoHora.toFixed(2) + '/hora</div>';
+html += '</div>';
+
+html += '<div class="kpi-card ' + (cumpleMeta ? 'bueno' : 'malo') + '">';
+html += '<h3>Cumplimiento de meta</h3>';
+html += '<div class="valor">' + (cumpleMeta ? 'Cumple' : 'No cumple') + '</div>';
+html += '<div class="detalle">' + (cumpleMeta ? 'Dentro de la meta de ' + Math.round(metaLeadTime) + ' min' : 'Supera la meta en ' + desviacion + '%') + '</div>';
+html += '</div>';
+
+html += '</div>';
+
+document.getElementById('resultadoKPI').innerHTML = html;
+}
+
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
@@ -316,6 +424,7 @@ renderDiagram();
 cargarEjemploProceso();
 analizarProceso();
 simularOptimizacion();
+calcularKPIs();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
