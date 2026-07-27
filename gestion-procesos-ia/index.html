@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion de Procesos y Optimizacion Operativa con IA | Juan Carlos Reyes</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<style>
+:root{--azul:#1a3a5c;--azul-medio:#2563a8;--azul-claro:#3b82c4;--gris-claro:#f4f6fa;--gris-texto:#4a5568;--morado:#6d28d9}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--gris-claro);color:var(--gris-texto)}
+.hero{background:linear-gradient(135deg,var(--azul),var(--morado) 60%,var(--azul-claro));color:white;padding:40px 20px 32px;text-align:center}
+.hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;margin-bottom:8px}
+.hero .sub{font-size:1rem;opacity:.88;margin-bottom:6px}
+.hero .desc{font-size:.95rem;opacity:.8;max-width:640px;margin:0 auto 20px;line-height:1.6}
+.back{display:inline-block;color:white;text-decoration:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:8px 18px;border-radius:20px;font-size:.9rem}
+.back:hover{background:rgba(255,255,255,.28)}
+main{max-width:960px;margin:0 auto;padding:36px 16px}
+.sm{margin-bottom:36px}
+.sm h2{font-size:1.2rem;color:var(--azul);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--morado)}
+.sm p{line-height:1.75;font-size:1rem;margin-bottom:10px}
+.bpmn-tool{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:800px){.bpmn-tool{grid-template-columns:1fr 1.2fr}}
+.bpmn-controls{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.bpmn-controls label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:8px}
+#mermaidInput{width:100%;min-height:220px;font-family:Consolas,monospace;font-size:.82rem;padding:10px;border:1px solid #d7dce3;border-radius:8px;resize:vertical}
+.bpmn-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.bpmn-buttons button{border:none;padding:8px 14px;border-radius:8px;font-size:.82rem;cursor:pointer;color:white;background:var(--azul-medio);transition:.2s}
+.bpmn-buttons button:hover{background:var(--azul)}
+.bpmn-buttons button.ejemplo{background:var(--morado)}
+.bpmn-buttons button.ejemplo:hover{background:#5211a8}
+.bpmn-preview{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:auto;min-height:260px;display:flex;align-items:center;justify-content:center}
+.bpmn-preview svg{max-width:100%;height:auto}
+.mod-list{list-style:none;margin-top:10px}
+.mod-list li{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}
+.mod-list li:last-child{border-bottom:none}
+.mod-list .ok{color:#22c55e;font-weight:700}
+.mod-list .soon{color:#aaa;font-size:.8rem}
+footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0f2f7;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hero">
+<h1>Gestion de Procesos y Optimizacion Operativa con IA</h1>
+<p class="sub">Herramientas para modelar, analizar y optimizar procesos de negocio</p>
+<p class="desc">Modulo interactivo con utilidades de inteligencia artificial y notacion BPMN para mapear procesos, detectar oportunidades de mejora y apoyar la toma de decisiones operativas.</p>
+<a class="back" href="../index.html">&#8592; Volver al inicio</a>
+</div>
+<main>
+<section class="sm">
+<h2>Sobre este modulo</h2>
+<p>Este modulo reune herramientas practicas para la gestion y mejora continua de procesos organizacionales, combinando notacion BPMN con apoyo de inteligencia artificial. El primer componente disponible es el Diagramador de Procesos BPMN, que permite crear diagramas de flujo de procesos directamente en el navegador usando Mermaid.js, sin necesidad de instalar software adicional.</p>
+</section>
+<section class="sm">
+<h2>Diagramador de Procesos BPMN</h2>
+<p>Escribe o edita la definicion del proceso en la caja de texto usando sintaxis de Mermaid y presiona "Renderizar diagrama" para visualizarlo. Tambien puedes cargar ejemplos predefinidos de procesos simples, con decisiones o con areas (swimlanes).</p>
+<div class="bpmn-tool">
+<div class="bpmn-controls">
+<label for="mermaidInput">Codigo del diagrama (sintaxis Mermaid)</label>
+<textarea id="mermaidInput" spellcheck="false"></textarea>
+<div class="bpmn-buttons">
+<button onclick="renderDiagram()">Renderizar diagrama</button>
+<button class="ejemplo" onclick="cargarEjemplo('simple')">Ejemplo: Proceso simple</button>
+<button class="ejemplo" onclick="cargarEjemplo('decision')">Ejemplo: Con decision</button>
+<button class="ejemplo" onclick="cargarEjemplo('areas')">Ejemplo: Con areas</button>
+</div>
+</div>
+<div class="bpmn-preview" id="previewBox">
+<div id="diagramOutput"></div>
+</div>
+</div>
+</section>
+<section class="sm">
+<h2>Proximos componentes del modulo</h2>
+<ul class="mod-list">
+<li><span class="ok">&#10003;</span> Diagramador de Procesos BPMN (Mermaid.js)</li>
+<li><span class="soon">Proximamente</span> Analizador de cuellos de botella con IA</li>
+<li><span class="soon">Proximamente</span> Simulador de optimizacion de procesos</li>
+<li><span class="soon">Proximamente</span> Panel de indicadores KPI de procesos</li>
+</ul>
+</section>
+</main>
+<footer>
+<p>&#169; 2025 Juan Carlos Reyes &middot; Gestion de Procesos y Optimizacion Operativa con IA</p>
+</footer>
+<script>
+var ejemplos = {};
+ejemplos.simple = "flowchart LR\nA([Inicio]) --> B[Recibir solicitud]\nB --> C[Revisar documentos]\nC --> D[Registrar en el sistema]\nD --> E([Fin])";
+ejemplos.decision = "flowchart TD\nA([Inicio]) --> B[Recibir solicitud de compra]\nB --> C{Monto mayor a limite?}\nC -- Si --> D[Enviar a aprobacion gerencial]\nC -- No --> E[Aprobacion automatica]\nD --> F{Aprobado?}\nF -- Si --> G[Generar orden de compra]\nF -- No --> H[Notificar rechazo]\nE --> G\nG --> I([Fin])\nH --> I";
+ejemplos.areas = "flowchart TD\nsubgraph Cliente\nA([Inicio]) --> B[Envia solicitud]\nend\nsubgraph Ventas\nB --> C[Revisa solicitud]\nC --> D{Stock disponible?}\nend\nsubgraph Bodega\nD -- Si --> E[Prepara pedido]\nE --> F[Despacha pedido]\nend\nsubgraph Cliente2[Cliente]\nD -- No --> G[Notifica agotado]\nF --> H([Fin])\nG --> H\nend";
+
+function renderDiagram(){
+var codigo = document.getElementById('mermaidInput').value;
+var contenedor = document.getElementById('diagramOutput');
+mermaid.render('graficoGenerado', codigo).then(function(resultado){
+contenedor.innerHTML = resultado.svg;
+}).catch(function(error){
+contenedor.innerHTML = '<p style="color:#c0392b">No se pudo generar el diagrama. Revisa la sintaxis del proceso.</p>';
+});
+}
+
+function cargarEjemplo(nombre){
+document.getElementById('mermaidInput').value = ejemplos[nombre];
+renderDiagram();
+}
+
+mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
+document.getElementById('mermaidInput').value = ejemplos.decision;
+window.addEventListener('load', renderDiagram);
+</script>
+</body>
+</html>
