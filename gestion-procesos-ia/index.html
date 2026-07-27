@@ -132,6 +132,51 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 <p>Este modulo reune herramientas practicas para la gestion y mejora continua de procesos organizacionales, combinando notacion BPMN con apoyo de inteligencia artificial. El primer componente disponible es el Diagramador de Procesos BPMN, que permite crear diagramas de flujo de procesos directamente en el navegador usando Mermaid.js, sin necesidad de instalar software adicional.</p>
 </section>
 <section class="sm">
+<h2>Caracterizador de Procesos (SIPOC)</h2>
+<p>Define los proveedores, entradas, salidas y clientes de tu proceso para construir una ficha de caracterizacion SIPOC (Proveedores, Entradas, Proceso, Salidas, Clientes). La columna "Proceso" se completa automaticamente con los pasos definidos en el Analizador de Cuellos de Botella.</p>
+<div class="sipoc-tool">
+<div class="sipoc-inputs">
+<div>
+<label for="sipocNombre">Nombre del proceso</label>
+<input type="text" id="sipocNombre" value="Proceso de aprobacion de solicitudes">
+</div>
+<div></div>
+<div>
+<label for="sipocProveedores">Proveedores (uno por linea)</label>
+<textarea id="sipocProveedores" rows="4">Cliente externo
+Area comercial
+Sistema de gestion documental</textarea>
+</div>
+<div>
+<label for="sipocEntradas">Entradas (uno por linea)</label>
+<textarea id="sipocEntradas" rows="4">Solicitud del cliente
+Documentacion de soporte
+Politicas internas</textarea>
+</div>
+<div>
+<label for="sipocSalidas">Salidas (uno por linea)</label>
+<textarea id="sipocSalidas" rows="4">Solicitud aprobada o rechazada
+Notificacion al cliente
+Registro en el sistema</textarea>
+</div>
+<div>
+<label for="sipocClientes">Clientes (uno por linea)</label>
+<textarea id="sipocClientes" rows="4">Cliente externo
+Area de auditoria
+Gerencia</textarea>
+</div>
+</div>
+<div class="bpmn-buttons" style="margin:14px 0">
+<button onclick="generarSIPOC()">Generar ficha SIPOC</button>
+</div>
+<div id="resultadoSIPOC">
+<p style="color:#999">Completa los campos y presiona "Generar ficha SIPOC" para ver la tabla.</p>
+</div>
+</div>
+</section>
+
+
+<section class="sm">
 <h2>Diagramador de Procesos BPMN</h2>
 <p>Escribe o edita la definicion del proceso en la caja de texto usando sintaxis de Mermaid y presiona "Renderizar diagrama" para visualizarlo. Tambien puedes cargar ejemplos predefinidos de procesos simples, con decisiones o con areas (swimlanes).</p>
 <div class="bpmn-tool">
@@ -150,6 +195,45 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 </div>
 </div>
 </section>
+<section class="sm">
+<h2>Generador de Procedimientos (SOP)</h2>
+<p>Completa el objetivo, alcance y responsables del proceso para generar automaticamente un Procedimiento Estandar de Operacion (SOP) a partir de los pasos definidos en el Analizador de Cuellos de Botella.</p>
+<div class="sop-tool">
+<div class="sop-inputs">
+<div>
+<label for="sopCodigo">Codigo del documento</label>
+<input type="text" id="sopCodigo" value="SOP-001">
+</div>
+<div>
+<label for="sopVersion">Version</label>
+<input type="text" id="sopVersion" value="1.0">
+</div>
+<div class="full">
+<label for="sopObjetivo">Objetivo</label>
+<textarea id="sopObjetivo" rows="2">Estandarizar la ejecucion del proceso para asegurar consistencia, calidad y cumplimiento de los tiempos definidos.</textarea>
+</div>
+<div class="full">
+<label for="sopAlcance">Alcance</label>
+<textarea id="sopAlcance" rows="2">Aplica a todo el personal involucrado en la ejecucion de este proceso dentro de la organizacion.</textarea>
+</div>
+<div class="full">
+<label for="sopResponsables">Responsables (uno por linea)</label>
+<textarea id="sopResponsables" rows="3">Lider de proceso
+Equipo operativo
+Area de control interno</textarea>
+</div>
+</div>
+<div class="bpmn-buttons" style="margin:14px 0">
+<button onclick="generarSOP()">Generar procedimiento</button>
+<button onclick="copiarSOP()">Copiar procedimiento</button>
+</div>
+<div id="resultadoSOP" class="sop-resultado">
+<p style="color:#999">Completa los campos y presiona "Generar procedimiento" para ver el documento.</p>
+</div>
+</div>
+</section>
+
+
 <section class="sm">
 <h2>Analizador de Cuellos de Botella con IA</h2>
 <p>Ingresa los pasos de tu proceso indicando el tiempo de ciclo, el tiempo de espera y el porcentaje de retrabajo de cada uno. El analizador aplica reglas heuristicas de mejora continua para identificar los pasos criticos y sugerir acciones de optimizacion.</p>
@@ -215,90 +299,6 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 </div>
 <div id="resultadoKPI">
 <p style="color:#999">Define los pasos en el Analizador de Cuellos de Botella y presiona "Calcular indicadores".</p>
-</div>
-</div>
-</section>
-
-
-<section class="sm">
-<h2>Caracterizador de Procesos (SIPOC)</h2>
-<p>Define los proveedores, entradas, salidas y clientes de tu proceso para construir una ficha de caracterizacion SIPOC (Proveedores, Entradas, Proceso, Salidas, Clientes). La columna "Proceso" se completa automaticamente con los pasos definidos en el Analizador de Cuellos de Botella.</p>
-<div class="sipoc-tool">
-<div class="sipoc-inputs">
-<div>
-<label for="sipocNombre">Nombre del proceso</label>
-<input type="text" id="sipocNombre" value="Proceso de aprobacion de solicitudes">
-</div>
-<div></div>
-<div>
-<label for="sipocProveedores">Proveedores (uno por linea)</label>
-<textarea id="sipocProveedores" rows="4">Cliente externo
-Area comercial
-Sistema de gestion documental</textarea>
-</div>
-<div>
-<label for="sipocEntradas">Entradas (uno por linea)</label>
-<textarea id="sipocEntradas" rows="4">Solicitud del cliente
-Documentacion de soporte
-Politicas internas</textarea>
-</div>
-<div>
-<label for="sipocSalidas">Salidas (uno por linea)</label>
-<textarea id="sipocSalidas" rows="4">Solicitud aprobada o rechazada
-Notificacion al cliente
-Registro en el sistema</textarea>
-</div>
-<div>
-<label for="sipocClientes">Clientes (uno por linea)</label>
-<textarea id="sipocClientes" rows="4">Cliente externo
-Area de auditoria
-Gerencia</textarea>
-</div>
-</div>
-<div class="bpmn-buttons" style="margin:14px 0">
-<button onclick="generarSIPOC()">Generar ficha SIPOC</button>
-</div>
-<div id="resultadoSIPOC">
-<p style="color:#999">Completa los campos y presiona "Generar ficha SIPOC" para ver la tabla.</p>
-</div>
-</div>
-</section>
-
-
-<section class="sm">
-<h2>Generador de Procedimientos (SOP)</h2>
-<p>Completa el objetivo, alcance y responsables del proceso para generar automaticamente un Procedimiento Estandar de Operacion (SOP) a partir de los pasos definidos en el Analizador de Cuellos de Botella.</p>
-<div class="sop-tool">
-<div class="sop-inputs">
-<div>
-<label for="sopCodigo">Codigo del documento</label>
-<input type="text" id="sopCodigo" value="SOP-001">
-</div>
-<div>
-<label for="sopVersion">Version</label>
-<input type="text" id="sopVersion" value="1.0">
-</div>
-<div class="full">
-<label for="sopObjetivo">Objetivo</label>
-<textarea id="sopObjetivo" rows="2">Estandarizar la ejecucion del proceso para asegurar consistencia, calidad y cumplimiento de los tiempos definidos.</textarea>
-</div>
-<div class="full">
-<label for="sopAlcance">Alcance</label>
-<textarea id="sopAlcance" rows="2">Aplica a todo el personal involucrado en la ejecucion de este proceso dentro de la organizacion.</textarea>
-</div>
-<div class="full">
-<label for="sopResponsables">Responsables (uno por linea)</label>
-<textarea id="sopResponsables" rows="3">Lider de proceso
-Equipo operativo
-Area de control interno</textarea>
-</div>
-</div>
-<div class="bpmn-buttons" style="margin:14px 0">
-<button onclick="generarSOP()">Generar procedimiento</button>
-<button onclick="copiarSOP()">Copiar procedimiento</button>
-</div>
-<div id="resultadoSOP" class="sop-resultado">
-<p style="color:#999">Completa los campos y presiona "Generar procedimiento" para ver el documento.</p>
 </div>
 </div>
 </section>
