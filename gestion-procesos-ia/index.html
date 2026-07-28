@@ -469,7 +469,8 @@ fila.innerHTML = '<td><input type="text" class="p-nombre" value="' + nombre + '"
 '<td><input type="number" class="p-retrabajo" value="' + retrabajo + '" min="0" max="100"></td>' +
 '<td><button onclick="eliminarPaso(this)">&#10005;</button></td>';
 tbody.appendChild(fila);
-}
+
+guardarPasosLocal();}
 
 function agregarPasoVacio(){
 agregarPaso('Nuevo paso', 10, 0, 0);
@@ -478,7 +479,8 @@ agregarPaso('Nuevo paso', 10, 0, 0);
 function eliminarPaso(boton){
 var fila = boton.closest('tr');
 fila.parentNode.removeChild(fila);
-}
+
+guardarPasosLocal();}
 
 function cargarEjemploProceso(){
 document.getElementById('pasosBody').innerHTML = '';
@@ -1105,11 +1107,38 @@ html += '</table></div>';
 document.getElementById('resultadoRiskGuard').innerHTML = html;
 }
 
+function guardarPasosLocal(){
+var filas = document.querySelectorAll('#pasosBody tr');
+var datos = [];
+filas.forEach(function(fila){
+datos.push({
+nombre: fila.querySelector('.p-nombre').value,
+ciclo: fila.querySelector('.p-ciclo').value,
+espera: fila.querySelector('.p-espera').value,
+retrabajo: fila.querySelector('.p-retrabajo').value
+});
+});
+try{ localStorage.setItem('pasosProceso', JSON.stringify(datos)); }catch(e){}
+}
+function cargarPasosLocal(){
+try{
+var datos = JSON.parse(localStorage.getItem('pasosProceso'));
+if(datos && datos.length > 0){
+document.getElementById('pasosBody').innerHTML = '';
+datos.forEach(function(p){
+agregarPaso(p.nombre, p.ciclo, p.espera, p.retrabajo);
+});
+return true;
+}
+}catch(e){}
+return false;
+}
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.credito;
 renderDiagram();
-cargarEjemploProceso();
+if(!cargarPasosLocal()){ cargarEjemploProceso(); }
+document.getElementById('pasosBody').addEventListener('input', guardarPasosLocal);
 analizarProceso();
 simularOptimizacion();
 calcularKPIs();
