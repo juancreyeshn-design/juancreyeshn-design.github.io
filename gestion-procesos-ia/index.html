@@ -273,6 +273,9 @@ Gerencia</textarea>
 <button class="ejemplo" onclick="cargarEjemploProceso()">Cargar ejemplo</button>
 <button onclick="analizarProceso()">Analizar proceso</button>
 <button onclick="vaciarPasos()">Vaciar todos los pasos</button>
+<button onclick="exportarPasosJSON()">Exportar pasos (JSON)</button>
+<button onclick="document.getElementById('importarPasosInput').click()">Importar pasos (JSON)</button>
+<input type="file" id="importarPasosInput" accept="application/json" style="display:none" onchange="importarPasosJSON(this)">
 </div>
 </div>
 <div class="bottleneck-resultado" id="resultadoAnalisis">
@@ -554,6 +557,48 @@ actualizarTodo();}
 function vaciarPasos(){
 document.getElementById('pasosBody').innerHTML = '';
 actualizarTodo();
+}
+function exportarPasosJSON(){
+var filas = document.querySelectorAll('#pasosBody tr');
+var datos = [];
+filas.forEach(function(fila){
+datos.push({
+nombre: fila.querySelector('.p-nombre').value,
+ciclo: fila.querySelector('.p-ciclo').value,
+espera: fila.querySelector('.p-espera').value,
+retrabajo: fila.querySelector('.p-retrabajo').value
+});
+});
+var blob = new Blob([JSON.stringify(datos, null, 2)], {type:'application/json'});
+var a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = 'pasos-proceso.json';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+}
+function importarPasosJSON(input){
+var file = input.files[0];
+if(!file) return;
+var reader = new FileReader();
+reader.onload = function(e){
+try{
+var datos = JSON.parse(e.target.result);
+if(Array.isArray(datos) && datos.length > 0){
+document.getElementById('pasosBody').innerHTML = '';
+datos.forEach(function(p){
+agregarPaso(p.nombre || 'Paso sin nombre', p.ciclo || 0, p.espera || 0, p.retrabajo || 0);
+});
+actualizarTodo();
+} else {
+alert('El archivo no contiene un formato valido de pasos.');
+}
+}catch(err){
+alert('No se pudo leer el archivo. Verifica que sea un JSON valido exportado desde esta herramienta.');
+}
+input.value = '';
+};
+reader.readAsText(file);
 }
 function cargarEjemploProceso(){
 document.getElementById('pasosBody').innerHTML = '';
