@@ -502,7 +502,18 @@ descargarSVGDirecto();
 img.onerror = function(){ URL.revokeObjectURL(url); descargarSVGDirecto(); };
 img.src = url;
 }
+function guardarDiagramaLocal(){
+try{ localStorage.setItem('diagramaMermaid', document.getElementById('mermaidInput').value); }catch(e){}
+}
+function cargarDiagramaLocal(){
+try{
+var d = localStorage.getItem('diagramaMermaid');
+if(d){ document.getElementById('mermaidInput').value = d; return true; }
+}catch(e){}
+return false;
+}
 function renderDiagram(){
+guardarDiagramaLocal();
 var codigo = document.getElementById('mermaidInput').value;
 var contenedor = document.getElementById('diagramOutput');
 mermaid.render('graficoGenerado', codigo).then(function(resultado){
@@ -1203,8 +1214,9 @@ analizarRiesgos();
 }
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
-document.getElementById('mermaidInput').value = ejemplos.credito;
+if(!cargarDiagramaLocal()){ document.getElementById('mermaidInput').value = ejemplos.credito; }
 renderDiagram();
+document.getElementById('mermaidInput').addEventListener('input', guardarDiagramaLocal);
 if(!cargarPasosLocal()){ cargarEjemploProceso(); }
 document.getElementById('pasosBody').addEventListener('input', actualizarTodo);
 analizarProceso();
