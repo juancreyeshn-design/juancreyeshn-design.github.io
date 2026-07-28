@@ -135,6 +135,17 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .gap-grupo.menor h4{background:#f4f6fa;color:#666}
 .gap-grupo.reevaluar h4{background:#fef2f2;color:#dc2626}
 .gap-item{padding:8px 10px;border-left:3px solid #ddd;margin-bottom:6px;font-size:.85rem;background:#fafbfc;border-radius:0 6px 6px 0}
+.priority-matrix{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.priority-matrix h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azul);margin-bottom:4px}
+.priority-matrix .priority-caption{font-size:.75rem;color:#999;margin-bottom:12px}
+.priority-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px}
+.priority-cell{background:#fafbfc;border:1px solid #eef0f4;border-radius:10px;padding:10px;min-height:110px}
+.priority-cell .cell-tag{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.priority-cell.victoria .cell-tag{background:#f0fdf4;color:#16a34a}
+.priority-cell.estrategico .cell-tag{background:#f5f3ff;color:var(--morado)}
+.priority-cell.menor .cell-tag{background:#f4f6fa;color:#666}
+.priority-cell.reevaluar .cell-tag{background:#fef2f2;color:#dc2626}
+.priority-chip{display:inline-block;background:white;border:1px solid #e2e6ee;border-radius:16px;padding:4px 10px;font-size:.75rem;color:var(--gris-texto);margin:3px 4px 0 0}
 
 
 
@@ -751,6 +762,22 @@ alert('No se pudo copiar automaticamente. Copia el texto manualmente.');
 }
 
 
+function chipsHtml(lista){
+if(lista.length === 0){ return '<span style="color:#bbb;font-size:.78rem">Ninguno</span>'; }
+return lista.map(function(r){ return '<span class="priority-chip">' + r.nombre + '</span>'; }).join('');
+}
+function priorityMatrixHtml(victorias, estrategicos, menores, reevaluar){
+var html = '<div class="priority-matrix"><h4>Matriz de Priorizacion (Impacto vs Complejidad)</h4>';
+html += '<p class="priority-caption">Cada paso se ubica segun su peso en el tiempo total del proceso y su complejidad de intervencion.</p>';
+html += '<div class="priority-grid">';
+html += '<div class="priority-cell victoria"><span class="cell-tag">Victorias rapidas</span><div>' + chipsHtml(victorias) + '</div></div>';
+html += '<div class="priority-cell estrategico"><span class="cell-tag">Proyectos estrategicos</span><div>' + chipsHtml(estrategicos) + '</div></div>';
+html += '<div class="priority-cell menor"><span class="cell-tag">Mejoras menores</span><div>' + chipsHtml(menores) + '</div></div>';
+html += '<div class="priority-cell reevaluar"><span class="cell-tag">Reevaluar</span><div>' + chipsHtml(reevaluar) + '</div></div>';
+html += '</div></div>';
+return html;
+}
+
 function analizarBrechas(){
 var filas = document.querySelectorAll('#pasosBody tr');
 if(filas.length === 0){
@@ -807,6 +834,8 @@ html += '<div>Meta TO-BE<span>' + Math.round(metaToBe) + ' min</span></div>';
 html += '<div>Brecha<span>' + (brechaMin >= 0 ? '+' : '') + Math.round(brechaMin) + ' min</span></div>';
 html += '<div>Brecha relativa<span>' + (brechaPct >= 0 ? '+' : '') + brechaPct + '%</span></div>';
 html += '</div>';
+
+html += priorityMatrixHtml(victorias, estrategicos, menores, reevaluar);
 
 html += '<div class="gap-grupo victoria"><h4>Victorias rapidas (alto impacto, baja complejidad)</h4>' + listaHtml(victorias) + '</div>';
 html += '<div class="gap-grupo estrategico"><h4>Proyectos estrategicos (alto impacto, alta complejidad)</h4>' + listaHtml(estrategicos) + '</div>';
