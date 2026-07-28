@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+  <html lang="es">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificador de Proyecto de Mejora | Juan Carlos Reyes</title>
+<style>
+:root{--azul:#1a3a5c;--azul-medio:#2563a8;--azul-claro:#3b82c4;--gris-claro:#f4f6fa;--gris-texto:#4a5568;--morado:#6d28d9}
+  *{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--gris-claro);color:var(--gris-texto)}
+.hero{background:linear-gradient(135deg,var(--azul),var(--morado) 60%,var(--azul-claro));color:white;padding:40px 20px 32px;text-align:center}
+.hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;margin-bottom:8px}
+.hero .sub{font-size:1rem;opacity:.88;margin-bottom:6px}
+.hero .desc{font-size:.95rem;opacity:.8;max-width:640px;margin:0 auto 20px;line-height:1.6}
+.back{display:inline-block;color:white;text-decoration:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:8px 18px;border-radius:20px;font-size:.9rem}
+.back:hover{background:rgba(255,255,255,.28)}
+  main{max-width:960px;margin:0 auto;padding:36px 16px}
+.sm{margin-bottom:36px}
+.sm h2{font-size:1.2rem;color:var(--azul);font-weight:700;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--morado)}
+.sm p{line-height:1.75;font-size:1rem;margin-bottom:10px}
+.plan-inputs{display:grid;grid-template-columns:1fr;gap:14px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.plan-inputs label{font-size:.85rem;font-weight:700;color:var(--azul);display:block;margin-bottom:6px}
+.plan-inputs textarea{width:100%;padding:8px;border:1px solid #d7dce3;border-radius:8px;font-size:.85rem;font-family:inherit;resize:vertical}
+.bpmn-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.bpmn-buttons button{border:none;padding:8px 14px;border-radius:8px;font-size:.82rem;cursor:pointer;color:white;background:var(--azul-medio);transition:.2s}
+.bpmn-buttons button:hover{background:var(--azul)}
+  .plan-resultado{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-top:16px}
+.metodologia-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem}
+.metodologia-badge.scrum{background:#f0fdf4;color:#16a34a}
+.metodologia-badge.cascada{background:#eff6ff;color:#2563a8}
+.justificacion{font-style:italic;background:#faf9ff;border-left:4px solid var(--morado);padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0;line-height:1.6;font-size:.9rem}
+.recursos-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:10px}
+@media(min-width:800px){.recursos-grid{grid-template-columns:repeat(3,1fr)}}
+.recursos-col{background:#fafbfc;border-radius:10px;padding:14px}
+  .recursos-col h4{color:var(--azul);font-size:.85rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.recursos-col ul{padding-left:18px;font-size:.85rem;line-height:1.7}
+.comparacion-metodologias{display:grid;grid-template-columns:1fr;gap:14px;margin-top:10px}
+@media(min-width:800px){.comparacion-metodologias{grid-template-columns:repeat(2,1fr)}}
+.metodologia-card{background:white;border:2px solid #eee;border-radius:12px;padding:16px}
+.metodologia-card h5{color:var(--azul);margin-bottom:4px}
+.metodologia-card .metodologia-desc{color:#888;font-size:.85rem;margin-bottom:8px}
+.metodologia-card ul{padding-left:18px;font-size:.85rem;line-height:1.7}
+.metodologia-card.recomendada{border-color:var(--morado);box-shadow:0 2px 10px rgba(109,40,217,.15)}
+footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0f2f7;margin-top:20px}
+</style>
+  </head>
+  <body>
+  <div class="hero">
+  <h1>Planificador de Proyecto de Mejora</h1>
+<p class="sub">Cuestionario de descubrimiento con recomendacion de metodologia</p>
+<p class="desc">Responde tres preguntas clave sobre tu proyecto de mejora de procesos y obten una recomendacion de metodologia (Scrum o Cascada), junto con el equipo, la tecnologia y los proveedores sugeridos.</p>
+  <a class="back" href="index.html">&#8592; Volver al modulo</a>
+  </div>
+  <main>
+  <section class="sm">
+  <h2>Descubrimiento del proyecto</h2>
+<p>Responde estas tres preguntas con el mayor detalle posible (minimo 10 caracteres cada una). El analisis heuristico usa palabras clave de tus respuestas para sugerir la metodologia mas adecuada y los recursos necesarios.</p>
+<div class="plan-inputs">
+<div>
+<label for="pregunta1">1. Cual es el objetivo principal y el entregable final?</label>
+  <textarea id="pregunta1" rows="3" placeholder="Ej: Automatizar el proceso de aprobacion de creditos para reducir el tiempo de respuesta al cliente."></textarea>
+  </div>
+  <div>
+  <label for="pregunta2">2. Que tan claros estan los requisitos y que tanta flexibilidad hay?</label>
+  <textarea id="pregunta2" rows="3" placeholder="Ej: Los requisitos generales son claros, pero pueden ajustarse segun el feedback del area de riesgo."></textarea>
+  </div>
+  <div>
+  <label for="pregunta3">3. Cual es la expectativa de tiempo y hay dependencias criticas?</label>
+  <textarea id="pregunta3" rows="3" placeholder="Ej: Se espera en 2 meses; depende de una API externa y del equipo de TI."></textarea>
+  </div>
+  </div>
+  <div class="bpmn-buttons">
+  <button onclick="planificarProyecto()">Generar plan de proyecto</button>
+  </div>
+  <div class="plan-resultado" id="resultadoPlanificador">
+  <p style="color:#999">Responde las tres preguntas y presiona "Generar plan de proyecto" para ver la recomendacion.</p>
+  </div>
+  </section>
+  </main>
+  <footer>
+  <p>&#169; 2025 Juan Carlos Reyes &middot; Gestion de Procesos y Optimizacion Operativa con IA</p>
+  </footer>
+  <script>
+  function quitarAcentos(t){
+return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  }
+
+function contarCoincidencias(texto, palabras){
+  var t = quitarAcentos(texto);
+var contador = 0;
+palabras.forEach(function(p){ if(t.indexOf(p) !== -1) contador++; });
+return contador;
+}
+
+function planificarProyecto(){
+  var q1 = document.getElementById('pregunta1').value.trim();
+var q2 = document.getElementById('pregunta2').value.trim();
+var q3 = document.getElementById('pregunta3').value.trim();
+
+if(q1.length<10 || q2.length<10 || q3.length<10){
+  document.getElementById('resultadoPlanificador').innerHTML = '<p style="color:#c0392b">Completa las tres respuestas con al menos 10 caracteres cada una para generar el analisis.</p>';
+  return;
+  }
+
+  var textoCompleto = q1 + ' ' + q2 + ' ' + q3;
+
+  var palabrasScrum = ['cambia','cambiar','cambios','flexible','flexibilidad','iterar','iterativo','iterativa','ajustar','ajustes','evoluciona','evolucionar','feedback','retroalimentacion','incierto','incierta','no esta claro','no estan claros','por definir','prototipo','mvp','incertidumbre','sujeto a cambios'];
+  var palabrasCascada = ['claro','claros','clara','claras','definido','definidos','definida','fijo','fijos','fija','fijas','no cambiara','no cambiaran','documentado','documentados','aprobado','aprobados','regulatorio','normativa','cumplimiento estricto','certificacion','auditoria','fecha limite','plazo fijo','contrato'];
+
+var puntajeScrum = contarCoincidencias(textoCompleto, palabrasScrum);
+var puntajeCascada = contarCoincidencias(textoCompleto, palabrasCascada);
+
+var metodologia, justificacion;
+if(puntajeScrum >= puntajeCascada){
+metodologia = 'Scrum';
+justificacion = 'Se recomienda Scrum porque tus respuestas muestran senales de flexibilidad, retroalimentacion o incertidumbre en los requisitos. Un enfoque iterativo por sprints permite ajustar el alcance a medida que el proyecto avanza y gestionar mejor las dependencias criticas mencionadas.';
+} else {
+metodologia = 'Cascada';
+justificacion = 'Se recomienda Cascada porque tus respuestas indican requisitos claros, estables o con restricciones normativas o contractuales. Un enfoque secuencial permite planificar fechas, costos y entregables desde el inicio con bajo riesgo de cambios de alcance.';
+}
+
+var roles = ['Lider de proyecto / Patrocinador', 'Analista de procesos', 'Equipo operativo del area involucrada'];
+var tecnologia = ['Software de gestion de proyectos (Jira, Trello o Asana)', 'Herramienta de modelado de procesos (BPMN/Mermaid)'];
+var proveedores = [];
+
+if(metodologia === 'Scrum'){
+roles.push('Scrum Master', 'Product Owner');
+} else {
+roles.push('Gerente de proyecto', 'Responsable de documentacion y control de cambios');
+}
+
+var tieneTI = contarCoincidencias(textoCompleto, ['api','sistema','software','integracion','automatizacion','plataforma','digital']) > 0;
+if(tieneTI){
+roles.push('Especialista en TI / Integraciones');
+tecnologia.push('Plataforma de automatizacion de procesos (RPA/BPM)');
+proveedores.push('Proveedor de software o servicios de integracion');
+}
+
+var tieneCumplimiento = contarCoincidencias(textoCompleto, ['cumplimiento','regulatorio','normativa','certificacion','auditoria','riesgo']) > 0;
+if(tieneCumplimiento){
+roles.push('Especialista en riesgo y cumplimiento');
+proveedores.push('Consultor externo de cumplimiento o certificacion');
+}
+
+if(proveedores.length === 0){
+proveedores.push('Consultoria externa especializada (segun necesidad)');
+}
+tecnologia.push('Panel de indicadores (KPI) para seguimiento del proyecto');
+
+function listaHtml(items){
+  return items.map(function(i){ return '<li>' + i + '</li>'; }).join('');
+}
+
+var html = '';
+html += '<span class="metodologia-badge ' + (metodologia==='Scrum' ? 'scrum':'cascada') + '">Enfoque sugerido: ' + metodologia + '</span>';
+html += '<p class="justificacion">' + justificacion + '</p>';
+
+html += '<div class="recursos-grid">';
+html += '<div class="recursos-col"><h4>Equipo y roles</h4><ul>' + listaHtml(roles) + '</ul></div>';
+html += '<div class="recursos-col"><h4>Tecnologia</h4><ul>' + listaHtml(tecnologia) + '</ul></div>';
+html += '<div class="recursos-col"><h4>Proveedores / externos</h4><ul>' + listaHtml(proveedores) + '</ul></div>';
+html += '</div>';
+
+html += '<h4 style="margin-top:20px;color:var(--azul)">Compara las metodologias</h4>';
+html += '<div class="comparacion-metodologias">';
+html += '<div class="metodologia-card' + (metodologia==='Cascada' ? ' recomendada':'') + '"><h5>Cascada (Waterfall)</h5><p class="metodologia-desc">Secuencial y estructurado.</p><ul><li>Claridad total en fechas y costos desde el inicio.</li><li>Ideal para requisitos fijos que no cambiaran.</li><li>Facil seguimiento de hitos secuenciales.</li></ul></div>';
+  html += '<div class="metodologia-card' + (metodologia==='Scrum' ? ' recomendada':'') + '"><h5>Scrum</h5><p class="metodologia-desc">Iterativo y flexible.</p><ul><li>Adaptabilidad rapida a cambios de alcance.</li><li>Entrega de valor continua por sprints.</li><li>Mejora la colaboracion y retroalimentacion del equipo.</li></ul></div>';
+  html += '</div>';
+
+  document.getElementById('resultadoPlanificador').innerHTML = html;
+  }
+  </script>
+  </body>
+  </html>
