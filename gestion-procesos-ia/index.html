@@ -239,6 +239,7 @@ Gerencia</textarea>
 <button class="ejemplo" onclick="cargarEjemplo('simple')">Ejemplo: Proceso simple</button>
 <button class="ejemplo" onclick="cargarEjemplo('decision')">Ejemplo: Con decision</button>
 <button class="ejemplo" onclick="cargarEjemplo('areas')">Ejemplo: Con areas</button>
+<button class="ejemplo" onclick="cargarEjemplo('credito')">Ejemplo: Aprobacion de credito</button>
 </div>
 </div>
 <div class="bpmn-preview" id="previewBox">
@@ -388,6 +389,7 @@ var ejemplos = {};
 ejemplos.simple = "flowchart LR\nA([Inicio]) --> B[Recibir solicitud]\nB --> C[Revisar documentos]\nC --> D[Registrar en el sistema]\nD --> E([Fin])";
 ejemplos.decision = "flowchart TD\nA([Inicio]) --> B[Recibir solicitud de compra]\nB --> C{Monto mayor a limite?}\nC -- Si --> D[Enviar a aprobacion gerencial]\nC -- No --> E[Aprobacion automatica]\nD --> F{Aprobado?}\nF -- Si --> G[Generar orden de compra]\nF -- No --> H[Notificar rechazo]\nE --> G\nG --> I([Fin])\nH --> I";
 ejemplos.areas = "flowchart TD\nsubgraph Cliente\nA([Inicio]) --> B[Envia solicitud]\nend\nsubgraph Ventas\nB --> C[Revisa solicitud]\nC --> D{Stock disponible?}\nend\nsubgraph Bodega\nD -- Si --> E[Prepara pedido]\nE --> F[Despacha pedido]\nend\nsubgraph Cliente2[Cliente]\nD -- No --> G[Notifica agotado]\nF --> H([Fin])\nG --> H\nend";
+ejemplos.credito = "flowchart TD\nA([Inicio]) --> B[Recepcion de solicitud de credito]\nB --> C[Verificacion de identidad y documentos KYC]\nC --> D[Analisis crediticio y scoring]\nD --> E[Consulta a centrales de riesgo]\nE --> F{Comite aprueba el credito?}\nF -- Si --> G[Formalizacion y firma de contrato]\nF -- No --> H[Notificar rechazo al cliente]\nG --> I[Desembolso de fondos]\nI --> J[Seguimiento post-desembolso]\nJ --> K([Fin])\nH --> K";
 
 function renderDiagram(){
 var codigo = document.getElementById('mermaidInput').value;
@@ -960,7 +962,7 @@ document.getElementById('resultadoRiskGuard').innerHTML = html;
 
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
-document.getElementById('mermaidInput').value = ejemplos.decision;
+document.getElementById('mermaidInput').value = ejemplos.credito;
 renderDiagram();
 cargarEjemploProceso();
 analizarProceso();
