@@ -450,10 +450,20 @@ function descargarDiagramaPNG(){
 var svgEl = document.querySelector('#diagramOutput svg');
 if(!svgEl){ alert('Primero renderiza un diagrama para poder descargarlo.'); return; }
 var svgData = new XMLSerializer().serializeToString(svgEl);
+function descargarSVGDirecto(){
+var blobSvg = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
+var aSvg = document.createElement('a');
+aSvg.href = URL.createObjectURL(blobSvg);
+aSvg.download = 'diagrama-proceso.svg';
+document.body.appendChild(aSvg);
+aSvg.click();
+document.body.removeChild(aSvg);
+}
 var svgBlob = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
 var url = URL.createObjectURL(svgBlob);
 var img = new Image();
 img.onload = function(){
+try{
 var vb = svgEl.viewBox && svgEl.viewBox.baseVal;
 var bbox = svgEl.getBoundingClientRect();
 var w = (vb && vb.width) ? vb.width : bbox.width;
@@ -468,6 +478,7 @@ ctx.fillRect(0,0,canvas.width,canvas.height);
 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 URL.revokeObjectURL(url);
 canvas.toBlob(function(blob){
+if(!blob){ descargarSVGDirecto(); return; }
 var a = document.createElement('a');
 a.href = URL.createObjectURL(blob);
 a.download = 'diagrama-proceso.png';
@@ -475,8 +486,12 @@ document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
 });
+}catch(e){
+URL.revokeObjectURL(url);
+descargarSVGDirecto();
+}
 };
-img.onerror = function(){ alert('No se pudo generar la imagen del diagrama.'); URL.revokeObjectURL(url); };
+img.onerror = function(){ URL.revokeObjectURL(url); descargarSVGDirecto(); };
 img.src = url;
 }
 function renderDiagram(){
