@@ -527,7 +527,7 @@ fila.innerHTML = '<td><input type="text" class="p-nombre" value="' + nombre + '"
 '<td><button onclick="eliminarPaso(this)">&#10005;</button></td>';
 tbody.appendChild(fila);
 
-guardarPasosLocal();}
+actualizarTodo();}
 
 function agregarPasoVacio(){
 agregarPaso('Nuevo paso', 10, 0, 0);
@@ -537,7 +537,7 @@ function eliminarPaso(boton){
 var fila = boton.closest('tr');
 fila.parentNode.removeChild(fila);
 
-guardarPasosLocal();}
+actualizarTodo();}
 
 function cargarEjemploProceso(){
 document.getElementById('pasosBody').innerHTML = '';
@@ -1190,12 +1190,23 @@ return true;
 }catch(e){}
 return false;
 }
+function actualizarTodo(){
+guardarPasosLocal();
+analizarProceso();
+simularOptimizacion();
+calcularKPIs();
+generarSIPOC();
+generarSOP();
+analizarBrechas();
+generarVSM();
+analizarRiesgos();
+}
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.credito;
 renderDiagram();
 if(!cargarPasosLocal()){ cargarEjemploProceso(); }
-document.getElementById('pasosBody').addEventListener('input', guardarPasosLocal);
+document.getElementById('pasosBody').addEventListener('input', actualizarTodo);
 analizarProceso();
 simularOptimizacion();
 calcularKPIs();
