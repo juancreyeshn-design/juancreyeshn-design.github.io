@@ -105,6 +105,21 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .risk-badge.alto{background:#fef2f2;color:#dc2626}
 .risk-badge.medio{background:#fffbeb;color:#d97706}
 .risk-badge.bajo{background:#f0fdf4;color:#16a34a}
+.risk-heatmap{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.risk-heatmap h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azul);margin-bottom:12px}
+.heatmap-container{display:flex;gap:10px}
+.heatmap-yaxis{writing-mode:vertical-rl;transform:rotate(180deg);font-size:.72rem;font-weight:700;color:var(--azul);display:flex;align-items:center;justify-content:center}
+.heatmap-main{flex:1}
+.heatmap-row{display:grid;grid-template-columns:70px repeat(3,1fr);gap:6px;margin-bottom:6px}
+.heatmap-rowlabel{display:flex;align-items:center;justify-content:flex-end;font-size:.72rem;font-weight:700;color:var(--gris-texto);padding-right:4px}
+.heatmap-cell{border-radius:8px;padding:8px;min-height:60px;display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start}
+.heatmap-cell.alto{background:#fee2e2}
+.heatmap-cell.medio{background:#fef3c7}
+.heatmap-cell.bajo{background:#dcfce7}
+.heatmap-chip{background:white;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:3px 8px;font-size:.68rem;color:var(--gris-texto)}
+.heatmap-collabels{display:grid;grid-template-columns:70px repeat(3,1fr);gap:6px;margin-top:2px}
+.heatmap-collabel{text-align:center;font-size:.72rem;font-weight:700;color:var(--gris-texto)}
+.heatmap-xaxis{text-align:center;font-size:.72rem;font-weight:700;color:var(--azul);margin-top:6px}
 
 
 
@@ -943,6 +958,41 @@ function listaPasos(cat){
     }
 
 
+function heatmapCellsHtml(riesgos){
+var probScores={'Baja':1,'Media':2,'Alta':3};
+var impactScores={'Bajo':1,'Medio':2,'Alto':3};
+var mapa = {};
+riesgos.forEach(function(r){
+var key = impactScores[r.impacto] + '_' + probScores[r.probabilidad];
+if(!mapa[key]) mapa[key] = [];
+mapa[key].push(r.nombre);
+});
+var filas = [{score:3,label:'Alto'},{score:2,label:'Medio'},{score:1,label:'Bajo'}];
+var columnas = [1,2,3];
+var html = '';
+filas.forEach(function(fila){
+html += '<div class="heatmap-row"><div class="heatmap-rowlabel">' + fila.label + '</div>';
+columnas.forEach(function(colScore){
+var key = fila.score + '_' + colScore;
+var total = fila.score * colScore;
+var nivel = total >= 6 ? 'alto' : (total >= 3 ? 'medio' : 'bajo');
+var items = mapa[key] || [];
+var chips = items.map(function(n){ return '<span class="heatmap-chip">' + n + '</span>'; }).join('');
+html += '<div class="heatmap-cell ' + nivel + '">' + chips + '</div>';
+});
+html += '</div>';
+});
+return html;
+}
+function riskHeatmapHtml(riesgos){
+var html = '<div class="risk-heatmap"><h4>Mapa de Calor de Riesgos (Probabilidad x Impacto)</h4>';
+html += '<div class="heatmap-container"><div class="heatmap-yaxis">Impacto</div><div class="heatmap-main">';
+html += heatmapCellsHtml(riesgos);
+html += '<div class="heatmap-collabels"><div class="heatmap-collabel"></div><div class="heatmap-collabel">Baja</div><div class="heatmap-collabel">Media</div><div class="heatmap-collabel">Alta</div></div>';
+html += '<div class="heatmap-xaxis">Probabilidad</div>';
+html += '</div></div></div>';
+return html;
+}
 function analizarRiesgos(){
 var filas = document.querySelectorAll('#pasosBody tr');
 if(filas.length === 0){
@@ -1003,6 +1053,7 @@ html += '<div><div class="num" style="color:#d97706">' + totalMedio + '</div><di
 html += '<div><div class="num" style="color:#16a34a">' + totalBajo + '</div><div class="lbl">Riesgos bajos</div></div>';
 html += '</div>';
 
+html += riskHeatmapHtml(riesgos);
 html += '<div class="riskguard-table"><table><tr><th>Paso</th><th>Riesgo identificado</th><th>Tipo</th><th>Probabilidad</th><th>Impacto</th><th>Nivel</th><th>Control sugerido</th></tr>';
 riesgos.forEach(function(r){
 var badgeClass = r.nivel === 'Alto' ? 'alto' : (r.nivel === 'Medio' ? 'medio' : 'bajo');
