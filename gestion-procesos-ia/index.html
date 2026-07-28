@@ -82,6 +82,19 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .vsm-pareto table{width:100%;border-collapse:collapse;font-size:.85rem}
 .vsm-pareto th,.vsm-pareto td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}
 
+.riskguard-resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.riskguard-resumen div{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.riskguard-resumen .num{font-size:1.4rem;font-weight:700}
+.riskguard-resumen .lbl{font-size:.75rem;color:var(--gris-texto);margin-top:4px}
+.riskguard-table{background:white;border-radius:10px;padding:16px;margin-top:8px;overflow-x:auto}
+.riskguard-table table{width:100%;border-collapse:collapse;font-size:.85rem}
+.riskguard-table th,.riskguard-table td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+.risk-badge{padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700;display:inline-block}
+.risk-badge.alto{background:#fef2f2;color:#dc2626}
+.risk-badge.medio{background:#fffbeb;color:#d97706}
+.risk-badge.bajo{background:#f0fdf4;color:#16a34a}
+
+
 
 .sipoc-tool{margin-top:4px}
 .sipoc-inputs{display:grid;grid-template-columns:1fr;gap:14px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
@@ -345,6 +358,14 @@ Area de control interno</textarea>
 </section>
 
 <section class="sm">
+<h2>Identificador de Riesgos y Controles (RiskGuard AI)</h2>
+<p>Analiza cada paso definido en el Analizador de Cuellos de Botella para identificar riesgos operativos potenciales (demoras, reprocesos y errores manuales), calcula su nivel de riesgo combinando probabilidad e impacto, y sugiere el tipo de control mas adecuado para mitigarlo.</p>
+<div class="bpmn-buttons">
+<button onclick="analizarRiesgos()">Analizar riesgos</button>
+</div>
+<div id="resultadoRiskGuard"></div>
+</section>
+<section class="sm">
 <h2>Proximos componentes del modulo</h2>
 <ul class="mod-list">
 <li><span class="ok">&#10003;</span> Diagramador de Procesos BPMN (Mermaid.js)</li>
@@ -355,6 +376,7 @@ Area de control interno</textarea>
 <li><span class="ok">&#10003;</span> Generador de procedimientos (SOP)</li>
 <li><span class="ok">&#10003;</span> Analizador de brechas AS-IS vs TO-BE</li>
 <li><span class="ok">&#10003;</span> Mapeo de Flujo de Valor (VSM)</li>
+<li><span class="ok">&#10003;</span> Identificador de riesgos y controles (RiskGuard AI)</li>
 </ul>
 </section>
 </main>
@@ -862,6 +884,77 @@ document.getElementById('resultadoBrechas').innerHTML = html;
       document.getElementById('resultadoVSM').innerHTML = html;
     }
 
+
+function analizarRiesgos(){
+var filas = document.querySelectorAll('#pasosBody tr');
+if(filas.length === 0){
+document.getElementById('resultadoRiskGuard').innerHTML = '<p style="color:#c0392b">Agrega al menos un paso en el Analizador de Cuellos de Botella para identificar riesgos.</p>';
+return;
+}
+var pasos = [];
+filas.forEach(function(fila){
+var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
+var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var total = ciclo + espera;
+pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo, total:total});
+});
+
+var tiempoTotal = 0;
+pasos.forEach(function(p){ tiempoTotal += p.total; });
+if(tiempoTotal <= 0) tiempoTotal = 1;
+
+var riesgos = pasos.map(function(p){
+var impactoPct = Math.round((p.total / tiempoTotal) * 100);
+var impacto = impactoPct >= 30 ? 'Alto' : (impactoPct >= 15 ? 'Medio' : 'Bajo');
+var probabilidad = retrabajoNivel(p.retrabajo);
+var tipo, descripcion;
+if(p.espera > p.ciclo * 1.5){
+tipo = 'Operativo - Demora';
+descripcion = 'Cuello de botella por espera prolongada; riesgo de incumplimiento de tiempos de respuesta.';
+} else if(p.retrabajo >= 15){
+tipo = 'Operativo - Calidad';
+descripcion = 'Porcentaje de retrabajo elevado; riesgo de errores y reprocesos operativos.';
+} else {
+tipo = 'Operativo - Ejecucion';
+descripcion = 'Riesgo estandar asociado a la ejecucion manual del paso.';
+}
+var probScore = probabilidad === 'Alta' ? 3 : (probabilidad === 'Media' ? 2 : 1);
+var impactScore = impacto === 'Alto' ? 3 : (impacto === 'Medio' ? 2 : 1);
+var score = probScore * impactScore;
+var nivel = score >= 6 ? 'Alto' : (score >= 3 ? 'Medio' : 'Bajo');
+var control = nivel === 'Alto' ? 'Control preventivo obligatorio con doble validacion' : (nivel === 'Medio' ? 'Control detectivo periodico' : 'Monitoreo estandar');
+return {nombre:p.nombre, tipo:tipo, descripcion:descripcion, probabilidad:probabilidad, impacto:impacto, nivel:nivel, control:control};
+});
+
+function retrabajoNivel(r){
+if(r >= 15) return 'Alta';
+if(r >= 5) return 'Media';
+return 'Baja';
+}
+
+var totalAlto = riesgos.filter(function(r){ return r.nivel === 'Alto'; }).length;
+var totalMedio = riesgos.filter(function(r){ return r.nivel === 'Medio'; }).length;
+var totalBajo = riesgos.filter(function(r){ return r.nivel === 'Bajo'; }).length;
+
+var html = '';
+html += '<div class="riskguard-resumen">';
+html += '<div><div class="num" style="color:#dc2626">' + totalAlto + '</div><div class="lbl">Riesgos altos</div></div>';
+html += '<div><div class="num" style="color:#d97706">' + totalMedio + '</div><div class="lbl">Riesgos medios</div></div>';
+html += '<div><div class="num" style="color:#16a34a">' + totalBajo + '</div><div class="lbl">Riesgos bajos</div></div>';
+html += '</div>';
+
+html += '<div class="riskguard-table"><table><tr><th>Paso</th><th>Riesgo identificado</th><th>Tipo</th><th>Probabilidad</th><th>Impacto</th><th>Nivel</th><th>Control sugerido</th></tr>';
+riesgos.forEach(function(r){
+var badgeClass = r.nivel === 'Alto' ? 'alto' : (r.nivel === 'Medio' ? 'medio' : 'bajo');
+html += '<tr><td>' + r.nombre + '</td><td>' + r.descripcion + '</td><td>' + r.tipo + '</td><td>' + r.probabilidad + '</td><td>' + r.impacto + '</td><td><span class="risk-badge ' + badgeClass + '">' + r.nivel + '</span></td><td>' + r.control + '</td></tr>';
+});
+html += '</table></div>';
+
+document.getElementById('resultadoRiskGuard').innerHTML = html;
+}
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
@@ -874,6 +967,7 @@ generarSIPOC();
 generarSOP();
 analizarBrechas();
 generarVSM();
+analizarRiesgos();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
