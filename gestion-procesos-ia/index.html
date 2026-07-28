@@ -166,7 +166,7 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
 <div class="sipoc-inputs">
 <div>
 <label for="sipocNombre">Nombre del proceso</label>
-<input type="text" id="sipocNombre" value="Proceso de aprobacion de solicitudes">
+<input type="text" id="sipocNombre" value="Proceso de aprobacion de credito">
 </div>
 <div></div>
 <div>
@@ -426,11 +426,14 @@ fila.parentNode.removeChild(fila);
 
 function cargarEjemploProceso(){
 document.getElementById('pasosBody').innerHTML = '';
-agregarPaso('Recibir solicitud', 5, 2, 0);
-agregarPaso('Revisar documentos', 15, 30, 10);
-agregarPaso('Aprobacion gerencial', 10, 90, 5);
-agregarPaso('Registrar en sistema', 8, 5, 20);
-agregarPaso('Notificar al cliente', 3, 1, 0);
+agregarPaso('Recepcion de solicitud de credito', 10, 5, 5);
+agregarPaso('Verificacion de identidad y documentos (KYC)', 20, 15, 15);
+agregarPaso('Analisis crediticio y scoring', 30, 20, 10);
+agregarPaso('Consulta a centrales de riesgo', 10, 60, 5);
+agregarPaso('Comite de aprobacion de credito', 25, 120, 8);
+agregarPaso('Formalizacion y firma de contrato', 20, 30, 5);
+agregarPaso('Desembolso de fondos', 15, 10, 2);
+agregarPaso('Seguimiento post-desembolso', 10, 5, 0);
 }
 
 function analizarProceso(){
