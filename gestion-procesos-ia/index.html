@@ -191,6 +191,13 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .mod-list .ok{color:#22c55e;font-weight:700}
 .mod-list .soon{color:#aaa;font-size:.8rem}
 footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0f2f7;margin-top:20px}
+
+@media print{
+body *{visibility:hidden}
+#seccionSOP, #seccionSOP *{visibility:visible}
+#seccionSOP{position:absolute;left:0;top:0;width:100%}
+#seccionSOP .sop-inputs, #seccionSOP .bpmn-buttons{display:none !important}
+}
 </style>
 </head>
 <body>
@@ -302,7 +309,7 @@ Gerencia</textarea>
 </div>
 <div id="resultadoVSM"></div>
 </section>
-<section class="sm">
+<section class="sm" id="seccionSOP">
 <h2>Generador de Procedimientos (SOP)</h2>
 <p>Completa el objetivo, alcance y responsables del proceso para generar automaticamente un Procedimiento Estandar de Operacion (SOP) a partir de los pasos definidos en el Analizador de Cuellos de Botella.</p>
 <div class="sop-tool">
@@ -333,6 +340,7 @@ Area de control interno</textarea>
 <div class="bpmn-buttons" style="margin:14px 0">
 <button onclick="generarSOP()">Generar procedimiento</button>
 <button onclick="copiarSOP()">Copiar procedimiento</button>
+<button onclick="window.print()">Imprimir / Guardar como PDF</button>
 </div>
 <div id="resultadoSOP" class="sop-resultado">
 <p style="color:#999">Completa los campos y presiona "Generar procedimiento" para ver el documento.</p>
