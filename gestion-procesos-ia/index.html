@@ -105,6 +105,11 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .risk-badge.alto{background:#fef2f2;color:#dc2626}
 .risk-badge.medio{background:#fffbeb;color:#d97706}
 .risk-badge.bajo{background:#f0fdf4;color:#16a34a}
+.riskguard-taxonomia{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.riskguard-taxonomia h4{width:100%;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azul);margin-bottom:4px}
+.tax-chip{background:white;border-radius:10px;padding:10px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06);font-size:.82rem;color:var(--gris-texto);display:flex;align-items:center;gap:8px}
+.tax-chip b{font-size:1rem;color:var(--azul)}
+.tax-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
 .risk-heatmap{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 .risk-heatmap h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azul);margin-bottom:12px}
 .heatmap-container{display:flex;gap:10px}
@@ -993,6 +998,22 @@ html += '<div class="heatmap-xaxis">Probabilidad</div>';
 html += '</div></div></div>';
 return html;
 }
+function riskTaxonomiaHtml(riesgos){
+var counts = {Demora:0, Calidad:0, Ejecucion:0};
+riesgos.forEach(function(r){
+var sub = r.tipo.split(' - ')[1] || 'Ejecucion';
+if(counts[sub] === undefined) counts[sub] = 0;
+counts[sub]++;
+});
+var colores = {Demora:'#f0a500', Calidad:'#dc2626', Ejecucion:'#2563a8'};
+var etiquetas = {Demora:'Demora / cuello de botella', Calidad:'Calidad / retrabajo', Ejecucion:'Ejecucion manual estandar'};
+var html = '<div class="riskguard-taxonomia"><h4>Taxonomia de Riesgos Operativos</h4>';
+Object.keys(counts).forEach(function(k){
+html += '<div class="tax-chip"><span class="tax-dot" style="background:' + (colores[k]||'#999') + '"></span><b>' + counts[k] + '</b> ' + (etiquetas[k]||k) + '</div>';
+});
+html += '</div>';
+return html;
+}
 function analizarRiesgos(){
 var filas = document.querySelectorAll('#pasosBody tr');
 if(filas.length === 0){
@@ -1053,6 +1074,7 @@ html += '<div><div class="num" style="color:#d97706">' + totalMedio + '</div><di
 html += '<div><div class="num" style="color:#16a34a">' + totalBajo + '</div><div class="lbl">Riesgos bajos</div></div>';
 html += '</div>';
 
+html += riskTaxonomiaHtml(riesgos);
 html += riskHeatmapHtml(riesgos);
 html += '<div class="riskguard-table"><table><tr><th>Paso</th><th>Riesgo identificado</th><th>Tipo</th><th>Probabilidad</th><th>Impacto</th><th>Nivel</th><th>Control sugerido</th></tr>';
 riesgos.forEach(function(r){
