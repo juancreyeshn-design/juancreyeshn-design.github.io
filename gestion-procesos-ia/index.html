@@ -68,6 +68,21 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .kpi-barra-fondo{background:#eee;border-radius:6px;height:10px;margin-top:10px;overflow:hidden}
 .kpi-barra-relleno{background:var(--morado);height:100%}
 
+.vsm-resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.vsm-resumen div{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.vsm-resumen .num{font-size:1.4rem;font-weight:700;color:var(--azul)}
+.vsm-resumen .lbl{font-size:.75rem;color:var(--gris-texto);margin-top:4px}
+.vsm-cat{margin-bottom:16px}
+.vsm-cat h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding:6px 10px;border-radius:6px;display:inline-block}
+.vsm-cat.valor h4{background:#f0fdf4;color:#16a34a}
+.vsm-cat.necesario h4{background:#fffbeb;color:#d97706}
+.vsm-cat.desperdicio h4{background:#fef2f2;color:#dc2626}
+.vsm-item{padding:8px 10px;border-left:3px solid #ddd;margin-bottom:6px;font-size:.85rem;background:#fafbfc;border-radius:0 6px 6px 0}
+.vsm-pareto{background:white;border-radius:10px;padding:16px;margin-top:8px}
+.vsm-pareto table{width:100%;border-collapse:collapse;font-size:.85rem}
+.vsm-pareto th,.vsm-pareto td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}
+
+
 .sipoc-tool{margin-top:4px}
 .sipoc-inputs{display:grid;grid-template-columns:1fr;gap:14px;background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 @media(min-width:800px){.sipoc-inputs{grid-template-columns:repeat(2,1fr)}}
@@ -194,6 +209,14 @@ Gerencia</textarea>
 <div id="diagramOutput"></div>
 </div>
 </div>
+</section>
+<section class="sm">
+<h2>Mapeo de Flujo de Valor (VSM)</h2>
+<p>Clasifica automaticamente los pasos definidos en el Analizador de Cuellos de Botella en tres categorias de la filosofia Lean: Valor Agregado, Necesario sin Valor Agregado y Desperdicio. Calcula el tiempo consumido por cada categoria y aplica el principio de Pareto para priorizar los desperdicios mas criticos.</p>
+<div class="bpmn-buttons">
+<button onclick="generarVSM()">Analizar flujo de valor</button>
+</div>
+<div id="resultadoVSM"></div>
 </section>
 <section class="sm">
 <h2>Generador de Procedimientos (SOP)</h2>
@@ -331,6 +354,7 @@ Area de control interno</textarea>
 <li><span class="ok">&#10003;</span> Caracterizador de procesos (SIPOC)</li>
 <li><span class="ok">&#10003;</span> Generador de procedimientos (SOP)</li>
 <li><span class="ok">&#10003;</span> Analizador de brechas AS-IS vs TO-BE</li>
+<li><span class="ok">&#10003;</span> Mapeo de Flujo de Valor (VSM)</li>
 </ul>
 </section>
 </main>
@@ -757,6 +781,87 @@ html += '<div class="gap-grupo reevaluar"><h4>Reevaluar (bajo impacto, alta comp
 document.getElementById('resultadoBrechas').innerHTML = html;
 }
 
+
+    function generarVSM(){
+      var filas = document.querySelectorAll('#pasosBody tr');
+      if(filas.length === 0){
+        document.getElementById('resultadoVSM').innerHTML = '<p style="color:#c0392b">Agrega al menos un paso en el Analizador de Cuellos de Botella para generar el mapeo de flujo de valor.</p>';
+        return;
+      }
+      var pasos = [];
+      filas.forEach(function(fila){
+        var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
+        var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+        var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
+        var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+        var total = ciclo + espera;
+        var categoria;
+        if(retrabajo >= 15 || espera > ciclo){
+          categoria = 'desperdicio';
+        } else if(espera > 0){
+          categoria = 'necesario';
+        } else {
+          categoria = 'valor';
+        }
+        pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo, total:total, categoria:categoria});
+      });
+
+      var tiempoTotal = 0;
+      var sumaValor = 0, sumaNecesario = 0, sumaDesperdicio = 0;
+      pasos.forEach(function(p){
+        tiempoTotal += p.total;
+        if(p.categoria === 'valor') sumaValor += p.total;
+        else if(p.categoria === 'necesario') sumaNecesario += p.total;
+        else sumaDesperdicio += p.total;
+      });
+      if(tiempoTotal <= 0) tiempoTotal = 1;
+
+      var pctValor = Math.round((sumaValor / tiempoTotal) * 100);
+      var pctNecesario = Math.round((sumaNecesario / tiempoTotal) * 100);
+      var pctDesperdicio = Math.round((sumaDesperdicio / tiempoTotal) * 100);
+
+      var html = '';
+      html += '<div class="vsm-resumen">';
+      html += '<div><div class="num">' + Math.round(tiempoTotal) + ' min</div><div class="lbl">Tiempo total del proceso</div></div>';
+      html += '<div><div class="num">' + pctValor + '%</div><div class="lbl">Valor agregado (' + Math.round(sumaValor) + ' min)</div></div>';
+      html += '<div><div class="num">' + pctDesperdicio + '%</div><div class="lbl">Desperdicio (' + Math.round(sumaDesperdicio) + ' min)</div></div>';
+      html += '</div>';
+
+      function listaPasos(cat){
+        var items = pasos.filter(function(p){ return p.categoria === cat; });
+        if(items.length === 0) return '<div class="vsm-item">Sin pasos en esta categoria.</div>';
+        return items.map(function(p){
+          return '<div class="vsm-item">' + p.nombre + ' — ' + Math.round(p.total) + ' min</div>';
+        }).join('');
+      }
+
+      html += '<div class="vsm-cat valor"><h4>Valor agregado (' + pctValor + '%)</h4>' + listaPasos('valor') + '</div>';
+      html += '<div class="vsm-cat necesario"><h4>Necesario sin valor agregado (' + pctNecesario + '%)</h4>' + listaPasos('necesario') + '</div>';
+      html += '<div class="vsm-cat desperdicio"><h4>Desperdicio (' + pctDesperdicio + '%)</h4>' + listaPasos('desperdicio') + '</div>';
+
+      var desperdicios = pasos.filter(function(p){ return p.categoria === 'desperdicio'; }).sort(function(a,b){ return b.total - a.total; });
+      var sumaDesperdicioOrdenado = 0;
+      var totalDesperdicioPareto = desperdicios.reduce(function(acc,p){ return acc + p.total; }, 0) || 1;
+
+      html += '<div class="vsm-pareto"><h4 style="margin-bottom:10px;color:var(--azul)">Analisis de Pareto de desperdicios</h4>';
+      if(desperdicios.length === 0){
+        html += '<p>No se identificaron pasos clasificados como desperdicio puro.</p>';
+      } else {
+        html += '<table><tr><th>Paso</th><th>Tiempo (min)</th><th>% del desperdicio</th><th>Acumulado</th><th>Prioridad</th></tr>';
+        desperdicios.forEach(function(p){
+          sumaDesperdicioOrdenado += p.total;
+          var pct = Math.round((p.total / totalDesperdicioPareto) * 100);
+          var acumulado = Math.round((sumaDesperdicioOrdenado / totalDesperdicioPareto) * 100);
+          var prioridad = acumulado <= 80 ? 'Critico (80/20)' : 'Secundario';
+          html += '<tr><td>' + p.nombre + '</td><td>' + Math.round(p.total) + '</td><td>' + pct + '%</td><td>' + acumulado + '%</td><td>' + prioridad + '</td></tr>';
+        });
+        html += '</table>';
+      }
+      html += '</div>';
+
+      document.getElementById('resultadoVSM').innerHTML = html;
+    }
+
 function inicializarModulo(){
 mermaid.initialize({startOnLoad:false, theme:'default', securityLevel:'loose'});
 document.getElementById('mermaidInput').value = ejemplos.decision;
@@ -768,6 +873,7 @@ calcularKPIs();
 generarSIPOC();
 generarSOP();
 analizarBrechas();
+generarVSM();
 }
 window.addEventListener('load', inicializarModulo);
 </script>
