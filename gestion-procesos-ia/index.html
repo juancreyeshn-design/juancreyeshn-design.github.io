@@ -272,6 +272,7 @@ Gerencia</textarea>
 <button onclick="agregarPasoVacio()">Agregar paso</button>
 <button class="ejemplo" onclick="cargarEjemploProceso()">Cargar ejemplo</button>
 <button onclick="analizarProceso()">Analizar proceso</button>
+<button onclick="vaciarPasos()">Vaciar todos los pasos</button>
 </div>
 </div>
 <div class="bottleneck-resultado" id="resultadoAnalisis">
@@ -550,6 +551,10 @@ fila.parentNode.removeChild(fila);
 
 actualizarTodo();}
 
+function vaciarPasos(){
+document.getElementById('pasosBody').innerHTML = '';
+actualizarTodo();
+}
 function cargarEjemploProceso(){
 document.getElementById('pasosBody').innerHTML = '';
 agregarPaso('Recepcion de solicitud de credito', 10, 5, 5);
