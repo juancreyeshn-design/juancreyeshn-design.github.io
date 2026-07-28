@@ -68,7 +68,7 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .kpi-barra-fondo{background:#eee;border-radius:6px;height:10px;margin-top:10px;overflow:hidden}
 .kpi-barra-relleno{background:var(--morado);height:100%}
 
-.vsm-resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.vsm-resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px}
 .vsm-resumen div{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .vsm-resumen .num{font-size:1.4rem;font-weight:700;color:var(--azul)}
 .vsm-resumen .lbl{font-size:.75rem;color:var(--gris-texto);margin-top:4px}
@@ -81,6 +81,18 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .vsm-pareto{background:white;border-radius:10px;padding:16px;margin-top:8px}
 .vsm-pareto table{width:100%;border-collapse:collapse;font-size:.85rem}
 .vsm-pareto th,.vsm-pareto td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}
+.vsm-resumen div.valor{border-top:4px solid #16a34a}
+.vsm-resumen div.necesario{border-top:4px solid #d97706}
+.vsm-resumen div.desperdicio{border-top:4px solid #dc2626}
+.vsm-timeline{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 16px}
+.vsm-step{flex:0 0 auto;min-width:110px;padding:10px 12px;border-radius:8px;color:white;font-size:.78rem;font-weight:600;text-align:center;line-height:1.3}
+.vsm-step.valor{background:#22c55e}
+.vsm-step.necesario{background:#f0a500}
+.vsm-step.desperdicio{background:#dc2626}
+.vsm-step .vsm-step-time{display:block;font-size:.7rem;font-weight:400;opacity:.9;margin-top:2px}
+.vsm-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.75rem;color:var(--gris-texto);margin-bottom:16px;align-items:center}
+.vsm-legend span{display:inline-flex;align-items:center;gap:6px}
+.vsm-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
 
 .riskguard-resumen{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .riskguard-resumen div{background:white;border-radius:10px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
@@ -885,13 +897,17 @@ document.getElementById('resultadoBrechas').innerHTML = html;
       var pctDesperdicio = Math.round((sumaDesperdicio / tiempoTotal) * 100);
 
       var html = '';
-      html += '<div class="vsm-resumen">';
-      html += '<div><div class="num">' + Math.round(tiempoTotal) + ' min</div><div class="lbl">Tiempo total del proceso</div></div>';
-      html += '<div><div class="num">' + pctValor + '%</div><div class="lbl">Valor agregado (' + Math.round(sumaValor) + ' min)</div></div>';
-      html += '<div><div class="num">' + pctDesperdicio + '%</div><div class="lbl">Desperdicio (' + Math.round(sumaDesperdicio) + ' min)</div></div>';
-      html += '</div>';
+      html += '<div class="vsm-timeline">' + pasos.map(function(p){ return '<div class="vsm-step ' + p.categoria + '">' + p.nombre + '<span class="vsm-step-time">' + Math.round(p.total) + ' min</span></div>'; }).join('') + '</div>';
+html += '<div class="vsm-legend"><span><i style="background:#22c55e"></i>Valor Agregado</span><span><i style="background:#f0a500"></i>Necesario (NNVA)</span><span><i style="background:#dc2626"></i>Desperdicio (NVA)</span></div>';
 
-      function listaPasos(cat){
+html += '<div class="vsm-resumen">';
+html += '<div><div class="num">' + Math.round(tiempoTotal) + ' min</div><div class="lbl">Tiempo total del proceso</div></div>';
+html += '<div class="valor"><div class="num" style="color:#16a34a">' + pctValor + '%</div><div class="lbl">Valor agregado (' + Math.round(sumaValor) + ' min)</div></div>';
+html += '<div class="necesario"><div class="num" style="color:#d97706">' + pctNecesario + '%</div><div class="lbl">Necesario NNVA (' + Math.round(sumaNecesario) + ' min)</div></div>';
+html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + pctDesperdicio + '%</div><div class="lbl">Desperdicio (' + Math.round(sumaDesperdicio) + ' min)</div></div>';
+html += '</div>';
+
+function listaPasos(cat){
         var items = pasos.filter(function(p){ return p.categoria === cat; });
         if(items.length === 0) return '<div class="vsm-item">Sin pasos en esta categoria.</div>';
         return items.map(function(p){
