@@ -205,6 +205,29 @@ Gerencia</textarea>
 
 
 <section class="sm">
+<h2>Analizador de Cuellos de Botella con IA</h2>
+<p>Ingresa los pasos de tu proceso indicando el tiempo de ciclo, el tiempo de espera y el porcentaje de retrabajo de cada uno. El analizador aplica reglas heuristicas de mejora continua para identificar los pasos criticos y sugerir acciones de optimizacion.</p>
+<div class="bottleneck-tool">
+<div class="bottleneck-controls">
+<table class="pasos-tabla">
+<thead>
+<tr><th>Paso</th><th>T. ciclo (min)</th><th>T. espera (min)</th><th>% Retrabajo</th><th></th></tr>
+</thead>
+<tbody id="pasosBody"></tbody>
+</table>
+<div class="bpmn-buttons">
+<button onclick="agregarPasoVacio()">Agregar paso</button>
+<button class="ejemplo" onclick="cargarEjemploProceso()">Cargar ejemplo</button>
+<button onclick="analizarProceso()">Analizar proceso</button>
+</div>
+</div>
+<div class="bottleneck-resultado" id="resultadoAnalisis">
+<p style="color:#999">Los resultados del analisis apareceran aqui.</p>
+</div>
+</div>
+</section>
+
+<section class="sm">
 <h2>Diagramador de Procesos BPMN</h2>
 <p>Escribe o edita la definicion del proceso en la caja de texto usando sintaxis de Mermaid y presiona "Renderizar diagrama" para visualizarlo. Tambien puedes cargar ejemplos predefinidos de procesos simples, con decisiones o con areas (swimlanes).</p>
 <div class="bpmn-tool">
@@ -269,29 +292,6 @@ Area de control interno</textarea>
 </div>
 </section>
 
-
-<section class="sm">
-<h2>Analizador de Cuellos de Botella con IA</h2>
-<p>Ingresa los pasos de tu proceso indicando el tiempo de ciclo, el tiempo de espera y el porcentaje de retrabajo de cada uno. El analizador aplica reglas heuristicas de mejora continua para identificar los pasos criticos y sugerir acciones de optimizacion.</p>
-<div class="bottleneck-tool">
-<div class="bottleneck-controls">
-<table class="pasos-tabla">
-<thead>
-<tr><th>Paso</th><th>T. ciclo (min)</th><th>T. espera (min)</th><th>% Retrabajo</th><th></th></tr>
-</thead>
-<tbody id="pasosBody"></tbody>
-</table>
-<div class="bpmn-buttons">
-<button onclick="agregarPasoVacio()">Agregar paso</button>
-<button class="ejemplo" onclick="cargarEjemploProceso()">Cargar ejemplo</button>
-<button onclick="analizarProceso()">Analizar proceso</button>
-</div>
-</div>
-<div class="bottleneck-resultado" id="resultadoAnalisis">
-<p style="color:#999">Los resultados del analisis apareceran aqui.</p>
-</div>
-</div>
-</section>
 <section class="sm">
 <h2>Simulador de Optimizacion de Procesos</h2>
 <p>Utiliza los pasos definidos en el Analizador de Cuellos de Botella como base y simula el impacto de aplicar mejoras tipicas de optimizacion: reducir tiempos de espera, disminuir el retrabajo y automatizar los pasos mas criticos.</p>
