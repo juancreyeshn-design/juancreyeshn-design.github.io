@@ -316,7 +316,9 @@ Gerencia</textarea>
 <section class="sm">
 <h2>Mapeo de Flujo de Valor (VSM)</h2>
 <p>Clasifica automaticamente los pasos definidos en el Analizador de Cuellos de Botella en tres categorias de la filosofia Lean: Valor Agregado, Necesario sin Valor Agregado y Desperdicio. Calcula el tiempo consumido por cada categoria y aplica el principio de Pareto para priorizar los desperdicios mas criticos.</p>
-<div class="bpmn-buttons">
+<div class="bpmn-buttons" style="align-items:center">
+<label for="vsmFrecuencia" style="font-size:.85rem;font-weight:700;color:var(--azul);margin:0">Veces que se ejecuta el proceso por mes:</label>
+<input type="number" id="vsmFrecuencia" value="1" min="1" style="width:80px;padding:6px;border:1px solid #d7dce3;border-radius:8px">
 <button onclick="generarVSM()">Analizar flujo de valor</button>
 </div>
 <div id="resultadoVSM"></div>
@@ -1263,7 +1265,10 @@ renderIniciativas();
       });
       if(tiempoTotal <= 0) tiempoTotal = 1;
 
-      var pctValor = Math.round((sumaValor / tiempoTotal) * 100);
+      var elFrecuencia = document.getElementById('vsmFrecuencia');
+var frecuenciaMensual = elFrecuencia ? (parseFloat(elFrecuencia.value) || 1) : 1;
+
+var pctValor = Math.round((sumaValor / tiempoTotal) * 100);
       var pctNecesario = Math.round((sumaNecesario / tiempoTotal) * 100);
       var pctDesperdicio = Math.round((sumaDesperdicio / tiempoTotal) * 100);
 
@@ -1277,6 +1282,21 @@ html += '<div class="valor"><div class="num" style="color:#16a34a">' + pctValor 
 html += '<div class="necesario"><div class="num" style="color:#d97706">' + pctNecesario + '%</div><div class="lbl">Necesario NNVA (' + Math.round(sumaNecesario) + ' min)</div></div>';
 html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + pctDesperdicio + '%</div><div class="lbl">Desperdicio (' + Math.round(sumaDesperdicio) + ' min)</div></div>';
 html += '</div>';
+
+var tiempoTotalMensual = tiempoTotal * frecuenciaMensual;
+var valorMensual = sumaValor * frecuenciaMensual;
+var necesarioMensual = sumaNecesario * frecuenciaMensual;
+var desperdicioMensual = sumaDesperdicio * frecuenciaMensual;
+var desperdicioAnualHoras = (desperdicioMensual * 12) / 60;
+var totalAnualHoras = (tiempoTotalMensual * 12) / 60;
+
+html += '<div class="vsm-pareto"><h4 style="margin-bottom:10px;color:var(--azul)">Proyeccion segun frecuencia de ejecucion (' + frecuenciaMensual + ' veces/mes)</h4>';
+html += '<div class="vsm-resumen">';
+html += '<div><div class="num">' + Math.round(tiempoTotalMensual) + ' min</div><div class="lbl">Tiempo total mensual</div></div>';
+html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + Math.round(desperdicioMensual) + ' min</div><div class="lbl">Desperdicio mensual</div></div>';
+html += '<div><div class="num">' + Math.round(totalAnualHoras) + ' h</div><div class="lbl">Tiempo total anual</div></div>';
+html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + Math.round(desperdicioAnualHoras) + ' h</div><div class="lbl">Desperdicio anual</div></div>';
+html += '</div></div>';
 
 function listaPasos(cat){
         var items = pasos.filter(function(p){ return p.categoria === cat; });
