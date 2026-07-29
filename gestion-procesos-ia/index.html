@@ -1276,9 +1276,9 @@ renderIniciativas();
         var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
         var total = ciclo + espera;
         var categoria;
-        if(retrabajo >= 15 || espera > ciclo){
+        if(retrabajo >= 15 || (espera > ciclo * 2 && espera > 0)){
           categoria = 'desperdicio';
-        } else if(espera > 0){
+        } else if(espera > ciclo * 0.5){
           categoria = 'necesario';
         } else {
           categoria = 'valor';
