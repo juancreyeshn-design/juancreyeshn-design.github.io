@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planificador de Proyecto de Mejora | Juan Carlos Reyes</title>
+<meta name="description" content="Cuestionario de descubrimiento para recomendar metodologia (Scrum o Cascada), equipo, tecnologia y proveedores para un proyecto de mejora de procesos. Incluye backlog y estimacion de sprints. Por Juan Carlos Reyes.">
+<meta property="og:title" content="Planificador de Proyecto de Mejora">
+<meta property="og:description" content="Cuestionario de descubrimiento con recomendacion de metodologia, equipo, tecnologia y estimacion de sprints para proyectos de mejora de procesos.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/jpeg" href="../foto.jpg">
+<meta property="og:url" content="https://juancreyeshn-design.github.io/gestion-procesos-ia/planificador-proyecto.html">
 <style>
 :root{--azul:#1a3a5c;--azul-medio:#2563a8;--azul-claro:#3b82c4;--gris-claro:#f4f6fa;--gris-texto:#4a5568;--morado:#6d28d9}
   *{margin:0;padding:0;box-sizing:border-box}
@@ -81,12 +87,12 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
   <p>Registra las historias o tareas de tu backlog con sus puntos de esfuerzo, define la velocidad de tu equipo y la duracion del sprint, y obten automaticamente el numero de sprints estimados y el tiempo total del proyecto.</p>
   <div class="plan-inputs">
   <div>
-  <label>Nueva historia / tarea</label>
+  <label for="backlogNuevaHistoria">Nueva historia / tarea</label>
   <input type="text" id="backlogNuevaHistoria" placeholder="Ej: Disenar formulario de solicitud de credito">
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
   <div>
-  <label>Puntos de esfuerzo</label>
+  <label for="backlogNuevoPuntos">Puntos de esfuerzo</label>
   <input type="number" id="backlogNuevoPuntos" min="1" value="3">
   </div>
   <div style="display:flex;align-items:flex-end">
@@ -103,11 +109,11 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
   </div>
   <div class="plan-inputs" style="margin-top:16px;grid-template-columns:1fr 1fr">
   <div>
-  <label>Velocidad del equipo (puntos/sprint)</label>
+  <label for="backlogVelocidad">Velocidad del equipo (puntos/sprint)</label>
   <input type="number" id="backlogVelocidad" min="1" value="20" onchange="calcularSprints()">
   </div>
   <div>
-  <label>Duracion del sprint (semanas)</label>
+  <label for="backlogDuracionSprint">Duracion del sprint (semanas)</label>
   <select id="backlogDuracionSprint" onchange="calcularSprints()">
   <option value="1">1 semana</option>
   <option value="2" selected>2 semanas</option>
@@ -270,7 +276,7 @@ html += '<div class="metodologia-card' + (metodologia==='Cascada' ? ' recomendad
 
   function calcularSprints(){
   var totalPuntos = backlogHistorias.reduce(function(sum, h){ return sum + h.puntos; }, 0);
-  var velocidad = parseInt(document.getElementById('backlogVelocidad').value) || 1;
+  var velocidad = Math.max(1, parseInt(document.getElementById('backlogVelocidad').value) || 1);
   var duracionSprint = parseInt(document.getElementById('backlogDuracionSprint').value) || 1;
   var sprints = totalPuntos > 0 ? Math.ceil(totalPuntos / velocidad) : 0;
   var semanasTotal = sprints * duracionSprint;
