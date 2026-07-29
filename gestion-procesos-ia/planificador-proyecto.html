@@ -76,6 +76,52 @@ footer{text-align:center;padding:24px;color:#999;font-size:.85rem;background:#f0
   <p style="color:#999">Responde las tres preguntas y presiona "Generar plan de proyecto" para ver la recomendacion.</p>
   </div>
   </section>
+  <section class="sm">
+  <h2>Backlog y Estimacion de Sprints</h2>
+  <p>Registra las historias o tareas de tu backlog con sus puntos de esfuerzo, define la velocidad de tu equipo y la duracion del sprint, y obten automaticamente el numero de sprints estimados y el tiempo total del proyecto.</p>
+  <div class="plan-inputs">
+  <div>
+  <label>Nueva historia / tarea</label>
+  <input type="text" id="backlogNuevaHistoria" placeholder="Ej: Disenar formulario de solicitud de credito">
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div>
+  <label>Puntos de esfuerzo</label>
+  <input type="number" id="backlogNuevoPuntos" min="1" value="3">
+  </div>
+  <div style="display:flex;align-items:flex-end">
+  <button type="button" onclick="agregarHistoriaBacklog()">Agregar historia</button>
+  </div>
+  </div>
+  </div>
+  <div class="plan-resultado" style="margin-top:16px">
+  <table style="width:100%;border-collapse:collapse;font-size:.85rem" id="tablaBacklog">
+  <thead><tr style="text-align:left;border-bottom:2px solid #eee"><th style="padding:6px">Historia / Tarea</th><th style="padding:6px">Puntos</th><th style="padding:6px"></th></tr></thead>
+  <tbody id="backlogTbody"></tbody>
+  </table>
+  <p id="backlogVacio" style="color:#999;margin-top:10px">Aun no hay historias en el backlog.</p>
+  </div>
+  <div class="plan-inputs" style="margin-top:16px;grid-template-columns:1fr 1fr">
+  <div>
+  <label>Velocidad del equipo (puntos/sprint)</label>
+  <input type="number" id="backlogVelocidad" min="1" value="20" onchange="calcularSprints()">
+  </div>
+  <div>
+  <label>Duracion del sprint (semanas)</label>
+  <select id="backlogDuracionSprint" onchange="calcularSprints()">
+  <option value="1">1 semana</option>
+  <option value="2" selected>2 semanas</option>
+  <option value="4">4 semanas</option>
+  </select>
+  </div>
+  </div>
+  <div class="plan-resultado" style="margin-top:16px">
+  <p><strong>Total de puntos:</strong> <span id="backlogTotalPuntos">0</span></p>
+  <p><strong>Sprints estimados:</strong> <span id="backlogSprintsEstimados">0</span></p>
+  <p><strong>Tiempo total estimado:</strong> <span id="backlogTiempoTotal">0 semanas</span></p>
+  </div>
+  </section>
+  
   </main>
   <footer>
   <p>&#169; 2025 Juan Carlos Reyes &middot; Gestion de Procesos y Optimizacion Operativa con IA</p>
@@ -169,6 +215,72 @@ html += '<div class="metodologia-card' + (metodologia==='Cascada' ? ' recomendad
 
   document.getElementById('resultadoPlanificador').innerHTML = html;
   }
+  
+  var backlogHistorias = [];
+
+  function cargarBacklogLocal(){
+  var datos = localStorage.getItem('backlogHistorias');
+  backlogHistorias = datos ? JSON.parse(datos) : [];
+  }
+
+  function guardarBacklogLocal(){
+  localStorage.setItem('backlogHistorias', JSON.stringify(backlogHistorias));
+  }
+
+  function agregarHistoriaBacklog(){
+  var texto = document.getElementById('backlogNuevaHistoria').value.trim();
+  var puntos = parseInt(document.getElementById('backlogNuevoPuntos').value) || 0;
+  if(texto.length < 3 || puntos <= 0){
+  alert('Escribe una historia valida y puntos mayores a 0.');
+  return;
+  }
+  backlogHistorias.push({texto: texto, puntos: puntos});
+  guardarBacklogLocal();
+  document.getElementById('backlogNuevaHistoria').value = '';
+  document.getElementById('backlogNuevoPuntos').value = '3';
+  renderBacklog();
+  }
+
+  function eliminarHistoriaBacklog(idx){
+  backlogHistorias.splice(idx, 1);
+  guardarBacklogLocal();
+  renderBacklog();
+  }
+
+  function renderBacklog(){
+  var tbody = document.getElementById('backlogTbody');
+  var vacio = document.getElementById('backlogVacio');
+  if(backlogHistorias.length === 0){
+  tbody.innerHTML = '';
+  vacio.style.display = 'block';
+  } else {
+  vacio.style.display = 'none';
+  var html = '';
+  backlogHistorias.forEach(function(h, idx){
+  html += '<tr style="border-bottom:1px solid #f0f0f0">';
+  html += '<td style="padding:6px">' + h.texto + '</td>';
+  html += '<td style="padding:6px">' + h.puntos + '</td>';
+  html += '<td style="padding:6px"><button type="button" onclick="eliminarHistoriaBacklog(' + idx + ')" style="background:#dc2626">Eliminar</button></td>';
+  html += '</tr>';
+  });
+  tbody.innerHTML = html;
+  }
+  calcularSprints();
+  }
+
+  function calcularSprints(){
+  var totalPuntos = backlogHistorias.reduce(function(sum, h){ return sum + h.puntos; }, 0);
+  var velocidad = parseInt(document.getElementById('backlogVelocidad').value) || 1;
+  var duracionSprint = parseInt(document.getElementById('backlogDuracionSprint').value) || 1;
+  var sprints = totalPuntos > 0 ? Math.ceil(totalPuntos / velocidad) : 0;
+  var semanasTotal = sprints * duracionSprint;
+  document.getElementById('backlogTotalPuntos').textContent = totalPuntos;
+  document.getElementById('backlogSprintsEstimados').textContent = sprints;
+  document.getElementById('backlogTiempoTotal').textContent = semanasTotal + ' semanas';
+  }
+
+  cargarBacklogLocal();
+  renderBacklog();
   </script>
   </body>
   </html>
