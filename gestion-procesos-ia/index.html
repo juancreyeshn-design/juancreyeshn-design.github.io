@@ -340,6 +340,13 @@ Gerencia</textarea>
 <div class="bpmn-buttons" style="align-items:center">
 <label for="vsmFrecuencia" style="font-size:.85rem;font-weight:700;color:var(--azul);margin:0">Veces que se ejecuta el proceso por mes:</label>
 <input type="number" id="vsmFrecuencia" value="1" min="1" style="width:80px;padding:6px;border:1px solid #d7dce3;border-radius:8px">
+<label for="vsmHorizonte" style="font-size:.85rem;font-weight:700;color:var(--azul);margin:0 0 0 12px">Horizonte de proyeccion:</label>
+<select id="vsmHorizonte" style="padding:6px;border:1px solid #d7dce3;border-radius:8px">
+<option value="dia">Diario</option>
+<option value="semana">Semanal</option>
+<option value="mes" selected>Mensual</option>
+<option value="anio">Anual</option>
+</select>
 <button onclick="generarVSM()">Analizar flujo de valor</button>
 </div>
 <div id="resultadoVSM"></div>
@@ -1307,19 +1314,24 @@ html += '<div class="necesario"><div class="num" style="color:#d97706">' + pctNe
 html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + pctDesperdicio + '%</div><div class="lbl">Desperdicio (' + Math.round(sumaDesperdicio) + ' min)</div></div>';
 html += '</div>';
 
-var tiempoTotalMensual = tiempoTotal * frecuenciaMensual;
-var valorMensual = sumaValor * frecuenciaMensual;
-var necesarioMensual = sumaNecesario * frecuenciaMensual;
-var desperdicioMensual = sumaDesperdicio * frecuenciaMensual;
-var desperdicioAnualHoras = (desperdicioMensual * 12) / 60;
-var totalAnualHoras = (tiempoTotalMensual * 12) / 60;
+var elHorizonte = document.getElementById('vsmHorizonte');
+var horizonte = elHorizonte ? elHorizonte.value : 'mes';
+var factorPorHorizonte = {dia: 1/30, semana: 7/30, mes: 1, anio: 12};
+var etiquetaHorizonte = {dia: 'diario', semana: 'semanal', mes: 'mensual', anio: 'anual'};
+var factor = factorPorHorizonte[horizonte] !== undefined ? factorPorHorizonte[horizonte] : 1;
+var vecesProyectadas = frecuenciaMensual * factor;
+var tiempoTotalProyectado = tiempoTotal * vecesProyectadas;
+var desperdicioProyectado = sumaDesperdicio * vecesProyectadas;
+var mostrarEnHoras = (horizonte === 'anio');
+var tiempoTotalMostrado = mostrarEnHoras ? (tiempoTotalProyectado / 60) : tiempoTotalProyectado;
+var desperdicioMostrado = mostrarEnHoras ? (desperdicioProyectado / 60) : desperdicioProyectado;
+var unidadMostrada = mostrarEnHoras ? 'h' : 'min';
 
-html += '<div class="vsm-pareto"><h4 style="margin-bottom:10px;color:var(--azul)">Proyeccion segun frecuencia de ejecucion (' + frecuenciaMensual + ' veces/mes)</h4>';
+html += '<div class="vsm-pareto"><h4 style="margin-bottom:10px;color:var(--azul)">Proyeccion ' + etiquetaHorizonte[horizonte] + ' (' + frecuenciaMensual + ' veces/mes)</h4>';
 html += '<div class="vsm-resumen">';
-html += '<div><div class="num">' + Math.round(tiempoTotalMensual) + ' min</div><div class="lbl">Tiempo total mensual</div></div>';
-html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + Math.round(desperdicioMensual) + ' min</div><div class="lbl">Desperdicio mensual</div></div>';
-html += '<div><div class="num">' + Math.round(totalAnualHoras) + ' h</div><div class="lbl">Tiempo total anual</div></div>';
-html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + Math.round(desperdicioAnualHoras) + ' h</div><div class="lbl">Desperdicio anual</div></div>';
+html += '<div><div class="num">' + Math.round(tiempoTotalMostrado) + ' ' + unidadMostrada + '</div><div class="lbl">Tiempo total ' + etiquetaHorizonte[horizonte] + '</div></div>';
+html += '<div class="desperdicio"><div class="num" style="color:#dc2626">' + Math.round(desperdicioMostrado) + ' ' + unidadMostrada + '</div><div class="lbl">Desperdicio ' + etiquetaHorizonte[horizonte] + '</div></div>';
+html += '</div></div>';
 html += '</div></div>';
 
 function listaPasos(cat){
