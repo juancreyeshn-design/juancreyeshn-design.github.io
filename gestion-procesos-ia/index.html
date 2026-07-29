@@ -309,7 +309,7 @@ Gerencia</textarea>
 <button onclick="vaciarPasos()">Vaciar todos los pasos</button>
 <button onclick="exportarPasosJSON()">Exportar pasos (JSON)</button>
 <button onclick="document.getElementById('importarPasosInput').click()">Importar pasos (JSON)</button>
-<input type="file" id="importarPasosInput" accept="application/json" style="display:none" onchange="importarPasosJSON(this)">
+<input aria-label="Importar pasos en formato JSON" type="file" id="importarPasosInput" accept="application/json" style="display:none" onchange="importarPasosJSON(this)">
 </div>
 </div>
 <div class="bottleneck-resultado" id="resultadoAnalisis">
@@ -401,11 +401,11 @@ Area de control interno</textarea>
 <p>Utiliza los pasos definidos en el Analizador de Cuellos de Botella como base y simula el impacto de aplicar mejoras tipicas de optimizacion: reducir tiempos de espera, disminuir el retrabajo y automatizar los pasos mas criticos.</p>
 <div class="bottleneck-tool">
 <div class="bottleneck-controls">
-<label>Reduccion de tiempo de espera: <span id="valEspera">30</span>%</label>
+<label for="sliderEspera">Reduccion de tiempo de espera: <span id="valEspera">30</span>%</label>
 <input type="range" id="sliderEspera" min="0" max="100" value="30" oninput="document.getElementById('valEspera').textContent=this.value">
-<label>Reduccion de retrabajo: <span id="valRetrabajo">50</span>%</label>
+<label for="sliderRetrabajo">Reduccion de retrabajo: <span id="valRetrabajo">50</span>%</label>
 <input type="range" id="sliderRetrabajo" min="0" max="100" value="50" oninput="document.getElementById('valRetrabajo').textContent=this.value">
-<label>Automatizacion de pasos criticos (reduccion de tiempo de ciclo): <span id="valCiclo">20</span>%</label>
+<label for="sliderCiclo">Automatizacion de pasos criticos (reduccion de tiempo de ciclo): <span id="valCiclo">20</span>%</label>
 <input type="range" id="sliderCiclo" min="0" max="100" value="20" oninput="document.getElementById('valCiclo').textContent=this.value">
 <div class="bpmn-buttons">
 <button onclick="simularOptimizacion()">Simular optimizacion</button>
