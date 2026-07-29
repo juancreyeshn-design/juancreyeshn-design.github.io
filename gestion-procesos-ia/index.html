@@ -1160,7 +1160,7 @@ var html = '<h4 style="font-size:.78rem;text-transform:uppercase;letter-spacing:
 if(lista.length === 0){
 html += '<p style="color:#999;font-size:.85rem;margin-bottom:10px">Aun no hay iniciativas registradas. Agrega una manualmente o usa "+ Agregar iniciativa" en la matriz de priorizacion.</p>';
 } else {
-html += '<table class="iniciativas-tabla"><thead><tr><th>Iniciativa</th><th>Tipo</th><th>Estado</th><th>Evaluacion</th><th></th></tr></thead><tbody>';
+html += '<table class="iniciativas-tabla"><thead><tr><th>Iniciativa</th><th>Tipo</th><th>Estado</th><th>Responsable</th><th>Fecha limite</th><th>Evaluacion</th><th></th></tr></thead><tbody>';
 lista.forEach(function(it){
 html += '<tr>';
 html += '<td><input type="text" value="' + String(it.iniciativa).replace(/"/g,'&quot;') + '" onchange="actualizarCampoIniciativa(' + it.id + ',\'iniciativa\',this.value)"></td>';
@@ -1174,6 +1174,8 @@ html += '<td><select onchange="actualizarCampoIniciativa(' + it.id + ',\'estado\
 html += '<option value="' + e + '"' + (it.estado === e ? ' selected' : '') + '>' + e + '</option>';
 });
 html += '</select></td>';
+html += '<td><input type="text" value="' + String(it.responsable||'').replace(/"/g,'&quot;') + '" placeholder="Asignar responsable" onchange="actualizarCampoIniciativa(' + it.id + ',\'responsable\',this.value)"></td>';
+html += '<td><input type="date" value="' + String(it.fechaLimite||'') + '" onchange="actualizarCampoIniciativa(' + it.id + ',\'fechaLimite\',this.value)"></td>';
 html += '<td>' + (it.evaluacion ? '<span class="eval-badge">C:' + it.evaluacion.complejidad.toFixed(1) + ' / I:' + it.evaluacion.impacto.toFixed(1) + '</span>' : '<span class="eval-badge">Sin evaluar</span>') + '<br><button onclick="abrirEvaluacion(' + it.id + ')" style="margin-top:4px;border:none;background:var(--morado);color:white;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.72rem">Evaluar</button></td>';
 html += '<td><button onclick="eliminarIniciativa(' + it.id + ')">&#10005;</button></td>';
 html += '</tr>';
