@@ -717,6 +717,18 @@ document.getElementById('mermaidInput').value = ejemplos[nombre];
 renderDiagram();
 }
 
+function numPositivo(valor, porDefecto){
+  var n = parseFloat(valor);
+  if(isNaN(n) || n < 0){ return porDefecto; }
+  return n;
+}
+function numPorcentaje(valor){
+  var n = parseFloat(valor);
+  if(isNaN(n) || n < 0){ return 0; }
+  if(n > 100){ return 100; }
+  return n;
+}
+
 function agregarPaso(nombre, ciclo, espera, retrabajo){
 var tbody = document.getElementById('pasosBody');
 var fila = document.createElement('tr');
@@ -806,9 +818,9 @@ return;
 var pasos = [];
 filas.forEach(function(fila){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
 pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo, total:ciclo+espera});
 });
 
@@ -866,9 +878,9 @@ var reduccionCiclo = parseFloat(document.getElementById('sliderCiclo').value) / 
 var pasos = [];
 filas.forEach(function(fila){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
 pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo});
 });
 
@@ -915,15 +927,15 @@ if(filas.length === 0){
 document.getElementById('resultadoKPI').innerHTML = '<p style="color:#c0392b">Primero define los pasos del proceso en el Analizador de Cuellos de Botella.</p>';
 return;
 }
-var turno = parseFloat(document.getElementById('kpiTurno').value) || 480;
-var costoHora = parseFloat(document.getElementById('kpiCostoHora').value) || 0;
-var metaLeadTime = parseFloat(document.getElementById('kpiMeta').value) || 1;
+var turno = numPositivo(document.getElementById('kpiTurno').value, 480);
+var costoHora = numPositivo(document.getElementById('kpiCostoHora').value, 0);
+var metaLeadTime = numPositivo(document.getElementById('kpiMeta').value, 1);
 
 var tiempoValor = 0, tiempoTotal = 0;
 filas.forEach(function(fila){
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
 var tiempoRetrabajo = ciclo * (retrabajo / 100);
 tiempoValor += ciclo;
 tiempoTotal += ciclo + espera + tiempoRetrabajo;
@@ -1049,7 +1061,7 @@ var responsables = listaDesdeTexto('sopResponsables');
 var pasos = [];
 pasosFilas.forEach(function(fila){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
 pasos.push({nombre:nombre, ciclo:ciclo});
 });
 
@@ -1093,7 +1105,7 @@ responsables.forEach(function(r){ texto += '- ' + r + salto; });
 texto += salto + '4. DESCRIPCION DEL PROCEDIMIENTO' + salto;
 pasosFilas.forEach(function(fila, idx){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
 texto += (idx+1) + '. ' + nombre + ' (tiempo estimado: ' + ciclo + ' min)' + salto;
 });
 return texto;
@@ -1204,14 +1216,14 @@ if(filas.length === 0){
 document.getElementById('resultadoBrechas').innerHTML = '<p style="color:#c0392b">Primero define los pasos del proceso en el Analizador de Cuellos de Botella.</p>';
 return;
 }
-var metaToBe = parseFloat(document.getElementById('gapMeta').value) || 1;
+var metaToBe = numPositivo(document.getElementById('gapMeta').value, 1);
 
 var pasos = [];
 filas.forEach(function(fila){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
 var tiempoRetrabajo = ciclo * (retrabajo / 100);
 var total = ciclo + espera + tiempoRetrabajo;
 pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo, total:total});
@@ -1277,9 +1289,9 @@ renderIniciativas();
       var pasos = [];
       filas.forEach(function(fila){
         var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-        var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-        var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-        var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+        var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+        var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+        var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
         var total = ciclo + espera;
         var categoria;
         if(retrabajo >= 15 || (espera > ciclo * 2 && espera > 0)){
@@ -1303,7 +1315,7 @@ renderIniciativas();
       if(tiempoTotal <= 0) tiempoTotal = 1;
 
       var elFrecuencia = document.getElementById('vsmFrecuencia');
-var frecuenciaMensual = elFrecuencia ? (parseFloat(elFrecuencia.value) || 1) : 1;
+var frecuenciaMensual = elFrecuencia ? (numPositivo(elFrecuencia.value, 1)) : 1;
 
 var pctValor = Math.round((sumaValor / tiempoTotal) * 100);
       var pctNecesario = Math.round((sumaNecesario / tiempoTotal) * 100);
@@ -1436,9 +1448,9 @@ return;
 var pasos = [];
 filas.forEach(function(fila){
 var nombre = fila.querySelector('.p-nombre').value || 'Paso sin nombre';
-var ciclo = parseFloat(fila.querySelector('.p-ciclo').value) || 0;
-var espera = parseFloat(fila.querySelector('.p-espera').value) || 0;
-var retrabajo = parseFloat(fila.querySelector('.p-retrabajo').value) || 0;
+var ciclo = numPositivo(fila.querySelector('.p-ciclo').value, 0);
+var espera = numPositivo(fila.querySelector('.p-espera').value, 0);
+var retrabajo = numPorcentaje(fila.querySelector('.p-retrabajo').value);
 var total = ciclo + espera;
 pasos.push({nombre:nombre, ciclo:ciclo, espera:espera, retrabajo:retrabajo, total:total});
 });
