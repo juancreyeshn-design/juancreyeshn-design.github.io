@@ -181,6 +181,13 @@ table.pasos-tabla button{border:none;background:#e5484d;color:white;border-radiu
 .priority-cell.menor .cell-tag{background:#f4f6fa;color:#666}
 .priority-cell.reevaluar .cell-tag{background:#fef2f2;color:#dc2626}
 .priority-chip{display:inline-block;background:white;border:1px solid #e2e6ee;border-radius:16px;padding:4px 10px;font-size:.75rem;color:var(--gris-texto);margin:3px 4px 0 0}
+table.iniciativas-tabla{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:6px}
+table.iniciativas-tabla th{text-align:left;color:var(--azul);padding:6px 4px;border-bottom:2px solid var(--morado);font-size:.78rem}
+table.iniciativas-tabla td{padding:4px}
+table.iniciativas-tabla input,table.iniciativas-tabla select{width:100%;padding:6px;border:1px solid #d7dce3;border-radius:6px;font-size:.82rem}
+table.iniciativas-tabla button{border:none;background:#e5484d;color:white;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.78rem}
+.priority-add{margin-top:8px;border:none;background:none;color:var(--morado);font-size:.75rem;font-weight:700;cursor:pointer;padding:0;display:block}
+.priority-add:hover{text-decoration:underline}
 
 
 
@@ -1083,14 +1090,75 @@ function priorityMatrixHtml(victorias, estrategicos, menores, reevaluar){
 var html = '<div class="priority-matrix"><h4>Matriz de Priorizacion (Impacto vs Complejidad)</h4>';
 html += '<p class="priority-caption">Cada paso se ubica segun su peso en el tiempo total del proceso y su complejidad de intervencion.</p>';
 html += '<div class="priority-grid">';
-html += '<div class="priority-cell victoria"><span class="cell-tag">Victorias rapidas</span><div>' + chipsHtml(victorias) + '</div></div>';
-html += '<div class="priority-cell estrategico"><span class="cell-tag">Proyectos estrategicos</span><div>' + chipsHtml(estrategicos) + '</div></div>';
-html += '<div class="priority-cell menor"><span class="cell-tag">Mejoras menores</span><div>' + chipsHtml(menores) + '</div></div>';
-html += '<div class="priority-cell reevaluar"><span class="cell-tag">Reevaluar</span><div>' + chipsHtml(reevaluar) + '</div></div>';
+html += '<div class="priority-cell victoria"><span class="cell-tag">Victorias rapidas</span><div>' + chipsHtml(victorias) + '</div><button class="priority-add" onclick="agregarIniciativa(\'\',\'Victorias rapidas\')">+ Agregar iniciativa</button></div>';
+html += '<div class="priority-cell estrategico"><span class="cell-tag">Proyectos estrategicos</span><div>' + chipsHtml(estrategicos) + '</div><button class="priority-add" onclick="agregarIniciativa(\'\',\'Proyectos estrategicos\')">+ Agregar iniciativa</button></div>';
+html += '<div class="priority-cell menor"><span class="cell-tag">Mejoras menores</span><div>' + chipsHtml(menores) + '</div><button class="priority-add" onclick="agregarIniciativa(\'\',\'Mejoras menores\')">+ Agregar iniciativa</button></div>';
+html += '<div class="priority-cell reevaluar"><span class="cell-tag">Reevaluar</span><div>' + chipsHtml(reevaluar) + '</div><button class="priority-add" onclick="agregarIniciativa(\'\',\'Reevaluar\')">+ Agregar iniciativa</button></div>';
 html += '</div></div>';
 return html;
 }
 
+function cargarIniciativasLocal(){
+try{
+var datos = JSON.parse(localStorage.getItem('iniciativasMejora'));
+if(Array.isArray(datos)) return datos;
+}catch(e){}
+return [];
+}
+function guardarIniciativasLocal(lista){
+try{ localStorage.setItem('iniciativasMejora', JSON.stringify(lista)); }catch(e){}
+}
+function iniciativaSiguienteId(lista){
+var maxId = 0;
+lista.forEach(function(it){ if(it.id > maxId) maxId = it.id; });
+return maxId + 1;
+}
+function agregarIniciativa(iniciativaTexto, tipoTexto){
+var lista = cargarIniciativasLocal();
+lista.push({id: iniciativaSiguienteId(lista), iniciativa: iniciativaTexto || 'Nueva iniciativa', tipo: tipoTexto || 'Victorias rapidas', estado: 'Pendiente'});
+guardarIniciativasLocal(lista);
+renderIniciativas();
+}
+function actualizarCampoIniciativa(id, campo, valor){
+var lista = cargarIniciativasLocal();
+lista.forEach(function(it){ if(it.id === id){ it[campo] = valor; } });
+guardarIniciativasLocal(lista);
+}
+function eliminarIniciativa(id){
+var lista = cargarIniciativasLocal().filter(function(it){ return it.id !== id; });
+guardarIniciativasLocal(lista);
+renderIniciativas();
+}
+function renderIniciativas(){
+var cont = document.getElementById('iniciativasContainer');
+if(!cont) return;
+var lista = cargarIniciativasLocal();
+var html = '<h4 style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azul);margin:16px 0 8px">Registro de Iniciativas de Mejora</h4>';
+if(lista.length === 0){
+html += '<p style="color:#999;font-size:.85rem;margin-bottom:10px">Aun no hay iniciativas registradas. Agrega una manualmente o usa "+ Agregar iniciativa" en la matriz de priorizacion.</p>';
+} else {
+html += '<table class="iniciativas-tabla"><thead><tr><th>Iniciativa</th><th>Tipo</th><th>Estado</th><th></th></tr></thead><tbody>';
+lista.forEach(function(it){
+html += '<tr>';
+html += '<td><input type="text" value="' + String(it.iniciativa).replace(/"/g,'&quot;') + '" onchange="actualizarCampoIniciativa(' + it.id + ',\'iniciativa\',this.value)"></td>';
+html += '<td><select onchange="actualizarCampoIniciativa(' + it.id + ',\'tipo\',this.value)">';
+['Victorias rapidas','Proyectos estrategicos','Mejoras menores','Reevaluar'].forEach(function(t){
+html += '<option value="' + t + '"' + (it.tipo === t ? ' selected' : '') + '>' + t + '</option>';
+});
+html += '</select></td>';
+html += '<td><select onchange="actualizarCampoIniciativa(' + it.id + ',\'estado\',this.value)">';
+['Pendiente','En progreso','Completado'].forEach(function(e){
+html += '<option value="' + e + '"' + (it.estado === e ? ' selected' : '') + '>' + e + '</option>';
+});
+html += '</select></td>';
+html += '<td><button onclick="eliminarIniciativa(' + it.id + ')">&#10005;</button></td>';
+html += '</tr>';
+});
+html += '</tbody></table>';
+}
+html += '<div class="bpmn-buttons" style="margin-top:10px"><button onclick="agregarIniciativa(\'\',\'Victorias rapidas\')">Agregar iniciativa</button></div>';
+cont.innerHTML = html;
+}
 function analizarBrechas(){
 var filas = document.querySelectorAll('#pasosBody tr');
 if(filas.length === 0){
@@ -1154,8 +1222,10 @@ html += '<div class="gap-grupo victoria"><h4>Victorias rapidas (alto impacto, ba
 html += '<div class="gap-grupo estrategico"><h4>Proyectos estrategicos (alto impacto, alta complejidad)</h4>' + listaHtml(estrategicos) + '</div>';
 html += '<div class="gap-grupo menor"><h4>Mejoras menores (bajo impacto, baja complejidad)</h4>' + listaHtml(menores) + '</div>';
 html += '<div class="gap-grupo reevaluar"><h4>Reevaluar (bajo impacto, alta complejidad)</h4>' + listaHtml(reevaluar) + '</div>';
+html += '<div id="iniciativasContainer"></div>';
 
 document.getElementById('resultadoBrechas').innerHTML = html;
+renderIniciativas();
 }
 
 
