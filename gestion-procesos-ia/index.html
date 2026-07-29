@@ -188,6 +188,27 @@ table.iniciativas-tabla input,table.iniciativas-tabla select{width:100%;padding:
 table.iniciativas-tabla button{border:none;background:#e5484d;color:white;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.78rem}
 .priority-add{margin-top:8px;border:none;background:none;color:var(--morado);font-size:.75rem;font-weight:700;cursor:pointer;padding:0;display:block}
 .priority-add:hover{text-decoration:underline}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.activo{display:flex}
+.modal-box{background:white;border-radius:14px;padding:24px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal-box h3{color:var(--azul);font-size:1.05rem;margin-bottom:4px}
+.modal-box .modal-sub{font-size:.82rem;color:#888;margin-bottom:16px}
+.eval-grupo{margin-bottom:16px}
+.eval-grupo h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--morado);margin-bottom:10px}
+.eval-criterio{margin-bottom:12px}
+.eval-criterio label{font-size:.82rem;font-weight:700;color:var(--gris-texto);display:block;margin-bottom:6px}
+.eval-btns{display:flex;gap:6px}
+.eval-btn{flex:1;border:1px solid #d7dce3;background:white;color:var(--gris-texto);padding:8px;border-radius:8px;font-size:.78rem;cursor:pointer}
+.eval-btn.selected{background:var(--morado);color:white;border-color:var(--morado)}
+.eval-scores{display:flex;gap:14px;background:var(--gris-claro);border-radius:10px;padding:12px;margin-bottom:16px}
+.eval-scores div{flex:1;text-align:center}
+.eval-scores .num{font-size:1.3rem;font-weight:700;color:var(--azul)}
+.eval-scores .lbl{font-size:.72rem;color:var(--gris-texto)}
+.modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+.modal-buttons button{border:none;padding:9px 16px;border-radius:8px;font-size:.85rem;cursor:pointer}
+.modal-buttons .btn-cancelar{background:#eee;color:#555}
+.modal-buttons .btn-guardar{background:var(--azul-medio);color:white}
+.eval-badge{padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700;display:inline-block;background:#f4f6fa;color:#888}
 
 
 
@@ -1139,7 +1160,7 @@ var html = '<h4 style="font-size:.78rem;text-transform:uppercase;letter-spacing:
 if(lista.length === 0){
 html += '<p style="color:#999;font-size:.85rem;margin-bottom:10px">Aun no hay iniciativas registradas. Agrega una manualmente o usa "+ Agregar iniciativa" en la matriz de priorizacion.</p>';
 } else {
-html += '<table class="iniciativas-tabla"><thead><tr><th>Iniciativa</th><th>Tipo</th><th>Estado</th><th></th></tr></thead><tbody>';
+html += '<table class="iniciativas-tabla"><thead><tr><th>Iniciativa</th><th>Tipo</th><th>Estado</th><th>Evaluacion</th><th></th></tr></thead><tbody>';
 lista.forEach(function(it){
 html += '<tr>';
 html += '<td><input type="text" value="' + String(it.iniciativa).replace(/"/g,'&quot;') + '" onchange="actualizarCampoIniciativa(' + it.id + ',\'iniciativa\',this.value)"></td>';
@@ -1153,6 +1174,7 @@ html += '<td><select onchange="actualizarCampoIniciativa(' + it.id + ',\'estado\
 html += '<option value="' + e + '"' + (it.estado === e ? ' selected' : '') + '>' + e + '</option>';
 });
 html += '</select></td>';
+html += '<td>' + (it.evaluacion ? '<span class="eval-badge">C:' + it.evaluacion.complejidad.toFixed(1) + ' / I:' + it.evaluacion.impacto.toFixed(1) + '</span>' : '<span class="eval-badge">Sin evaluar</span>') + '<br><button onclick="abrirEvaluacion(' + it.id + ')" style="margin-top:4px;border:none;background:var(--morado);color:white;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.72rem">Evaluar</button></td>';
 html += '<td><button onclick="eliminarIniciativa(' + it.id + ')">&#10005;</button></td>';
 html += '</tr>';
 });
@@ -1511,6 +1533,98 @@ generarVSM();
 analizarRiesgos();
 }
 window.addEventListener('load', inicializarModulo);
+var evaluacionCriterios = [
+{grupo:'complejidad', clave:'tiempoImplementacion', label:'Tiempo de Implementacion'},
+{grupo:'complejidad', clave:'costoFinanciero', label:'Costo Financiero'},
+{grupo:'complejidad', clave:'cambiosEstructurales', label:'Cambios Estructurales'},
+{grupo:'impacto', clave:'ingresos', label:'Ingresos / Ventas / Ahorros'},
+{grupo:'impacto', clave:'controlProceso', label:'Control del Proceso'},
+{grupo:'impacto', clave:'reduccionCarga', label:'Reduccion de Carga de Trabajo'}
+];
+var evaluacionTemp = {};
+var evaluacionIdActual = null;
+function abrirEvaluacion(id){
+var lista = cargarIniciativasLocal();
+var item = null;
+lista.forEach(function(it){ if(it.id === id){ item = it; } });
+if(!item) return;
+evaluacionIdActual = id;
+evaluacionTemp = {};
+evaluacionCriterios.forEach(function(c){
+evaluacionTemp[c.clave] = (item.evaluacion && item.evaluacion[c.clave]) ? item.evaluacion[c.clave] : 1;
+});
+renderModalEvaluacion(item.iniciativa);
+document.getElementById('modalEvaluacionOverlay').classList.add('activo');
+}
+function cerrarEvaluacion(){
+document.getElementById('modalEvaluacionOverlay').classList.remove('activo');
+evaluacionIdActual = null;
+}
+function seleccionarCriterioEval(clave, valor){
+evaluacionTemp[clave] = valor;
+var lista = cargarIniciativasLocal();
+var nombre = 'la iniciativa';
+lista.forEach(function(it){ if(it.id === evaluacionIdActual){ nombre = it.iniciativa; } });
+renderModalEvaluacion(nombre);
+}
+function promedioGrupoEval(grupo){
+var claves = evaluacionCriterios.filter(function(c){ return c.grupo === grupo; }).map(function(c){ return c.clave; });
+var suma = 0;
+claves.forEach(function(k){ suma += evaluacionTemp[k] || 1; });
+return suma / claves.length;
+}
+function renderModalEvaluacion(nombreIniciativa){
+var complejidad = promedioGrupoEval('complejidad');
+var impacto = promedioGrupoEval('impacto');
+var html = '<h3>Evaluar iniciativa</h3>';
+html += '<p class="modal-sub">' + nombreIniciativa + '</p>';
+html += '<div class="eval-scores"><div><div class="num">' + complejidad.toFixed(1) + '</div><div class="lbl">Complejidad</div></div><div><div class="num">' + impacto.toFixed(1) + '</div><div class="lbl">Impacto de Negocio</div></div></div>';
+['complejidad','impacto'].forEach(function(grupo){
+html += '<div class="eval-grupo"><h4>' + (grupo === 'complejidad' ? 'Complejidad' : 'Impacto de Negocio') + '</h4>';
+evaluacionCriterios.filter(function(c){ return c.grupo === grupo; }).forEach(function(c){
+html += '<div class="eval-criterio"><label>' + c.label + '</label><div class="eval-btns">';
+[[1,'Bajo'],[5,'Medio'],[9,'Alto']].forEach(function(par){
+var sel = evaluacionTemp[c.clave] === par[0] ? ' selected' : '';
+html += '<button class="eval-btn' + sel + '" onclick="seleccionarCriterioEval(\'' + c.clave + '\',' + par[0] + ')">' + par[1] + ' (' + par[0] + ')</button>';
+});
+html += '</div></div>';
+});
+html += '</div>';
+});
+html += '<div class="modal-buttons"><button class="btn-cancelar" onclick="cerrarEvaluacion()">Cancelar</button><button class="btn-guardar" onclick="guardarEvaluacion()">Guardar Evaluacion</button></div>';
+document.getElementById('modalEvaluacionBox').innerHTML = html;
+}
+function guardarEvaluacion(){
+if(evaluacionIdActual === null) return;
+var complejidad = promedioGrupoEval('complejidad');
+var impacto = promedioGrupoEval('impacto');
+var tipoNuevo;
+if(impacto >= 5 && complejidad <= 5){ tipoNuevo = 'Victorias rapidas'; }
+else if(impacto >= 5 && complejidad > 5){ tipoNuevo = 'Proyectos estrategicos'; }
+else if(impacto < 5 && complejidad <= 5){ tipoNuevo = 'Mejoras menores'; }
+else { tipoNuevo = 'Reevaluar'; }
+var lista = cargarIniciativasLocal();
+lista.forEach(function(it){
+if(it.id === evaluacionIdActual){
+it.evaluacion = {
+tiempoImplementacion: evaluacionTemp.tiempoImplementacion,
+costoFinanciero: evaluacionTemp.costoFinanciero,
+cambiosEstructurales: evaluacionTemp.cambiosEstructurales,
+ingresos: evaluacionTemp.ingresos,
+controlProceso: evaluacionTemp.controlProceso,
+reduccionCarga: evaluacionTemp.reduccionCarga,
+complejidad: complejidad,
+impacto: impacto
+};
+it.tipo = tipoNuevo;
+}
+});
+guardarIniciativasLocal(lista);
+cerrarEvaluacion();
+renderIniciativas();
+}
+
 </script>
+<div class="modal-overlay" id="modalEvaluacionOverlay"><div class="modal-box" id="modalEvaluacionBox"></div></div>
 </body>
 </html>
