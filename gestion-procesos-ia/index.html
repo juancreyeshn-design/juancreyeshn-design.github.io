@@ -244,7 +244,7 @@ body *{visibility:hidden}
 <main>
 <section class="sm">
 <h2>Sobre este modulo</h2>
-<p>Este modulo reune herramientas practicas para la gestion y mejora continua de procesos organizacionales, combinando notacion BPMN con apoyo de inteligencia artificial. El primer componente disponible es el Diagramador de Procesos BPMN, que permite crear diagramas de flujo de procesos directamente en el navegador usando Mermaid.js, sin necesidad de instalar software adicional.</p>
+<p>Este modulo reune herramientas practicas para la gestion y mejora continua de procesos organizacionales, combinando notacion BPMN con apoyo de inteligencia artificial. El primer componente disponible es el Diagramador de Procesos BPMN, que permite crear diagramas de flujo de procesos directamente en el navegador usando Mermaid.js, sin necesidad de instalar software adicional. Las herramientas son agnosticas de industria y tipo de proceso: los ejemplos precargados (banca, manufactura, atencion al cliente) son solo ilustrativos y pueden reemplazarse por los pasos de cualquier proceso propio.</p>
 </section>
 <section class="sm">
 <h2>Caracterizador de Procesos (SIPOC)</h2>
@@ -293,7 +293,7 @@ Gerencia</textarea>
 
 <section class="sm">
 <h2>Analizador de Cuellos de Botella con IA</h2>
-<p>Ingresa los pasos de tu proceso indicando el tiempo de ciclo, el tiempo de espera y el porcentaje de retrabajo de cada uno. El analizador aplica reglas heuristicas de mejora continua para identificar los pasos criticos y sugerir acciones de optimizacion.</p>
+<p>Ingresa los pasos de tu proceso indicando el tiempo de ciclo, el tiempo de espera y el porcentaje de retrabajo de cada uno. El analizador aplica reglas heuristicas de mejora continua para identificar los pasos criticos y sugerir acciones de optimizacion. Tambien puedes cargar ejemplos precargados de distintas industrias (banca, manufactura o atencion al cliente) para explorar la herramienta con datos de muestra.</p>
 <div class="bottleneck-tool">
 <div class="bottleneck-controls">
 <table class="pasos-tabla">
@@ -304,7 +304,13 @@ Gerencia</textarea>
 </table>
 <div class="bpmn-buttons">
 <button onclick="agregarPasoVacio()">Agregar paso</button>
-<button class="ejemplo" onclick="cargarEjemploProceso()">Cargar ejemplo</button>
+<label for="selectorIndustriaProceso" style="font-size:.85rem;font-weight:700;color:var(--azul);margin:0;align-self:center">Industria de ejemplo:</label>
+<select id="selectorIndustriaProceso" style="padding:6px;border:1px solid #d7dce3;border-radius:8px">
+<option value="credito">Aprobacion de credito (banca)</option>
+<option value="manufactura">Produccion en manufactura</option>
+<option value="soporte">Atencion al cliente / soporte</option>
+</select>
+<button class="ejemplo" onclick="cargarEjemploProceso(document.getElementById('selectorIndustriaProceso').value)">Cargar ejemplo</button>
 <button onclick="analizarProceso()">Analizar proceso</button>
 <button onclick="vaciarPasos()">Vaciar todos los pasos</button>
 <button onclick="exportarPasosJSON()">Exportar pasos (JSON)</button>
@@ -331,6 +337,8 @@ Gerencia</textarea>
 <button class="ejemplo" onclick="cargarEjemplo('decision')">Ejemplo: Con decision</button>
 <button class="ejemplo" onclick="cargarEjemplo('areas')">Ejemplo: Con areas</button>
 <button class="ejemplo" onclick="cargarEjemplo('credito')">Ejemplo: Aprobacion de credito</button>
+<button class="ejemplo" onclick="cargarEjemplo('manufactura')">Ejemplo: Manufactura</button>
+<button class="ejemplo" onclick="cargarEjemplo('soporte')">Ejemplo: Atencion al cliente</button>
 <button onclick="descargarDiagramaPNG()">Descargar diagrama (PNG)</button>
 <button onclick="descargarBPMNXML()">Exportar BPMN 2.0 (XML)</button>
 </div>
