@@ -2,6 +2,10 @@
 
 Módulo interactivo para modelar, analizar y mejorar procesos de negocio directamente en el navegador, sin necesidad de instalar software adicional. Combina notación BPMN, metodología Lean y apoyo de inteligencia artificial para convertir el conocimiento operativo de un equipo en procesos documentados, medibles y auditables.
 
+## Agnostico de industria y de tipo de proceso
+
+Las herramientas de este modulo no estan limitadas a un sector en particular: funcionan sobre conceptos genericos de proceso (pasos, tiempo de ciclo, tiempo de espera, porcentaje de retrabajo) que aplican por igual a manufactura, servicios, salud, banca, atencion al cliente o cualquier otro proceso de negocio. El Analizador de Cuellos de Botella incluye ejemplos precargados de tres industrias (aprobacion de credito, produccion en manufactura y atencion al cliente) seleccionables desde un menu desplegable; son solo ilustrativos y cualquier proceso propio puede reemplazarlos.
+
 ## Archivos
 
 `index.html`: aplicación principal con las herramientas de gestión de procesos.
@@ -30,7 +34,8 @@ Panel de Indicadores KPI de Procesos. Calcula lead time, porcentaje de valor agr
 
 Analizador de Brechas AS-IS vs TO-BE. Compara el estado actual con la meta deseada y prioriza iniciativas en una matriz de impacto vs. complejidad.
 
-Identificador de Riesgos y Controles, RiskGuard AI. Identifica riesgos operativos por paso y sugiere controles de mitigación.
+Identificador de Riesgos y Controles, RiskGuard AI. Id
+entifica riesgos operativos por paso y sugiere controles de mitigación.
 
 Planificador de Proyecto de Mejora. Recomienda metodología, Scrum o Cascada, y recursos para ejecutar las iniciativas priorizadas.
 
