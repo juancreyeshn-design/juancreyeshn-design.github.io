@@ -43,6 +43,8 @@ Planificador de Proyecto de Mejora. Recomienda metodología, Scrum o Cascada, y 
 
 Construido con HTML, CSS y JavaScript nativo, sin frameworks ni build tools. Usa Mermaid.js, vía CDN, para el renderizado de diagramas BPMN.
 
+La lógica de JavaScript está organizada en 8 módulos independientes (datos-ejemplos.js, utilidades.js, bpmn-diagramador.js, cuellos-botella.js, simulador-kpi.js, sipoc-sop.js, vsm-gap-riskguard.js y app-init.js), cargados en ese orden desde index.html.
+
 ## Uso
 
 Abre index.html en cualquier navegador moderno, o visita la versión publicada en GitHub Pages. No requiere instalación ni configuración previa.
